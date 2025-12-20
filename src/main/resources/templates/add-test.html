@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Test</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0b1936;
+            --secondary: #66d1ff;
+            --accent: #4a6cf7;
+            --light: #eef2ff;
+            --dark: #0a1429;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --card-bg: rgba(255, 255, 255, 0.85);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #eef2ff 0%, #dbeafe 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 700px;
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px);}
+            to   { opacity: 1; transform: translateY(0);}
+        }
+
+        .form-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+        }
+
+        .form-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent), var(--secondary));
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .header h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #64748b;
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            color: var(--primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        label i {
+            color: var(--accent);
+            width: 20px;
+            text-align: center;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            background: rgba(255, 255, 255, 0.8);
+            font-size: 15px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.2);
+            background: white;
+            transform: translateY(-2px);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent);
+            font-size: 18px;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .radio-option input {
+            width: auto;
+            margin: 0;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .badge-publish {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .badge-listed {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .btn {
+            padding: 15px 25px;
+            border-radius: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), var(--secondary));
+            color: white;
+            box-shadow: 0 5px 15px rgba(74, 108, 247, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(74, 108, 247, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            margin-top: 15px;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .btn-outline:hover {
+            background: rgba(74, 108, 247, 0.05);
+            transform: translateY(-3px);
+        }
+
+        .msg {
+            text-align: center;
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            font-weight: 500;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .msg-success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .price-preview {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+            font-weight: 500;
+        }
+
+        .price-amount {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                width: 100%;
+            }
+            
+            .form-card {
+                padding: 30px 25px;
+            }
+            
+            .header h2 {
+                font-size: 24px;
+            }
+            
+            .radio-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .form-card {
+                padding: 25px 20px;
+            }
+            
+            input, select, textarea {
+                padding: 12px 12px 12px 40px;
+            }
+            
+            .input-icon {
+                left: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="form-card">
+        <div class="header">
+            <h2>
+                <i class="fas fa-vial"></i> Add New Lab Test
+            </h2>
+            <p>Create a new test to add to your laboratory services</p>
+        </div>
+
+        <div th:if="${msg}" class="msg msg-success" th:text="${msg}"></div>
+
+        <form action="/lab/test/save" method="post" th:object="${test}">
+            <div class="form-group">
+                <label for="testName">
+                    <i class="fas fa-flask"></i> Test Name
+                </label>
+                <div class="input-wrapper">
+                    <input type="text" id="testName" th:field="*{testName}" placeholder="Enter Test Name" required>
+                    <div class="input-icon">
+                        <i class="fas fa-flask"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="category">
+                    <i class="fas fa-tags"></i> Category
+                </label>
+                <div class="input-wrapper">
+                    <select id="category" th:field="*{category}">
+                        <option value="">-- Select Category --</option>
+                        <option value="Blood Test">Blood Test</option>
+                        <option value="Urine Test">Urine Test</option>
+                        <option value="Sugar Test">Sugar Test</option>
+                        <option value="Covid Test">Covid Test</option>
+                        <option value="X-Ray">X-Ray</option>
+                        <option value="MRI">MRI</option>
+                        <option value="CT Scan">CT Scan</option>
+                        <option value="Ultrasound">Ultrasound</option>
+                        <option value="Genetic Test">Genetic Test</option>
+                        <option value="Allergy Test">Allergy Test</option>
+                    </select>
+                    <div class="input-icon">
+                        <i class="fas fa-tags"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="price">
+                    <i class="fas fa-indian-rupee-sign"></i> Price (₹)
+                </label>
+                <div class="input-wrapper">
+                    <input type="number" id="price" th:field="*{price}" placeholder="Enter Test Price" min="0" required>
+                    <div class="input-icon">
+                        <i class="fas fa-indian-rupee-sign"></i>
+                    </div>
+                </div>
+                <div class="price-preview">
+                    <span>Preview:</span>
+                    <span class="price-amount">₹<span id="priceDisplay">0</span></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="description">
+                    <i class="fas fa-align-left"></i> Description
+                </label>
+                <div class="input-wrapper">
+                    <textarea id="description" th:field="*{description}" placeholder="Enter a short description of the test..."></textarea>
+                    <div class="input-icon" style="top: 20px;">
+                        <i class="fas fa-align-left"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <i class="fas fa-eye"></i> Visibility Status
+                </label>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="publish" value="PUBLISH" checked>
+                        <span class="status-badge badge-publish">
+                            <i class="fas fa-globe"></i> Publish (Visible to all patients)
+                        </span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="publish" value="LISTED">
+                        <span class="status-badge badge-listed">
+                            <i class="fas fa-eye-slash"></i> Listed (Only visible to lab)
+                        </span>
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-plus-circle"></i> Add Test
+            </button>
+        </form>
+
+        <a href="/lab/dashboard" class="btn btn-outline">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+
+        <div class="form-footer">
+            <p>All fields marked with * are required</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Price preview functionality
+    document.getElementById('price').addEventListener('input', function() {
+        document.getElementById('priceDisplay').textContent = this.value || '0';
+    });
+    
+    // Initialize price display
+    document.getElementById('priceDisplay').textContent = document.getElementById('price').value || '0';
+    
+    // Add animation to form elements when they come into view
+    document.addEventListener('DOMContentLoaded', function() {
+        const formGroups = document.querySelectorAll('.form-group');
+        
+        formGroups.forEach((group, index) => {
+            group.style.opacity = '0';
+            group.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                group.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                group.style.opacity = '1';
+                group.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+    });
+</script>
+
+</body>
+</html>

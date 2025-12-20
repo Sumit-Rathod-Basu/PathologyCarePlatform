@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Lab Report Update</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #000;
+        }
+
+        .invoice-box {
+            max-width: 900px;
+            margin: auto;
+            padding: 25px;
+            border: 1px solid #000;
+            border-top: none !important;
+            border-right: none !important;
+            border-bottom: none !important;
+            border-left: none !important;
+        }
+
+        .bw-table th,
+        .bw-table td {
+            border: 1px solid #000 !important;
+        }
+
+        .bw-table th {
+            background: #eaeaea !important;
+            color: #000 !important;
+        }
+
+        .letterhead-header {
+            height: 0px;
+            width: 100%;
+        }
+
+        .letterhead-footer {
+            height: 55px;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .btn-container {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="text-center btn-container">
+    <button class="btn btn-secondary" onclick="window.history.back();">🔙 Back</button>
+</div>
+
+<div id="invoice" class="invoice-box">
+
+    <!-- Letterhead Header -->
+    <div class="letterhead-header"></div>
+
+    <!-- Patient Details -->
+    <div class="row mb-3">
+        <div class="col-8">
+            <p>
+                <strong>Patient Name:</strong> <span th:text="${patientName}"></span><br>
+                <strong>Patient ID:</strong> <span th:text="${patientId}"></span><br>
+                <strong>Mobile:</strong> <span th:text="${patientMobile}"></span><br>
+                <strong>Email:</strong> <span th:text="${patientEmail}"></span><br>
+                <strong>Completed-Date:</strong> <span th:text="${#dates.format(#dates.createNow(), 'dd-MM-yyyy')}"></span>
+            </p>
+        </div>
+    </div>
+
+    <!-- Editable Form -->
+    <form th:action="@{/saveTestUpdates}" method="post">
+
+        <!-- Test Table -->
+        <table class="table bw-table">
+            <thead>
+            <tr>
+                <th>Sr No</th>
+                <th>Test Name</th>
+                <th>Value</th>
+                <th>Unit</th>
+                <th>Reference Range</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="test, iter : ${tests}">
+                <td th:text="${iter.count}"></td>
+                <td>
+                    <input type="text" th:name="tests[__${iter.index}__].testField"
+                           th:value="${test.testField}" class="form-control"/>
+                </td>
+                <td>
+                    <input type="text" th:name="tests[__${iter.index}__].testValue"
+                           th:value="${test.testValue}" class="form-control"/>
+                </td>
+                <td>
+                    <input type="text" th:name="tests[__${iter.index}__].unit"
+                           th:value="${test.unit}" class="form-control"/>
+                </td>
+                <td>
+                    <input type="text" th:name="tests[__${iter.index}__].testRange"
+                           th:value="${test.testRange}" class="form-control"/>
+                </td>
+                <input type="hidden" th:name="tests[__${iter.index}__].id" th:value="${test.id}"/>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Report Summary -->
+        <div class="report-summary mt-3 p-3 border rounded" style="background-color: #f9f9f9;">
+            <h5>Report Summary</h5>
+            <textarea name="summary" class="form-control" rows="5" th:text="${summaryPoints}"></textarea>
+        </div>
+        <br>
+
+        <!-- Form Buttons -->
+        <div class="text-center mb-3">
+            <button type="submit" class="btn btn-success">Update</button>
+            <button type="button" class="btn btn-secondary" onclick="window.history.back();">Back</button>
+        </div>
+
+    </form>
+
+    <!-- Letterhead Footer -->
+    <div class="letterhead-footer"></div>
+
+</div>
+
+</body>
+</html>

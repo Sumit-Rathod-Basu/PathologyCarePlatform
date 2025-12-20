@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Patient Portal - Pathology Care</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            /* Professional Medical Palette */
+            --primary: #0e7490; /* Ocean Blue */
+            --primary-dark: #155e75;
+            --accent: #22d3ee;
+            --surface: #ffffff;
+            --surface-alt: #f8fafc; /* For segmented control background */
+            --bg-body: #f0fdfa;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --error: #ef4444;
+            --error-light: #fef2f2;
+            --success: #10b981;
+            --success-light: #f0fdf4;
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            /* Abstract Medical Background Image */
+            background:
+                linear-gradient(135deg, rgba(14, 116, 144, 0.9), rgba(6, 78, 59, 0.8)),
+                url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .wrapper {
+            width: 100%;
+            max-width: 460px;
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 40px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            animation: slideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Decorative top bar */
+        .wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, var(--accent), var(--primary));
+        }
+
+        .header {
+             text-align: center;
+             margin-bottom: 30px;
+        }
+        
+        .header h2 {
+            text-align: center;
+            color: var(--text-main);
+            margin-bottom: 8px;
+            font-weight: 800;
+            font-size: 26px;
+            letter-spacing: -0.02em;
+        }
+
+        /* Subtitle */
+        .header h2 span {
+            display: block;
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-top: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* --- Modern Segmented Control (Toggle) --- */
+        .toggle-buttons {
+            display: flex;
+            background: var(--surface-alt);
+            padding: 4px;
+            border-radius: 12px;
+            margin: 25px 0 30px; /* Added bottom margin */
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .toggle-buttons button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: var(--transition);
+            position: relative;
+            z-index: 2;
+        }
+
+        .toggle-buttons button.active {
+            background: var(--surface);
+            color: var(--primary);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* --- Forms & Inputs --- */
+        form {
+            display: none;
+        }
+        form.active {
+            display: block;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        /* CSS Grid for Register Form Layout - MODIFIED FOR SINGLE COLUMN */
+        #registerForm.active {
+            display: grid;
+            /* Forces single column layout on all screen sizes */
+            grid-template-columns: 1fr; 
+            gap: 16px;
+        }
+
+        /* Full width items in grid - MODIFIED TO SPAN 1 COLUMN */
+        #registerForm input[name="name"],
+        #registerForm input[name="email"],
+        #registerForm input[name="address"],
+        #registerForm button,
+        .password-group {
+            /* All items must explicitly span only 1 column in the new 1fr grid */
+            grid-column: span 1 !important;
+        }
+        
+        /* Two-column layout for password fields in registration - MODIFIED TO SINGLE COLUMN */
+        .password-group {
+            display: grid;
+            /* Forces single column layout for password fields */
+            grid-template-columns: 1fr; 
+            gap: 16px;
+            grid-column: span 1 !important; /* Ensures the whole group spans 1 column */
+        }
+
+        .password-group .form-group {
+            /* Each password field takes one line */
+            grid-column: span 1; 
+        }
+
+        /* Password strength indicator now spans 1 column */
+        .password-strength-bar {
+            grid-column: span 1 !important; 
+        }
+        
+        /* Form group wrapper for input and icon */
+        .form-group {
+            position: relative;
+        }
+
+        /* Add margin bottom for login form specifically */
+        #loginForm .form-group {
+            margin-bottom: 18px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 14px 14px 14px 44px; /* Left padding for icon */
+            border-radius: 10px; /* Slightly smaller radius for inputs */
+            border: 1px solid var(--border);
+            background-color: var(--surface);
+            color: var(--text-main);
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            transition: var(--transition);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(14, 116, 144, 0.1);
+        }
+
+        /* Input icons */
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 18px;
+            transition: var(--transition);
+            pointer-events: none;
+        }
+
+        input:focus + .input-icon {
+            color: var(--primary);
+        }
+
+        /* Select styling */
+        select {
+            appearance: none;
+            -webkit-appearance: none;
+            padding-right: 40px; /* Space for custom arrow */
+        }
+        
+        /* Select arrow using Font Awesome */
+        .select-arrow {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 14px;
+            pointer-events: none;
+        }
+
+        /* Password strength indicator */
+        .password-strength-bar {
+            height: 4px;
+            border-radius: 2px;
+            margin-top: 5px;
+            background: var(--border);
+            overflow: hidden;
+            /* grid-column: span 2; - REMOVED, now spans 1 */
+        }
+
+        .strength-indicator {
+            height: 100%;
+            width: 0;
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .strength-weak { background: #ef4444; width: 33%; }
+        .strength-medium { background: #f59e0b; width: 66%; }
+        .strength-strong { background: #10b981; width: 100%; }
+
+
+        /* --- Buttons --- */
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            font-size: 15px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: var(--transition);
+            box-shadow: 0 6px 15px -3px rgba(14, 116, 144, 0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px -3px rgba(14, 116, 144, 0.5);
+        }
+
+        /* --- Notifications (Improved from the original CSS) --- */
+        .error-msg, .success-msg {
+            padding: 14px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            border-left: 4px solid; /* Use solid line for visual pop */
+            animation: slideDown 0.3s ease-out;
+        }
+        
+        .error-msg i, .success-msg i {
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .error-msg {
+            background: var(--error-light);
+            color: var(--error);
+            border-color: var(--error);
+        }
+
+        .success-msg {
+            background: var(--success-light);
+            color: var(--success);
+            border-color: var(--success);
+        }
+
+        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+
+        /* Mobile fixes (Kept for robust mobile support) */
+        @media (max-width: 500px) {
+            body { align-items: flex-start; } 
+            .wrapper { 
+                padding: 30px 20px; 
+                border-radius: 0; 
+                min-height: 100vh;
+                box-shadow: none;
+            }
+            .wrapper::before { height: 4px; }
+            /* Mobile settings are now largely covered by the main 1fr styles, 
+               but these remain for maximal compatibility: */
+            #registerForm.active { grid-template-columns: 1fr; }
+            #registerForm input, #registerForm select, 
+            .password-group, .password-group .form-group, .password-strength-bar { 
+                grid-column: span 1 !important; 
+            }
+        }
+    </style>
+
+    <script>
+        function showForm(formId) {
+            document.getElementById("loginForm").classList.remove("active");
+            document.getElementById("registerForm").classList.remove("active");
+            document.getElementById(formId).classList.add("active");
+
+            document.getElementById("loginBtn").classList.remove("active");
+            document.getElementById("registerBtn").classList.remove("active");
+            document.getElementById(formId + "Btn").classList.add("active");
+        }
+        
+        // --- Password Strength & Validation Functions ---
+
+        function checkPasswordStrength(password) {
+            const strengthBar = document.getElementById('passwordStrengthIndicator');
+            if (!strengthBar) return;
+            
+            let strength = 0;
+            if (password.length >= 8) strength++; // Length
+            if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++; // Mixed case
+            if (password.match(/\d/)) strength++; // Numbers
+            if (password.match(/[^a-zA-Z\d]/)) strength++; // Special characters
+            
+            strengthBar.className = 'strength-indicator';
+            
+            if (password.length === 0) {
+                strengthBar.style.width = '0';
+            } else if (strength <= 2) {
+                strengthBar.classList.add('strength-weak');
+            } else if (strength === 3) {
+                strengthBar.classList.add('strength-medium');
+            } else {
+                strengthBar.classList.add('strength-strong');
+            }
+        }
+
+        function validatePassword() {
+            const password = document.querySelector('#registerForm input[name="password"]');
+            const confirmPassword = document.querySelector('#registerForm input[name="confirmPassword"]');
+            
+            if (password && confirmPassword) {
+                if (password.value !== confirmPassword.value) {
+                    confirmPassword.setCustomValidity("Passwords don't match");
+                } else {
+                    confirmPassword.setCustomValidity('');
+                }
+            }
+        }
+
+        // Initialize event listeners when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordInput = document.querySelector('#registerForm input[name="password"]');
+            const confirmPasswordInput = document.querySelector('#registerForm input[name="confirmPassword"]');
+            
+            if (passwordInput) {
+                passwordInput.addEventListener('input', function() {
+                    checkPasswordStrength(this.value);
+                    validatePassword();
+                });
+            }
+            
+            if (confirmPasswordInput) {
+                confirmPasswordInput.addEventListener('input', validatePassword);
+            }
+            
+            // Set initial form state
+            showForm('loginForm');
+        });
+    </script>
+</head>
+<body>
+
+<div class="wrapper">
+
+    <div class="header">
+        <h2>Pathology Care <span>Secure Patient Portal</span></h2>
+    </div>
+
+    <div class="toggle-buttons" role="tablist">
+        <button id="loginBtn" onclick="showForm('loginForm')" role="tab" aria-selected="true" aria-controls="loginForm">Sign In</button>
+        <button id="registerBtn" onclick="showForm('registerForm')" role="tab" aria-selected="false" aria-controls="registerForm">Register Patient</button>
+    </div>
+
+    <div th:if="${error}" class="error-msg" role="alert">
+        <i class="fas fa-exclamation-circle" aria-hidden="true"></i>
+        <span th:text="${error}">An error occurred during login/registration.</span>
+    </div>
+    <div th:if="${success}" class="success-msg" role="status">
+        <i class="fas fa-check-circle" aria-hidden="true"></i>
+        <span th:text="${success}">Account created successfully!</span>
+    </div>
+
+    <form id="loginForm" th:action="@{/patients/patient/login}" method="post" role="form" aria-labelledby="loginBtn">
+        <div class="form-group">
+            <input type="email" name="email" placeholder="Email Address" required aria-label="Email Address" />
+            <div class="input-icon" aria-hidden="true"><i class="fas fa-envelope"></i></div>
+        </div>
+
+        <div class="form-group">
+            <input type="password" name="password" placeholder="Password" required aria-label="Password" />
+            <div class="input-icon" aria-hidden="true"><i class="fas fa-lock"></i></div>
+        </div>
+
+        <button type="submit" class="btn">
+            <i class="fas fa-sign-in-alt" aria-hidden="true"></i> Login to Portal
+        </button>
+    </form>
+
+    <form id="registerForm" th:action="@{/patients/insert}" method="post" role="form" aria-labelledby="registerBtn">
+        
+        <div class="form-group">
+            <input type="text" name="name" placeholder="Full Legal Name" required aria-label="Full Legal Name" />
+            <div class="input-icon" aria-hidden="true"><i class="fas fa-user"></i></div>
+        </div>
+
+        <div class="form-group">
+            <input type="email" name="email" placeholder="Email Address" required aria-label="Email Address" />
+            <div class="input-icon" aria-hidden="true"><i class="fas fa-envelope"></i></div>
+        </div>
+
+        <div class="form-group">
+            <input type="text" name="phone" placeholder="Phone Number" required aria-label="Phone Number" />
+            <div class="input-icon" aria-hidden="true"><i class="fas fa-phone"></i></div>
+        </div>
+
+        <div class="form-group">
+            <select name="gender" required aria-label="Gender Selection">
+                <option value="">Select Gender</option>
+                <option>Male</option>
+                <option>Female</option>
+                <option>Other</option>
+            </select>
+            <div class="input-icon" aria-hidden="true"><i class="fas fa-venus-mars"></i></div>
+            <div class="select-arrow" aria-hidden="true"><i class="fas fa-chevron-down"></i></div>
+        </div>
+
+        <div class="form-group">
+            <input type="text" name="address" placeholder="Home Address" required aria-label="Home Address" />
+            <div class="input-icon" aria-hidden="true"><i class="fas fa-map-marker-alt"></i></div>
+        </div>
+
+        <div class="password-group">
+            <div class="form-group">
+                <input type="password" name="password" placeholder="Create Password" required aria-label="Create Password" />
+                <div class="input-icon" aria-hidden="true"><i class="fas fa-lock"></i></div>
+            </div>
+
+            <div class="form-group">
+                <input type="password" name="confirmPassword" placeholder="Confirm Password" required aria-label="Confirm Password" />
+                <div class="input-icon" aria-hidden="true"><i class="fas fa-lock"></i></div>
+            </div>
+            
+            <div class="password-strength-bar">
+                <div id="passwordStrengthIndicator" class="strength-indicator"></div>
+            </div>
+        </div>
+        <button type="submit" class="btn">
+            <i class="fas fa-user-plus" aria-hidden="true"></i> Create Account
+        </button>
+    </form>
+
+</div>
+
+</body>
+</html>

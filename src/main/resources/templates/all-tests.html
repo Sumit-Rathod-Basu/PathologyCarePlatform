@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>All Lab Tests</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0b1936;
+            --secondary: #66d1ff;
+            --accent: #4a6cf7;
+            --light: #eef2ff;
+            --dark: #0a1429;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --card-bg: rgba(255, 255, 255, 0.85);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #eef2ff 0%, #dbeafe 100%);
+            min-height: 100vh;
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .page-title i {
+            background: linear-gradient(135deg, var(--accent), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border-radius: 12px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 15px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), var(--secondary));
+            color: white;
+            box-shadow: 0 5px 15px rgba(74, 108, 247, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(74, 108, 247, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+        }
+
+        .btn-outline:hover {
+            background: rgba(74, 108, 247, 0.05);
+            transform: translateY(-3px);
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: slideUp 0.8s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+        }
+
+        .table-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 12px 20px;
+            border-radius: 12px;
+            width: 350px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus-within {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            background: white;
+        }
+
+        .search-box input {
+            border: none;
+            background: transparent;
+            margin-left: 10px;
+            width: 100%;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .filter-options {
+            display: flex;
+            gap: 15px;
+        }
+
+        .filter-select {
+            padding: 10px 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            background: white;
+            font-size: 14px;
+            outline: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(74, 108, 247, 0.2);
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1000px;
+        }
+
+        thead {
+            background: linear-gradient(135deg, var(--primary), var(--dark));
+            color: white;
+        }
+
+        th {
+            padding: 18px 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 15px;
+            position: relative;
+        }
+
+        th:after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 60%;
+            width: 1px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        th:last-child:after {
+            display: none;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        tbody tr:hover {
+            background: rgba(74, 108, 247, 0.03);
+            transform: scale(1.01);
+        }
+
+        td {
+            padding: 16px 15px;
+            font-size: 14px;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .status-published {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .status-draft {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .price {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-sm {
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 13px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-edit {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .btn-edit:hover {
+            background: rgba(245, 158, 11, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .btn-delete {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .btn-delete:hover {
+            background: rgba(239, 68, 68, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .table-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .pagination {
+            display: flex;
+            gap: 8px;
+        }
+
+        .page-item {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .page-item:hover {
+            background: rgba(74, 108, 247, 0.1);
+        }
+
+        .page-item.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        .results-info {
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: #64748b;
+        }
+
+        .empty-state i {
+            font-size: 60px;
+            margin-bottom: 20px;
+            color: #cbd5e1;
+        }
+
+        .empty-state h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #475569;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .table-controls {
+                flex-direction: column;
+                gap: 20px;
+                align-items: flex-start;
+            }
+            
+            .search-box {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            
+            .action-buttons {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .btn {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .filter-options {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1 class="page-title">
+            <i class="fas fa-vial"></i> All Lab Tests
+        </h1>
+        <div class="action-buttons">
+            <a href="/lab/dashboard" class="btn btn-outline">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+            <a href="/lab/test/add" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Add New Test
+            </a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="table-controls">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search tests by name, category, or description...">
+            </div>
+            <div class="filter-options">
+                <select class="filter-select">
+                    <option>All Categories</option>
+                    <option>Blood Test</option>
+                    <option>Urine Test</option>
+                    <option>Imaging</option>
+                    <option>Genetic Test</option>
+                </select>
+                <select class="filter-select">
+                    <option>All Status</option>
+                    <option>Published</option>
+                    <option>Draft</option>
+                </select>
+                <select class="filter-select">
+                    <option>Sort by: Newest First</option>
+                    <option>Sort by: Oldest First</option>
+                    <option>Sort by: Price (Low to High)</option>
+                    <option>Sort by: Price (High to Low)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Lab Name</th>
+                    <th>Test Name</th>
+                    <th>Price</th>
+                    <th>Sample Category</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="t : ${tests}">
+                    <td th:text="${t.id}">1</td>
+                    <td th:text="${t.labName}">MediLab Diagnostics</td>
+                    <td th:text="${t.testName}">Complete Blood Count</td>
+                    <td class="price">₹<span th:text="${t.price}">450</span></td>
+                    <td th:text="${t.category}">Blood Test</td>
+                    <td th:text="${t.description}">Measures different components of blood</td>
+                    <td>
+                        <span th:if="${t.publish=='PUBLISH' }" class="status-badge status-published">
+                            <i class="fas fa-check-circle"></i> Published
+                        </span>
+
+    <span th:if="${t.publish == 'PUBLIC'}" class="status-badge status-active">
+        <i class="fas fa-check-circle"></i> Public
+    </span>
+
+    <span th:if="${t.publish == 'LISTED'}" class="status-badge status-draft">
+        <i class="fas fa-pencil-alt"></i> Draft
+    </span>
+
+    <!-- Button only when DRAFT -->
+    <a th:if="${t.publish == 'LISTED'}"
+       th:href="@{'/lab/test/publish/' + ${t.id}}"
+       class="publish-btn">
+        Make Public
+    </a>
+
+
+                    </td>
+                    <td>
+                        <div class="actions">
+                            <a th:href="@{'/lab/test/edit/' + ${t.id}}" class="btn-sm btn-edit">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <a th:href="@{'/lab/test/delete/' + ${t.id}}" class="btn-sm btn-delete">
+                                <i class="fas fa-trash"></i> Delete
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                <!-- Additional sample rows for demonstration -->
+                
+                </tbody>
+            </table>
+        </div>
+
+        <div class="table-footer">
+            <div class="results-info">
+                Showing 1 to 3 of 12 results
+            </div>
+            <div class="pagination">
+                <div class="page-item"><i class="fas fa-chevron-left"></i></div>
+                <div class="page-item active">1</div>
+                <div class="page-item">2</div>
+                <div class="page-item">3</div>
+                <div class="page-item">4</div>
+                <div class="page-item"><i class="fas fa-chevron-right"></i></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

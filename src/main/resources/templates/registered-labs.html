@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Registered Labs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3d52d6;
+            --primary-dark: #2c3db8;
+            --primary-light: #5b6fe5;
+            --secondary: #06b6d4;
+            --accent: #8b5cf6;
+            --background: #f0f9ff;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #cbd5e1;
+            --success: #10b981;
+            --error: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e0f2fe, #dbeafe);
+            min-height: 100vh;
+            padding: 20px 15px;
+            color: var(--text);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        .search-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 25px;
+            animation: slideUp 0.8s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .search-box {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 14px 15px 14px 45px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 16px;
+            outline: none;
+            background: var(--card-bg);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(61, 82, 214, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            font-size: 18px;
+        }
+
+        .filter-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            padding: 0 5px;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(61, 82, 214, 0.2);
+        }
+
+        /* Mobile-first grid - 1 column by default */
+        .lab-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            width: 100%;
+        }
+
+        /* Tablet - 2 columns */
+        @media (min-width: 768px) {
+            .lab-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 25px;
+            }
+            
+            h2 {
+                font-size: 32px;
+            }
+            
+            .subtitle {
+                font-size: 18px;
+            }
+            
+            .filter-btn {
+                padding: 10px 20px;
+            }
+        }
+
+        /* Desktop - 3 columns */
+        @media (min-width: 1024px) {
+            .lab-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            h2 {
+                font-size: 36px;
+            }
+        }
+
+        .lab-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            padding: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.6s ease;
+            border-top: 4px solid var(--primary);
+            width: 100%;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .lab-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .lab-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .lab-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 18px;
+        }
+
+        .lab-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .lab-name i {
+            color: var(--primary);
+            font-size: 18px;
+        }
+
+        .verified-badge {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #f59e0b;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .details-list {
+            margin-bottom: 20px;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .detail-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: rgba(61, 82, 214, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            margin-right: 10px;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .detail-label {
+            font-weight: 500;
+            color: var(--text-light);
+            min-width: 70px;
+            font-size: 14px;
+        }
+
+        .detail-value {
+            color: var(--text);
+            font-weight: 500;
+            flex: 1;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .specialties {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            background: rgba(61, 82, 214, 0.1);
+            color: var(--primary);
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            background: var(--primary);
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 10px rgba(61, 82, 214, 0.2);
+            font-size: 14px;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(61, 82, 214, 0.3);
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            grid-column: 1 / -1;
+        }
+
+        .empty-state i {
+            font-size: 60px;
+            color: #cbd5e1;
+            margin-bottom: 15px;
+        }
+
+        .empty-state h3 {
+            font-size: 22px;
+            color: var(--text);
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            color: var(--text-light);
+            max-width: 400px;
+            margin: 0 auto 20px;
+            font-size: 15px;
+        }
+
+        /* Mobile-specific adjustments */
+        @media (max-width: 480px) {
+            body {
+                padding: 15px 10px;
+            }
+            
+            .lab-card {
+                padding: 18px;
+            }
+            
+            .lab-name {
+                font-size: 18px;
+            }
+            
+            .filter-container {
+                justify-content: flex-start;
+                overflow-x: auto;
+                padding-bottom: 5px;
+            }
+            
+            .card-footer {
+                flex-direction: column;
+                gap: 12px;
+                align-items: flex-start;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .stats-bar {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .stat-item {
+                min-width: 100%;
+            }
+            
+            .detail-item {
+                flex-direction: column;
+                gap: 5px;
+                align-items: flex-start;
+            }
+            
+            .detail-label {
+                min-width: auto;
+            }
+            
+            .lab-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .rating {
+                align-self: flex-start;
+            }
+        }
+
+        /* Tablet adjustments */
+        @media (min-width: 481px) and (max-width: 767px) {
+            .lab-grid {
+                gap: 18px;
+            }
+            
+            .lab-card {
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="header">
+        <h2>
+            <i class="fas fa-flask"></i> Registered Laboratories
+        </h2>
+        <p class="subtitle">Find and connect with certified medical laboratories in your area</p>
+    </div>
+
+    <div class="stats-bar">
+        <div class="stat-item">
+            <div class="stat-value" th:text="${labs.size()}">12</div>
+            <div class="stat-label">Total Labs</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">8</div>
+            <div class="stat-label">Verified Labs</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">4</div>
+            <div class="stat-label">New This Month</div>
+        </div>
+    </div>
+
+    <div class="search-container">
+        <div class="search-box">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" id="searchInput" placeholder="Search laboratories by name, city, or specialty..." onkeyup="searchLabs()">
+        </div>
+    </div>
+
+    <div class="filter-container">
+        <button class="filter-btn active" onclick="filterLabs('all')">
+            <i class="fas fa-layer-group"></i> All Labs
+        </button>
+        <button class="filter-btn" onclick="filterLabs('verified')">
+            <i class="fas fa-check-circle"></i> Verified
+        </button>
+        <button class="filter-btn" onclick="filterLabs('blood')">
+            <i class="fas fa-tint"></i> Blood Tests
+        </button>
+        <button class="filter-btn" onclick="filterLabs('imaging')">
+            <i class="fas fa-x-ray"></i> Imaging
+        </button>
+        <button class="filter-btn" onclick="filterLabs('city')">
+            <i class="fas fa-map-marker-alt"></i> Nearby
+        </button>
+    </div>
+
+    <div class="lab-grid">
+        <div class="lab-card"
+             th:each="lab : ${labs}"
+             th:data-name="${lab.labName}"
+             th:data-city="${lab.city}">
+
+            <div class="lab-header">
+                <div>
+                    <h3 class="lab-name">
+                        <i class="fas fa-hospital"></i>
+                        <span th:text="${lab.labName}">MediLab Diagnostics</span>
+                    </h3>
+                    <div class="verified-badge">
+                        <i class="fas fa-check-circle"></i> Verified Laboratory
+                    </div>
+                </div>
+                <div class="rating">
+                    <i class="fas fa-star"></i>
+                    <span>4.8</span>
+                </div>
+            </div>
+
+            <div class="details-list">
+                <div class="detail-item">
+                    <div class="detail-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="detail-label">Email:</div>
+                    <div class="detail-value" th:text="${lab.email}">contact@medilab.com</div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div class="detail-label">Phone:</div>
+                    <div class="detail-value" th:text="${lab.phone}">+1 (555) 123-4567</div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div class="detail-label">Address:</div>
+                    <div class="detail-value" th:text="${lab.address}">123 Medical Center Drive</div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-icon">
+                        <i class="fas fa-city"></i>
+                    </div>
+                    <div class="detail-label">City:</div>
+                    <div class="detail-value" th:text="${lab.city}">Springfield</div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-icon">
+                        <i class="fas fa-map-pin"></i>
+                    </div>
+                    <div class="detail-label">Pincode:</div>
+                    <div class="detail-value" th:text="${lab.pincode}">12345</div>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <div class="specialties">
+                    <span class="badge">Blood Tests</span>
+                    <span class="badge">Urine Analysis</span>
+                </div>
+                <a class="btn" th:href="@{'/patient/lab/' + ${lab.id}}">
+                    <i class="fas fa-eye"></i> View Details
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function searchLabs() {
+        let input = document.getElementById("searchInput").value.toLowerCase();
+        let cards = document.getElementsByClassName("lab-card");
+
+        for (let i = 0; i < cards.length; i++) {
+            let name = cards[i].getAttribute("data-name").toLowerCase();
+            let city = cards[i].getAttribute("data-city").toLowerCase();
+            
+            if (name.includes(input) || city.includes(input)) {
+                cards[i].style.display = "";
+            } else {
+                cards[i].style.display = "none";
+            }
+        }
+    }
+
+    function filterLabs(filter) {
+        // Reset all filter buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        
+        // Activate the clicked button
+        event.target.classList.add('active');
+        
+        // In a real application, this would filter labs based on the selected criteria
+        // For this demo, we'll just show a simple alert
+        if (filter !== 'all') {
+            alert(`Filtering labs by: ${filter}. This would filter the labs in a real application.`);
+        }
+    }
+    
+    // Add animation to cards when they come into view
+    document.addEventListener('DOMContentLoaded', function() {
+        const cards = document.querySelectorAll('.lab-card');
+        
+        cards.forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.1}s`;
+        });
+    });
+</script>
+
+</body>
+</html>

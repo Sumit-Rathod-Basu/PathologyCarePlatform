@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: Pathology-Care-Platform
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/pathology_Care_Platform
+    username: root
+    password: admin
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: sumitrathod1405@gmail.com     # <-- your Gmail
+    password: ylho nvaz uczp vkty      # 16-digit Gmail App Password (no spaces)
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+
+server:
+  port: 9191
+
+ 

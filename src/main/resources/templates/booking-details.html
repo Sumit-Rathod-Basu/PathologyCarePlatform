@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Booking Details</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" 
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #eef2ff, #d4d8ff);
+            margin: 0;
+            padding: 40px 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 8px 30px rgba(0,0,255,0.08);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .header h2 {
+            background: linear-gradient(90deg, #4f46e5, #6d28d9);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 26px;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .detail-row {
+            margin: 12px 0;
+            padding: 12px 15px;
+            background: #f4f6ff;
+            border-radius: 10px;
+            border-left: 5px solid #4f46e5;
+        }
+
+        .detail-row strong {
+            color: #4f46e5;
+        }
+
+        .actions {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 18px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 15px;
+            transition: 0.2s;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #4f46e5, #6d28d9);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.03);
+        }
+
+        .btn-secondary {
+            background: #e2e8ff;
+            color: #4f46e5;
+        }
+
+        .btn-secondary:hover {
+            background: #c7ceff;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+
+        <div class="header">
+            <h2>Booking Details</h2>
+        </div>
+
+        <div class="detail-row">
+            <strong>Patient Name:</strong>
+            <span th:text="${booking.patientName}"></span>
+        </div>
+
+        <div class="detail-row">
+            <strong>Email:</strong>
+            <span th:text="${booking.patientEmail}"></span>
+        </div>
+
+        <div class="detail-row">
+            <strong>Test Name:</strong>
+            <span th:text="${booking.testName}"></span>
+        </div>
+
+        <div class="detail-row">
+            <strong>Lab Name:</strong>
+            <span th:text="${booking.labName}"></span>
+        </div>
+
+        <div class="detail-row">
+            <strong>Booking Date:</strong>
+            <span th:text="${booking.bookingDate}"></span>
+        </div>
+
+        <div class="detail-row">
+            <strong>Status:</strong>
+            <span th:text="${booking.status}"></span>
+        </div>
+
+        <div class="detail-row">
+            <strong>Price:</strong>
+            ₹ <span th:text="${booking.price}"></span>
+        </div>
+
+        <div class="actions">
+
+            <!-- Generate PDF Button -->
+            <a th:href="@{'/booking/generate-pdf/' + ${booking.id}}">
+                <button class="btn btn-primary">
+                    <i class="fa-solid fa-file-pdf"></i> Generate Booking PDF
+                </button>
+            </a>
+
+            <!-- Back Button -->
+            <a href="/lab/BookingDashboard">
+                <button class="btn btn-secondary">
+                    <i class="fa-solid fa-arrow-left"></i> Back
+                </button>
+            </a>
+
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Book Test</title>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background: #eef2ff;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 600px;
+            margin: auto;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #4f46e5;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+        }
+
+        input, button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        input:disabled {
+            background: #f3f4f6;
+            font-weight: bold;
+        }
+
+        button {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 18px;
+        }
+
+        button:hover {
+            background: #4338ca;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Book Test</h2>
+
+    <form th:action="@{/book-test/save}" th:object="${booking}" method="post">
+
+        <!-- Hidden fields -->
+        <input type="hidden" th:field="*{testId}">
+        <input type="hidden" th:field="*{testName}">
+        <input type="hidden" th:field="*{labId}">
+        <input type="hidden" th:field="*{labName}">
+       <input type="hidden" name="price" th:value="${test.price}">
+
+
+        <label>Test Name:</label>
+        <input type="text" th:value="${test.testName}" disabled>
+
+        <label>Lab:</label>
+        <input type="text" th:value="${test.labName}" disabled>
+
+        <label>Price:</label>
+        <input type="text" th:value="'₹ ' + ${test.price}" disabled>
+
+        <label>Your Email</label>
+        <input type="email" th:field="*{patientEmail}" placeholder="Enter your email" required>
+
+        <label>Your Name</label>
+        <input type="text" th:field="*{patientName}" placeholder="Enter your name" required>
+
+        <label>Booking Date</label>
+        <input type="date" th:field="*{bookingDate}" required>
+
+        <button type="submit"><i class="fa-solid fa-check"></i> Confirm Booking</button>
+    </form>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Patient Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #818cf8;
+            --primary-dark: #3730a3;
+            --secondary: #10b981;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .profile-card {
+            width: 100%;
+            max-width: 500px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 30px 25px;
+            text-align: center;
+            position: relative;
+        }
+
+        .profile-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 32px;
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .patient-id {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .card-body {
+            padding: 30px;
+        }
+
+        .info {
+            margin-bottom: 25px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .info-item:last-child {
+            margin-bottom: 0;
+            border-bottom: none;
+        }
+
+        .icon-container {
+            width: 40px;
+            height: 40px;
+            background: var(--bg);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: var(--primary);
+            flex-shrink: 0;
+        }
+
+        .info-content {
+            flex: 1;
+        }
+
+        .label {
+            font-weight: 600;
+            color: var(--text);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .value {
+            color: var(--text-light);
+        }
+
+        .card-footer {
+            padding: 0 30px 30px;
+            text-align: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            box-shadow: 0 4px 6px rgba(79, 70, 229, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 14px rgba(79, 70, 229, 0.3);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        @media (max-width: 576px) {
+            .profile-card {
+                max-width: 100%;
+            }
+            
+            .card-header, .card-body, .card-footer {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="profile-card">
+    <div class="card-header">
+        <div class="profile-icon">
+            <i class="fas fa-user-injured"></i>
+        </div>
+        <h2>Patient Profile</h2>
+        <div class="patient-id">ID: <span th:text="${patient.id}"></span></div>
+    </div>
+    
+    <div class="card-body">
+        <div class="info">
+            <div class="info-item">
+                <div class="icon-container">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="info-content">
+                    <span class="label">Name</span>
+                    <span class="value" th:text="${patient.name}"></span>
+                </div>
+            </div>
+            
+            <div class="info-item">
+                <div class="icon-container">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div class="info-content">
+                    <span class="label">Email</span>
+                    <span class="value" th:text="${patient.email}"></span>
+                </div>
+            </div>
+            
+            <div class="info-item">
+                <div class="icon-container">
+                    <i class="fas fa-phone"></i>
+                </div>
+                <div class="info-content">
+                    <span class="label">Phone</span>
+                    <span class="value" th:text="${patient.phone}"></span>
+                </div>
+            </div>
+            
+            <div class="info-item">
+                <div class="icon-container">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <div class="info-content">
+                    <span class="label">Address</span>
+                    <span class="value" th:text="${patient.address}"></span>
+                </div>
+            </div>
+            
+            <div class="info-item">
+                <div class="icon-container">
+                    <i class="fas fa-venus-mars"></i>
+                </div>
+                <div class="info-content">
+                    <span class="label">Gender</span>
+                    <span class="value" th:text="${patient.gender}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card-footer">
+        <a href="/patients/patient/logout" class="btn">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+    </div>
+</div>
+
+</body>
+</html>

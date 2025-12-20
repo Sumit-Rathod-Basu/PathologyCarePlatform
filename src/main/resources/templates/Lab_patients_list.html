@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Patients List</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f5f6fa;
+            font-family: Arial, sans-serif;
+        }
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            font-weight: 700;
+            margin-top: 20px;
+        }
+        table th, table td {
+            white-space: nowrap;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>All Registered Patients</h2>
+
+    <div class="container table-container">
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Lab ID</th>
+                    <th>Title</th>
+                    <th>Full Name</th>
+                    <th>Gender</th>
+                    <th>Mobile</th>
+                    <!-- <th>Alt Mobile</th> -->
+                    <th>Age</th>
+                    <!-- <th>Age Type</th> -->
+                    <th>Referred By</th>
+                    <th>Referral Lab</th>
+                    <th>Referral Hospital</th>
+                    <th>Outside Lab</th>
+                    <th>Height</th>
+                    <th>Weight</th>
+                    <th>Email</th>
+                    <th>Area</th>
+                    <th>City</th>
+                    <th>Pincode</th>
+<!--                     <th>Insurance No</th>
+                    <th>Insurance Company</th> -->
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr th:each="patient : ${patients}">
+                    <td th:text="${patient.id}"></td>
+                    <td th:text="${patient.labId}"></td>
+                    <td th:text="${patient.title}"></td>
+                    <td th:text="${patient.fullName}"></td>
+                    <td th:text="${patient.gender}"></td>
+                    <td th:text="${patient.mobile}"></td>
+                   <!--  <td th:text="${patient.altMobile}"></td> -->
+                    <td th:text="${patient.age}"></td>
+                    <!-- <td th:text="${patient.ageType}"></td> -->
+                    <td th:text="${patient.referredBy}"></td>
+                    <td th:text="${patient.referralLab}"></td>
+                    <td th:text="${patient.referralHospital}"></td>
+                    <td th:text="${patient.outsideLab}"></td>
+                    <td th:text="${patient.height}"></td>
+                    <td th:text="${patient.weight}"></td>
+                    <td th:text="${patient.email}"></td>
+                    <td th:text="${patient.area}"></td>
+                    <td th:text="${patient.city}"></td>
+                    <td th:text="${patient.pincode}"></td>
+                   <!--  <td th:text="${patient.insuranceNo}"></td>
+                    <td th:text="${patient.insuranceCompany}"></td> -->
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>

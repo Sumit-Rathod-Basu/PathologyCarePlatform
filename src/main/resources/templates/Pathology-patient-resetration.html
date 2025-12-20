@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Registration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0288d1;
+            --primary-dark: #0277bd;
+            --secondary: #f5f7fa;
+            --text: #333;
+            --text-light: #666;
+            --border: #ddd;
+            --success: #4caf50;
+            --danger: #f44336;
+            --warning: #ff9800;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #eef2f7 0%, #f5f7fa 100%);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            padding: 0;
+        }
+
+        .header {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 25px 30px;
+            position: relative;
+        }
+
+        .header h2 {
+            font-weight: 600;
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header h2 i {
+            font-size: 1.6rem;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .form-container {
+            padding: 30px;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .section-title i {
+            font-size: 1.1rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text);
+            font-size: 0.95rem;
+        }
+
+        .form-group label.required:after {
+            content: " *";
+            color: var(--danger);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: #fff;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(2, 136, 209, 0.1);
+        }
+
+        .form-control::placeholder {
+            color: #aaa;
+        }
+
+        .phone-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .country-code {
+            flex: 0 0 80px;
+        }
+
+        .phone-number {
+            flex: 1;
+        }
+
+        .toggle-group {
+            display: flex;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1.5px solid var(--border);
+        }
+
+        .toggle-btn {
+            flex: 1;
+            padding: 12px;
+            background: #f9f9f9;
+            border: none;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .toggle-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .toggle-btn:not(.active):hover {
+            background: #f0f0f0;
+        }
+
+        .age-relation-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 20px;
+            align-items: end;
+        }
+
+        .age-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .age-input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .age-input-wrapper {
+            flex: 1;
+        }
+
+        .age-unit-toggle {
+            display: flex;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1.5px solid var(--border);
+            height: 46px;
+        }
+
+        .age-unit-btn {
+            padding: 0 15px;
+            background: #f9f9f9;
+            border: none;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 40px;
+        }
+
+        .age-unit-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .age-unit-btn:not(.active):hover {
+            background: #f0f0f0;
+        }
+
+        .relation-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .add-patient-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            align-self: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .add-patient-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .btn {
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(2, 136, 209, 0.2);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: var(--text);
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+            align-items: flex-end;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .validation-message {
+            font-size: 0.85rem;
+            color: var(--danger);
+            margin-top: 5px;
+            display: none;
+        }
+
+        .info-text {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .age-relation-container {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .add-patient-btn {
+                grid-column: span 2;
+                justify-self: start;
+                margin-top: 10px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+            
+            .phone-group, .age-input-group {
+                flex-direction: column;
+            }
+            
+            .age-unit-toggle {
+                width: 100%;
+                justify-content: stretch;
+            }
+            
+            .age-unit-btn {
+                flex: 1;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .age-relation-container {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .add-patient-btn {
+                justify-self: start;
+                margin-top: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h2 {
+                font-size: 1.5rem;
+            }
+            
+            .form-container {
+                padding: 15px;
+            }
+        }
+
+        /* Animation for form sections */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-section {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .form-section:nth-child(2) { animation-delay: 0.1s; }
+        .form-section:nth-child(3) { animation-delay: 0.2s; }
+        .form-section:nth-child(4) { animation-delay: 0.3s; }
+        .form-section:nth-child(5) { animation-delay: 0.4s; }
+        .form-section:nth-child(6) { animation-delay: 0.5s; }
+
+        /* Tooltip for information */
+        .info-icon {
+            color: var(--primary);
+            margin-left: 5px;
+            cursor: help;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h2><i class="fas fa-user-plus"></i> Patient Registration</h2>
+        <p>Please fill in all required fields to register a new patient</p>
+    </div>
+
+    <div class="form-container">
+        <form th:action="@{/register}" method="post" id="patientForm">
+            <!-- Personal Information Section -->
+            <div class="form-section">
+                <div class="section-title">
+                    <i class="fas fa-user"></i>
+                    <span>Personal Information</span>
+                </div>
+                <span th:text="'Welcome, ' + ${labid}"></span>
+                <div class="grid">
+                    <div class="form-group">
+                        <label for="title" class="required">Title</label>
+                        <select id="title" name="title" class="form-control" required>
+                            <option value="">Select Title</option>
+                            <option value="Mr">Mr</option>
+                            <option value="Mrs">Mrs</option>
+                            <option value="Miss">Miss</option>
+                            <option value="Dr">Dr</option>
+                            <option value="Prof">Prof</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fullName" class="required">Full Name</label>
+                        <input type="text" id="fullName" name="fullName" class="form-control" placeholder="Enter full name" required>
+                    </div>
+                    <input type="hidden" name="labId" th:value="${labid}" />
+                    <div class="form-group">
+                        <label class="required">Gender</label>
+                        <div class="toggle-group">
+                            <button type="button" class="toggle-btn active" data-value="Male">Male</button>
+                            <button type="button" class="toggle-btn" data-value="Female">Female</button>
+                            <button type="button" class="toggle-btn" data-value="Others">Others</button>
+                        </div>
+                        <input type="hidden" id="gender" name="gender" value="Male" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="dob">Date of Birth</label>
+                        <input type="date" id="dob" name="dob" class="form-control">
+                        <div class="info-text">Leave empty if entering age manually</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Contact Information Section -->
+            <div class="form-section">
+                <div class="section-title">
+                    <i class="fas fa-phone-alt"></i>
+                    <span>Contact Information</span>
+                </div>
+                
+                <div class="grid">
+                    <div class="form-group">
+                        <label for="mobile" class="required">Mobile Number</label>
+                        <div class="phone-group">
+                            <div class="country-code">
+                                <select id="mobileCode" name="mobileCode" class="form-control">
+                                    <option value="+91">+91 (IND)</option>
+                                    <option value="+1">+1 (USA)</option>
+                                    <option value="+44">+44 (UK)</option>
+                                </select>
+                            </div>
+                            <div class="phone-number">
+                                <input type="tel" id="mobile" name="mobile" class="form-control" placeholder="Mobile number" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="altMobile">Alternate Mobile Number</label>
+                        <div class="phone-group">
+                            <div class="country-code">
+                                <select id="altMobileCode" name="altMobileCode" class="form-control">
+                                    <option value="+91">+91 (IND)</option>
+                                    <option value="+1">+1 (USA)</option>
+                                    <option value="+44">+44 (UK)</option>
+                                </select>
+                            </div>
+                            <div class="phone-number">
+                                <input type="tel" id="altMobile" name="altMobile" class="form-control" placeholder="Alternate mobile">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email ID</label>
+                        <input type="email" id="email" name="email" class="form-control" placeholder="patient@example.com">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Age & Relation Section -->
+            <div class="form-section">
+                <div class="section-title">
+                    <i class="fas fa-birthday-cake"></i>
+                    <span>Age & Relationship</span>
+                </div>
+                
+                <div class="age-relation-container">
+                    <div class="age-section">
+                        <label for="age" class="required">Age</label>
+                        <div class="age-input-group">
+                            <div class="age-input-wrapper">
+                                <input type="number" id="age" name="age" class="form-control" placeholder="Enter age" min="0" max="150">
+                            </div>
+                            <div class="age-unit-toggle">
+                                <button type="button" class="age-unit-btn active" data-unit="years">Y</button>
+                                <button type="button" class="age-unit-btn" data-unit="months">M</button>
+                                <button type="button" class="age-unit-btn" data-unit="days">D</button>
+                            </div>
+                        </div>
+                        <input type="hidden" id="ageUnit" name="ageUnit" value="years">
+                    </div>
+                    
+                    <div class="relation-section">
+                        <label for="relation">Relationship</label>
+                        <select id="relation" name="relation" class="form-control">
+                            <option value="SELF">SELF</option>
+                            <option value="SPOUSE">SPOUSE</option>
+                            <option value="CHILD">CHILD</option>
+                            <option value="PARENT">PARENT</option>
+                            <option value="OTHER">OTHER</option>
+                        </select>
+                    </div>
+                    
+                    <button type="button" class="add-patient-btn" title="Add another patient">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Referral Information Section -->
+            <div class="form-section">
+                <div class="section-title">
+                    <i class="fas fa-hospital-user"></i>
+                    <span>Referral Information</span>
+                </div>
+                
+                <div class="grid">
+                    <div class="form-group">
+                        <label for="outsideLab">Outside Lab</label>
+                        <input type="text" id="outsideLab" name="outsideLab" class="form-control" placeholder="Outside lab name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="referralLab">Referral Lab</label>
+                        <select id="referralLab" name="referralLab" class="form-control">
+                            <option value="">Select Referral Lab</option>
+                            <option value="lab1">City Diagnostics Lab</option>
+                            <option value="lab2">Health First Lab</option>
+                            <option value="lab3">Precision Path Labs</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="referralHospital">Referral Hospital</label>
+                        <select id="referralHospital" name="referralHospital" class="form-control">
+                            <option value="">Select Referral Hospital</option>
+                            <option value="hosp1">City General Hospital</option>
+                            <option value="hosp2">Medicare Speciality</option>
+                            <option value="hosp3">Unity Health Center</option>
+                        </select>
+                    </div>
+                    
+                    <button type="button" class="add-patient-btn" title="Add referral">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Physical Details Section -->
+            <div class="form-section">
+                <div class="section-title">
+                    <i class="fas fa-weight"></i>
+                    <span>Physical Details</span>
+                </div>
+                
+                <div class="grid">
+                    <div class="form-group">
+                        <label for="height">Height (cm)</label>
+                        <input type="number" id="height" name="height" class="form-control" placeholder="Height in cm" min="50" max="250">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="weight">Weight (kg)</label>
+                        <input type="number" id="weight" name="weight" class="form-control" placeholder="Weight in kg" min="2" max="300">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input type="text" id="city" name="city" class="form-control" placeholder="City">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="area">Area/Locality</label>
+                        <input type="text" id="area" name="area" class="form-control" placeholder="Area/Locality">
+                    </div>
+                </div>
+            </div>
+            <!-- Address & Insurance Section -->
+            <div class="form-section">
+                <div class="section-title">
+                    <i class="fas fa-home"></i>
+                    <span>Address & Insurance</span>
+                </div>
+                
+                <div class="grid">
+                    <div class="form-group">
+                        <label for="pincode">Pincode</label>
+                        <input type="text" id="pincode" name="pincode" class="form-control" placeholder="Pincode">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="insuranceNo">Insurance Number</label>
+                        <input type="text" id="insuranceNo" name="insuranceNo" class="form-control" placeholder="Insurance policy number">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="insuranceCompany">Insurance Company</label>
+                        <input type="text" id="insuranceCompany" name="insuranceCompany" class="form-control" placeholder="Insurance company name">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button type="reset" class="btn btn-secondary">
+                    <i class="fas fa-redo"></i> Clear Form
+                </button>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-user-plus"></i> Register Patient
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Gender toggle functionality
+    document.querySelectorAll('.toggle-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            // Remove active class from all buttons in this toggle group
+            this.parentElement.querySelectorAll('.toggle-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to clicked button
+            this.classList.add('active');
+            
+            // Update the hidden input value
+            const genderInput = document.getElementById('gender');
+            genderInput.value = this.getAttribute('data-value');
+        });
+    });
+    
+    // Age unit toggle functionality
+    document.querySelectorAll('.age-unit-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            // Remove active class from all buttons in this toggle group
+            this.parentElement.querySelectorAll('.age-unit-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to clicked button
+            this.classList.add('active');
+            
+            // Update the hidden input value
+            const ageUnitInput = document.getElementById('ageUnit');
+            ageUnitInput.value = this.getAttribute('data-unit');
+        });
+    });
+    
+    // Form validation
+    document.getElementById('patientForm').addEventListener('submit', function(e) {
+        let isValid = true;
+        
+        // Check required fields
+        const requiredFields = document.querySelectorAll('[required]');
+        requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+                isValid = false;
+                field.style.borderColor = 'var(--danger)';
+                
+                // Create or show validation message
+                let message = field.nextElementSibling;
+                if (!message || !message.classList.contains('validation-message')) {
+                    message = document.createElement('div');
+                    message.className = 'validation-message';
+                    message.textContent = 'This field is required';
+                    field.parentNode.appendChild(message);
+                }
+                message.style.display = 'block';
+            } else {
+                field.style.borderColor = 'var(--border)';
+                
+                // Hide validation message if exists
+                const message = field.nextElementSibling;
+                if (message && message.classList.contains('validation-message')) {
+                    message.style.display = 'none';
+                }
+            }
+        });
+        
+        // Validate age if date of birth is not provided
+        const dob = document.getElementById('dob').value;
+        const age = document.getElementById('age').value;
+        
+        if (!dob && !age) {
+            isValid = false;
+            const ageInput = document.getElementById('age');
+            ageInput.style.borderColor = 'var(--danger)';
+            
+            let message = ageInput.nextElementSibling;
+            if (!message || !message.classList.contains('validation-message')) {
+                message = document.createElement('div');
+                message.className = 'validation-message';
+                message.textContent = 'Please enter age or date of birth';
+                ageInput.parentNode.appendChild(message);
+            }
+            message.style.display = 'block';
+        }
+        
+        if (!isValid) {
+            e.preventDefault();
+            alert('Please fill in all required fields marked with *');
+        }
+    });
+    
+    // Clear form validation styles on reset
+    document.querySelector('.btn-secondary').addEventListener('click', function() {
+        document.querySelectorAll('.form-control').forEach(field => {
+            field.style.borderColor = 'var(--border)';
+        });
+        
+        document.querySelectorAll('.validation-message').forEach(msg => {
+            msg.style.display = 'none';
+        });
+    });
+    
+    // Auto-calculate age from date of birth
+    document.getElementById('dob').addEventListener('change', function() {
+        const dob = new Date(this.value);
+        if (!isNaN(dob.getTime())) {
+            const today = new Date();
+            let age = today.getFullYear() - dob.getFullYear();
+            const monthDiff = today.getMonth() - dob.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+                age--;
+            }
+            
+            if (age >= 0) {
+                document.getElementById('age').value = age;
+                // Set age unit to years
+                document.querySelectorAll('.age-unit-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.getAttribute('data-unit') === 'years') {
+                        btn.classList.add('active');
+                    }
+                });
+                document.getElementById('ageUnit').value = 'years';
+            }
+        }
+    });
+    
+    // Add button functionality
+    document.querySelectorAll('.add-patient-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            if (this.closest('.age-relation-container')) {
+                alert('Add another patient functionality would be implemented here.');
+            } else if (this.closest('.form-section')) {
+                alert('Add referral functionality would be implemented here.');
+            }
+        });
+    });
+    
+    // Validate mobile number format
+    document.getElementById('mobile').addEventListener('blur', function() {
+        const mobilePattern = /^[0-9]{10}$/;
+        if (this.value && !mobilePattern.test(this.value)) {
+            this.style.borderColor = 'var(--danger)';
+            alert('Mobile number must be 10 digits');
+        }
+    });
+    
+    // Validate alternate mobile number format
+    document.getElementById('altMobile').addEventListener('blur', function() {
+        const mobilePattern = /^$|^[0-9]{10}$/;
+        if (this.value && !mobilePattern.test(this.value)) {
+            this.style.borderColor = 'var(--danger)';
+            alert('Alternate mobile number must be 10 digits');
+        }
+    });
+</script>
+
+</body>
+</html>
