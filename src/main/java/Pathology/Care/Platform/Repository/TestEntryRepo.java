@@ -25,4 +25,44 @@ public interface TestEntryRepo extends JpaRepository<TestEntry, Long>
     """, nativeQuery = true)
 List<TestEntry> findLatestDistinctPatientsByLabId(@Param("labId") Long labId);
 
+/* @Query(value = """
+    SELECT t.*
+    FROM test_entries t
+    JOIN patients p ON t.patient_id = p.id
+    WHERE p.email = :email
+      AND t.id IN (
+          SELECT MAX(t2.id)
+          FROM test_entries t2
+          JOIN patients p2 ON t2.patient_id = p2.id
+          WHERE p2.email = :email
+          GROUP BY t2.patient_id
+      )
+    ORDER BY t.id DESC
+    """, nativeQuery = true)
+List<TestEntry> findLatestByPatientEmailGroupedByPatient(
+        @Param("email") String email); */
+
+List<TestEntry> findTopByPatientEmailOrderByIdDesc(String patientEmail);
+
+
+@Query(value = """
+    SELECT t.*
+    FROM test_entries t
+    JOIN patients p ON t.patient_id = p.id
+    WHERE p.email = :email
+      AND t.id IN (
+          SELECT MAX(t2.id)
+          FROM test_entries t2
+          JOIN patients p2 ON t2.patient_id = p2.id
+          WHERE p2.email = :email
+          GROUP BY t2.patient_id
+      )
+    ORDER BY t.id DESC
+    """, nativeQuery = true)
+List<TestEntry> findLatestByPatientEmailGroupedByPatient(
+        @Param("email") String email);
+
+
+
+ 
 }

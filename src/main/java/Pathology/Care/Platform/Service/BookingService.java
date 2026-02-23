@@ -29,4 +29,14 @@ public class BookingService {
         // TODO Auto-generated method stub
         return bookingRepo.findById(id).orElse(null);   
     }
+    
+    public BookingInfo getLastBookingByEmail(String email) {
+
+        return bookingRepo
+                .findTopByPatientEmailOrderByIdDesc(email);
+    }
+    public List<BookingInfo> getAllBooking(String email)
+    {
+              return bookingRepo.findBypatientEmail(email);
+    }
 }

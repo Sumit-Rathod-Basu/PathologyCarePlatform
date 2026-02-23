@@ -85,7 +85,7 @@ public String labDashboard(HttpSession session, Model model) {
 
     return "Labs-Bokking";
 }
-@GetMapping("/booking/view/{id}")
+    @GetMapping("/booking/view/{id}")
     public String viewBookingDetails(@PathVariable Long id, Model model) {
 
         BookingInfo booking = bookingService.getBookingById(id);
@@ -97,6 +97,23 @@ public String labDashboard(HttpSession session, Model model) {
 
         model.addAttribute("booking", booking);
         return "booking-details";   // HTML page name
+    }
+    
+    @GetMapping("/last-booking")
+    public String getLastBooking(HttpSession session, Model model) {
+
+        Patient patient = (Patient) session.getAttribute("loggedInPatient");
+
+        if (patient == null) {
+            return "redirect:/login";
+        }
+
+        List<BookingInfo> booking = bookingService
+                . getAllBooking(patient.getEmail());
+   System.out.println("Your Mail is:"+patient.getEmail());
+        model.addAttribute("booking", booking);
+
+        return "dummy";
     }
 
 }

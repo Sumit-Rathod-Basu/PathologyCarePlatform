@@ -1,10 +1,9 @@
 package Pathology.Care.Platform.Service;
-import Pathology.Care.Platform.Model.LabPatient;
+
 import Pathology.Care.Platform.Model.Patient;
 
 import Pathology.Care.Platform.Repository.patientrepo;
 
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

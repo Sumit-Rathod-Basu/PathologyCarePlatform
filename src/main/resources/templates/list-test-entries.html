@@ -153,7 +153,7 @@
                 <tr th:each="entry : ${testEntries}">
                     <td th:text="${entry.id}"></td>
                     <td th:text="${entry.patientName}"></td>
-                    <td th:text="${entry.patientMobile}"></td>
+                    <td th:text="${entry.patientMobile}"></td> 
                     <td th:text="${entry.patientEmail}"></td>
                     <td>
                         <a th:href="@{'/api/test/view/' + ${entry.id}}" class="btn btn-sm btn-primary me-1"><i class="bi bi-eye-fill"></i></a>

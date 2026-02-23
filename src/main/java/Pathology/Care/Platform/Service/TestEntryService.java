@@ -24,11 +24,21 @@ public class TestEntryService {
     // Save multiple test entries
     public List<TestEntry> saveAllTests(List<TestEntry> testEntries) {
         return repo.saveAll(testEntries);
-    }
+    } 
+
+
 
     // Get all test entries
     public List<TestEntry> getAllTestsByLabID(Long id) {
       return repo.findLatestDistinctPatientsByLabId(id);
+    }
+
+    public List<TestEntry> getAllTestsByEmail(String email) {
+         return repo.findTopByPatientEmailOrderByIdDesc(email);
+    }
+
+    public List<TestEntry> getAllTestsByEmail1(String email) {
+    return repo.findTopByPatientEmailOrderByIdDesc(email);
     }
 
     // Get single test entry

@@ -605,6 +605,68 @@
                 order: 1;
             }
         }
+        .booking-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    margin-top: 15px;
+}
+
+.booking-table th,
+.booking-table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+.booking-table th {
+    background-color: #2c3e50;
+    color: white;
+}
+
+.booking-table tr:hover {
+    background-color: #f2f2f2;
+}
+
+.btn-track {
+    padding: 6px 12px;
+    background-color: #3498db;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.btn-track:hover {
+    background-color: #2980b9;
+}
+.report-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.report-table th {
+    background-color: #2c7be5;
+    color: white;
+    padding: 12px;
+    text-align: left;
+}
+
+.report-table td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.report-table tr:hover {
+    background-color: #f9f9f9;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
     </style>
 </head>
 <body>
@@ -640,8 +702,8 @@
 
                 <li><a href="/patients/patient/tests" class="menu-item"><i class="fas fa-flask menu-icon"></i> <span class="menu-text">Book Tests</span></a></li>
                 <li><a href="/patients/Regesterd/Labs" class="menu-item"><i class="fas fa-hospital menu-icon"></i> <span class="menu-text">Registered Labs</span></a></li>
-                <li><a href="#" class="menu-item"><i class="fas fa-calendar-check menu-icon"></i> <span class="menu-text">My Bookings</span></a></li>
-                <li><a href="#" class="menu-item"><i class="fas fa-file-medical menu-icon"></i> <span class="menu-text">Reports</span></a></li>
+                <li><a href="/last-booking" class="menu-item"><i class="fas fa-calendar-check menu-icon"></i> <span class="menu-text">My Bookings</span></a></li>
+                <li><a href="/patients/GetReport" class="menu-item"><i class="fas fa-file-medical menu-icon"></i> <span class="menu-text">Reports</span></a></li>
                 <li><a href="#" class="menu-item"><i class="fas fa-headset menu-icon"></i> <span class="menu-text">Support</span></a></li>
             </ul>
         </nav>
@@ -706,47 +768,101 @@
 
             <!-- All Tests Section -->
             <!-- Registered Labs Section -->
-            <section class="section">
-                <div class="section-header">
-                    <h2 class="section-title">Registered Labs</h2>
-                </div>
-                <div class="grid">
-                    <div class="lab-card" th:each="lab : ${labs}">
-                        <h3 class="lab-name" th:text="${lab.name}">Metro Diagnostic Center</h3>
-                        <div class="lab-distance" th:text="${lab.distance} + ' km away'">2.5 km away</div>
-                        <div class="lab-rating">
-                            <div class="stars">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star-half-alt"></i>
-                            </div>
-                            <span th:text="${lab.rating}">4.5</span>
-                        </div>
-                        <p class="lab-tests" th:text="${lab.tests}">Blood Tests, Sugar Tests, CBC, Hormone Tests</p>
-                        <button class="btn btn-primary btn-small">Choose Lab</button>
-                    </div>
-                </div>
-            </section>
+           <!-- Last Booking Section -->
+<section class="section">
+    <div class="section-header">
+        <h2 class="section-title">Your Last Booking</h2>
+    </div>
 
+    <div th:if="${lastBooking != null}">
+        <table class="booking-table">
+            <thead>
+                <tr>
+                    <th>Lab Name</th>
+                    <th>Test Name</th>
+                    <th>Price (₹)</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Track</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td th:text="${lastBooking.labName}"></td>
+                    <td th:text="${lastBooking.testName}"></td>
+                    <td th:text="${lastBooking.price}"></td>
+                    <td th:text="${lastBooking.bookingDate}"></td>
+
+                    <!-- Status with dynamic color -->
+                    <td>
+                        <span th:text="${lastBooking.status}"
+                              th:style="'color:' + 
+                              (${lastBooking.status} == 'PENDING' ? 'orange' : 
+                              (${lastBooking.status} == 'CONFIRMED' ? 'blue' : 'green')) 
+                              + '; font-weight:bold;'">
+                        </span>
+                    </td>
+
+                    <!-- Track Button -->
+                    <td>
+                        <a th:href="@{/track-report/{id}(id=${lastBooking.id})}"
+                           class="btn-track">
+                            Track
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:if="${lastBooking == null}">
+        <p style="color:red;">No Booking Found</p>
+    </div>
+</section>
             <!-- Reports Section -->
-            <section class="section">
-                <div class="section-header">
-                    <h2 class="section-title">My Reports</h2>
-                </div>
-                <div class="grid">
-                    <div class="report-card" th:each="report : ${reports}">
-                        <h3 class="report-name" th:text="${report.testName}">Complete Blood Count (CBC)</h3>
-                        <div class="report-date" th:text="${report.date}">October 15, 2023</div>
-                        <div class="report-status status-completed" th:text="${report.status}">Completed</div>
-                        <div class="action-buttons">
-                            <button class="btn btn-outline btn-small">View Report</button>
-                            <button class="btn btn-primary btn-small">Download PDF</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
+<!-- My Reports Section -->
+<section class="section">
+    <div class="section-header">
+        <h2 class="section-title">My Reports</h2>
+    </div>
+
+    <div class="table-responsive">
+        <table class="report-table">
+            <thead>
+                <tr>
+                    <th>Patient Name</th>
+                    <th>Email</th>
+                    <th>Mobile</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr th:each="report : ${reports}">
+                    <td th:text="${report.patientName}">John Doe</td>
+                    <td th:text="${report.patientEmail}">john@gmail.com</td>
+                    <td th:text="${report.patientMobile}">9876543210</td>
+
+                    <td>
+                        <a th:href="@{'/bill/invoice/' + ${report.patientId}}" 
+                           class="btn btn-outline btn-small">
+                            View
+                        </a>
+
+                        <a th:href="@{'/invoice/' + ${report.id}}" 
+                           class="btn btn-primary btn-small">
+                            Download
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:if="${#lists.isEmpty(reports)}">
+        <p style="color:red;">No Reports Available</p>
+    </div>
+</section>
         </main>
     </div>
 

@@ -13,6 +13,9 @@ import org.springframework.ui.Model;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+
+
 
 @Controller 
 @RequestMapping("/api/test")
@@ -46,17 +49,13 @@ public class TestEntryController {
 @GetMapping("/all")
 public String listAllTests(Model model,HttpSession session) {
       
-   
-   
    // Long id =model.getAttribute("labId")!=null ? (Long) model.getAttribute("labId") : 1L;
    Long id = (Long) session.getAttribute("labId");
     List<TestEntry> testEntries = service.getAllTestsByLabID(id);
     model.addAttribute("testEntries", testEntries);
-    
-
     return "list-test-entries"; // Thymeleaf file
 }
-    // Get test entry by ID
+    // Get test entry by ID 
     @GetMapping("/{id}")
     public TestEntry getTest(@PathVariable Long id) {
         return service.getTest(id);

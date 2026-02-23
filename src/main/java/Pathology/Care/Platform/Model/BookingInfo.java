@@ -23,7 +23,6 @@ public class BookingInfo {
     private String testName;
     private Long labId;
     private String labName;
-
     private String bookingDate;   // YYYY-MM-DD
     private String status = "PENDING";  // PENDING / CONFIRMED / COMPLETED
 }

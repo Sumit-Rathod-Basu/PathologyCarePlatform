@@ -9,6 +9,6 @@ import Pathology.Care.Platform.Model.Patient;
 public interface patientrepo  extends JpaRepository<Patient, Long>
 {
 
-Patient findByEmail(String email);
+  Patient findByEmail(String email);
          
 }

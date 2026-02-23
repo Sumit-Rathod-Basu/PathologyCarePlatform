@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Last Booking</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+        }
+        .container {
+            width: 80%;
+            margin: 40px auto;
+        }
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .no-data {
+            text-align: center;
+            color: red;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h2>Your Last Booking Details</h2>
+
+    <div th:if="${booking != null and !booking.isEmpty()}">
+    <table>
+        <thead>
+            <tr>
+                <th>Patient ID</th>
+                <th>Patient Name</th>
+                <th>Email</th>
+                <th>Test Name</th>
+                <th>Lab Name</th>
+                <th>Price</th>
+                <th>Booking Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="b : ${booking}">
+                <td th:text="${b.patientId}"></td>
+                <td th:text="${b.patientName}"></td>
+                <td th:text="${b.patientEmail}"></td>
+                <td th:text="${b.testName}"></td>
+                <td th:text="${b.labName}"></td>
+                <td th:text="${b.price}"></td>
+                <td th:text="${b.bookingDate}"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="no-data" th:if="${booking == null or booking.isEmpty()}">
+    No Booking Found!
+</div>
+
+    <div class="no-data" th:if="${booking == null}">
+        No Booking Found!
+    </div>
+
+</div>
+
+</body>
+</html>

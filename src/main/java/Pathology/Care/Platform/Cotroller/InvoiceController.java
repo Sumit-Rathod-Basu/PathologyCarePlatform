@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @Controller
 @RequestMapping("/invoice")
@@ -89,4 +92,5 @@ for (ResultSummary summary : summaries) {
 
         return "invoiceprint";
     }
+    
 }
