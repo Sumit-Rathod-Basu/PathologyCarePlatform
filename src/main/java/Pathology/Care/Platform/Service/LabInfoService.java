@@ -30,4 +30,14 @@ public class LabInfoService {
         return repo.findAll();
     }
 
+    public void deleteLab(Long id) {
+        // TODO Auto-generated method stub
+          repo.deleteById(id);
+    }
+
+    public LabInfo saveLab(LabInfo lab) {
+        // TODO Auto-generated method stub
+        return repo.save(lab);
+    }
+
 }

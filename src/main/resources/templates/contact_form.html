@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Contact — PathoCare Team</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+<style>
+
+/* ── TOKENS ── */
+:root {
+  --bg:        #0d0d0d;
+  --surface:   #131313;
+  --surface2:  #1a1a1a;
+  --border:    rgba(255,255,255,0.08);
+  --border-hi: rgba(255,255,255,0.18);
+  --text:      #f0f0f0;
+  --text2:     #999;
+  --muted:     #555;
+  --accent:    #19c37d;
+  --accent-d:  rgba(25,195,125,0.13);
+  --accent-g:  rgba(25,195,125,0.28);
+  --error:     #f87171;
+  --error-d:   rgba(248,113,113,0.12);
+  --warn:      #fb923c;
+  --input-bg:  #1c1c1c;
+}
+:root.light {
+  --bg:        #f0f2f5;
+  --surface:   #ffffff;
+  --surface2:  #f7f8fa;
+  --border:    rgba(0,0,0,0.09);
+  --border-hi: rgba(0,0,0,0.22);
+  --text:      #111111;
+  --text2:     #666;
+  --muted:     #aaa;
+  --accent:    #0ea373;
+  --accent-d:  rgba(14,163,115,0.10);
+  --accent-g:  rgba(14,163,115,0.22);
+  --error:     #dc2626;
+  --error-d:   rgba(220,38,38,0.08);
+  --warn:      #ea580c;
+  --input-bg:  #f7f8fa;
+}
+
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Sora', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px 40px;
+  transition: background .35s, color .35s;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Background grid pattern */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(25,195,125,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(25,195,125,0.025) 1px, transparent 1px);
+  background-size: 36px 36px;
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity .35s;
+}
+:root.light body::before { opacity: .5; }
+
+/* Ambient glow */
+body::after {
+  content: '';
+  position: fixed;
+  top: -150px; left: 50%;
+  transform: translateX(-50%);
+  width: 700px; height: 500px;
+  background: radial-gradient(ellipse, var(--accent-d) 0%, transparent 68%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── THEME TOGGLE ── */
+.theme-toggle {
+  position: fixed;
+  top: 18px; right: 18px;
+  z-index: 100;
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: var(--text2);
+  font-size: 16px;
+  transition: background .2s, border-color .2s, color .2s, transform .15s;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+}
+.theme-toggle:hover { background: var(--surface2); color: var(--text); transform: scale(1.07); }
+
+/* ── WRAPPER ── */
+.wrapper {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 520px;
+  animation: slideUp .55s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes slideUp { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:none} }
+
+/* ── HEADER BADGE ── */
+.brand-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+  justify-content: center;
+}
+.brand-mark {
+  width: 38px; height: 38px;
+  background: var(--accent);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  box-shadow: 0 0 18px var(--accent-g);
+}
+.brand-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -.4px;
+}
+.brand-name span { color: var(--accent); }
+
+/* ── CARD ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 36px 36px 32px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.04);
+  transition: background .35s, border-color .35s, box-shadow .35s;
+}
+:root.light .card { box-shadow: 0 12px 48px rgba(0,0,0,0.10); }
+
+/* ── CARD HEADER ── */
+.card-header { margin-bottom: 28px; }
+
+.card-header h1 {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -.5px;
+  margin-bottom: 6px;
+  transition: color .35s;
+}
+
+.card-header p {
+  font-size: 13.5px;
+  color: var(--text2);
+  line-height: 1.6;
+}
+
+/* ── ALERT BANNERS ── */
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 13px 16px;
+  border-radius: 11px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  margin-bottom: 22px;
+  animation: alertIn .4s ease both;
+  border: 1px solid;
+}
+@keyframes alertIn { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:none} }
+
+.alert.success {
+  background: var(--accent-d);
+  border-color: rgba(25,195,125,.25);
+  color: var(--accent);
+}
+:root.light .alert.success { color: #0a7a56; }
+
+.alert.error {
+  background: var(--error-d);
+  border-color: rgba(248,113,113,.22);
+  color: var(--error);
+}
+
+.alert-icon { font-size: 17px; margin-top: 1px; flex-shrink: 0; }
+.alert-text strong { display: block; font-weight: 600; margin-bottom: 2px; }
+
+/* ── FORM ── */
+form { display: flex; flex-direction: column; gap: 16px; }
+
+/* field group */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  color: var(--text2);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color .35s;
+}
+.field label i { font-size: 11px; opacity: .7; }
+
+/* input + textarea */
+.field input,
+.field textarea,
+.field select {
+  width: 100%;
+  padding: 12px 15px;
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-family: 'Sora', sans-serif;
+  font-size: 14px;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s, background .35s, color .35s;
+  resize: none;
+}
+.field input::placeholder,
+.field textarea::placeholder { color: var(--muted); }
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-d);
+  background: var(--surface2);
+}
+
+.field input.err,
+.field textarea.err { border-color: var(--error); box-shadow: 0 0 0 3px var(--error-d); }
+
+/* inline field error */
+.field-err {
+  font-size: 11.5px;
+  color: var(--error);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity .2s, transform .2s;
+  pointer-events: none;
+}
+.field-err.show { opacity: 1; transform: none; }
+
+/* row (2-col) */
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+/* char counter */
+.field-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.char-count {
+  font-size: 11px;
+  color: var(--muted);
+  transition: color .2s;
+}
+.char-count.warn { color: var(--warn); }
+.char-count.over { color: var(--error); font-weight: 600; }
+
+/* subject chips */
+.subject-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.chip {
+  padding: 6px 13px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: transparent;
+  font-size: 12px;
+  color: var(--text2);
+  cursor: pointer;
+  font-family: 'Sora', sans-serif;
+  transition: all .18s;
+}
+.chip:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-d); }
+.chip.selected { border-color: var(--accent); color: var(--accent); background: var(--accent-d); font-weight: 600; }
+
+/* hidden subject input */
+#subjectInput { display: none; }
+
+/* priority row */
+.priority-row {
+  display: flex;
+  gap: 8px;
+}
+.priority-btn {
+  flex: 1;
+  padding: 9px 8px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  background: transparent;
+  font-size: 12px;
+  color: var(--text2);
+  cursor: pointer;
+  font-family: 'Sora', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  transition: all .18s;
+}
+.priority-btn:hover { border-color: var(--border-hi); color: var(--text); }
+.priority-btn.sel-low    { border-color: var(--accent); color: var(--accent); background: var(--accent-d); }
+.priority-btn.sel-medium { border-color: #fb923c; color: #fb923c; background: rgba(251,146,60,.1); }
+.priority-btn.sel-high   { border-color: var(--error); color: var(--error); background: var(--error-d); }
+
+/* ── SUBMIT BTN ── */
+.submit-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--accent);
+  border: none;
+  border-radius: 11px;
+  color: #fff;
+  font-size: 14.5px;
+  font-weight: 600;
+  font-family: 'Sora', sans-serif;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  transition: background .18s, transform .1s, box-shadow .18s;
+  box-shadow: 0 4px 20px var(--accent-g);
+  margin-top: 4px;
+}
+.submit-btn:hover { background: #14a86a; transform: translateY(-2px); box-shadow: 0 8px 28px var(--accent-g); }
+.submit-btn:active { transform: translateY(0); }
+.submit-btn.loading { opacity: .75; pointer-events: none; }
+.submit-btn.loading i { animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── DIVIDER ── */
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 4px 0;
+}
+
+/* ── CONTACT INFO ROW ── */
+.contact-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 0;
+}
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  transition: background .35s, border-color .35s;
+}
+.info-icon {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: var(--accent-d);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--accent);
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.info-text p { font-size: 10px; color: var(--muted); letter-spacing: .4px; text-transform: uppercase; font-weight: 600; }
+.info-text span { font-size: 12.5px; color: var(--text); font-weight: 500; }
+
+/* ── FOOTER NOTE ── */
+.footer-note {
+  text-align: center;
+  font-size: 11.5px;
+  color: var(--muted);
+  margin-top: 20px;
+}
+.footer-note a { color: var(--accent); text-decoration: none; }
+
+/* ── PROGRESS BAR ── */
+.progress-bar {
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  width: 0%;
+  transition: width .3s ease;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 480px) {
+  .card { padding: 24px 18px 22px; }
+  .row { grid-template-columns: 1fr; }
+  .contact-info { grid-template-columns: 1fr; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- Theme Toggle -->
+<button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle light/dark">
+  <i class="fas fa-moon" id="themeIcon"></i>
+</button>
+
+<div class="wrapper">
+
+  <!-- Brand -->
+  <div class="brand-row">
+    <div class="brand-mark">🔬</div>
+    <span class="brand-name">Patho<span>Care</span></span>
+  </div>
+
+  <!-- Card -->
+  <div class="card">
+
+    <!-- Header -->
+    <div class="card-header">
+      <h1>Contact Our Team</h1>
+      <p>Reach out for lab result queries, appointment support, or clinical guidance. We typically respond within 24 hours.</p>
+    </div>
+
+    <!-- Form progress bar -->
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+    <!-- ── SUCCESS / ERROR ALERTS (Thymeleaf + JS) ── -->
+    <div class="alert success" th:if="${success}" id="successAlert">
+      <span class="alert-icon"><i class="fas fa-circle-check"></i></span>
+      <div class="alert-text">
+        <strong>Message sent!</strong>
+        <span th:text="${success}">Your message has been received. Our team will get back to you soon.</span>
+      </div>
+    </div>
+
+    <div class="alert error" th:if="${error}" id="errorAlert">
+      <span class="alert-icon"><i class="fas fa-circle-exclamation"></i></span>
+      <div class="alert-text">
+        <strong>Something went wrong</strong>
+        <span th:text="${error}">Please try again or contact us directly.</span>
+      </div>
+    </div>
+
+    <!-- ── FORM ── -->
+    <form th:action="@{/contact/submit}" th:object="${contactDTO}" method="post" id="contactForm" novalidate>
+
+      <!-- Name + Email row -->
+      <div class="row">
+        <div class="field">
+          <label><i class="fas fa-user"></i> Full Name</label>
+          <input
+            type="text"
+            th:field="*{name}"
+            id="nameInput"
+            placeholder="Dr. Jane Smith"
+            autocomplete="name"
+          />
+          <div class="field-err" id="nameErr"><i class="fas fa-triangle-exclamation"></i> Name is required</div>
+        </div>
+        <div class="field">
+          <label><i class="fas fa-envelope"></i> Email</label>
+          <input
+            type="email"
+            th:field="*{email}"
+            id="emailInput"
+            placeholder="you@hospital.com"
+            autocomplete="email"
+          />
+          <div class="field-err" id="emailErr"><i class="fas fa-triangle-exclamation"></i> Valid email required</div>
+        </div>
+      </div>
+
+      <!-- Phone (optional) -->
+      <div class="field">
+        <label><i class="fas fa-phone"></i> Phone <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">&nbsp;(optional)</span></label>
+        <input
+          type="tel"
+          id="phoneInput"
+          name="phone"
+          placeholder="+91 98765 43210"
+          autocomplete="tel"
+        />
+      </div>
+
+<!--     
+      <div class="field">
+        <label><i class="fas fa-tag"></i> Subject</label>
+        <div class="subject-chips" id="chips">
+          <button type="button" class="chip" onclick="selectChip(this, 'Lab Result Query')">🧪 Lab Results</button>
+          <button type="button" class="chip" onclick="selectChip(this, 'Appointment Support')">📅 Appointment</button>
+          <button type="button" class="chip" onclick="selectChip(this, 'Billing Inquiry')">💳 Billing</button>
+          <button type="button" class="chip" onclick="selectChip(this, 'Clinical Guidance')">🩺 Clinical Guidance</button>
+          <button type="button" class="chip" onclick="selectChip(this, 'Technical Issue')">⚙️ Technical</button>
+          <button type="button" class="chip" onclick="selectChip(this, 'Other')">💬 Other</button>
+        </div>
+        <input type="hidden" id="subjectInput" name="subject" value=""/>
+        <div class="field-err" id="subjectErr"><i class="fas fa-triangle-exclamation"></i> Please select a subject</div>
+      </div>
+ -->
+      <!-- Priority -->
+<!--       <div class="field">
+        <label><i class="fas fa-flag"></i> Priority</label>
+        <div class="priority-row" id="priorityRow">
+          <button type="button" class="priority-btn" onclick="setPriority('low', this)">
+            <i class="fas fa-circle-check" style="color:var(--accent)"></i> Low
+          </button>
+          <button type="button" class="priority-btn" onclick="setPriority('medium', this)">
+            <i class="fas fa-circle-half-stroke" style="color:#fb923c"></i> Medium
+          </button>
+          <button type="button" class="priority-btn" onclick="setPriority('high', this)">
+            <i class="fas fa-circle-exclamation" style="color:var(--error)"></i> Urgent
+          </button>
+        </div>
+        <input type="hidden" id="priorityInput" name="priority" value="low"/>
+      </div>
+ -->
+      <!-- Message -->
+      <div class="field">
+        <label><i class="fas fa-comment-medical"></i> Message</label>
+        <textarea
+          th:field="*{message}"
+          id="msgInput"
+          placeholder="Describe your query in detail — lab test name, result values, symptoms, or any specific concerns…"
+          rows="5"
+          maxlength="1000"
+          oninput="countChars(this)"
+        ></textarea>
+        <div class="field-footer">
+          <div class="field-err" id="msgErr" style="margin-top:0"><i class="fas fa-triangle-exclamation"></i> Message is required</div>
+          <div class="char-count" id="charCount">0 / 1000</div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Submit -->
+      <button type="submit" class="submit-btn" id="submitBtn">
+        <i class="fas fa-paper-plane"></i> Send Message
+      </button>
+
+    </form>
+
+    <!-- Contact info -->
+    <div class="contact-info" style="margin-top:22px;">
+      <div class="info-item">
+        <div class="info-icon"><i class="fas fa-clock"></i></div>
+        <div class="info-text">
+          <p>Response Time</p>
+          <span>Within 24 hours</span>
+        </div>
+      </div>
+     
+
+  </div><!-- /card -->
+
+  <div class="footer-note">
+    Protected by end-to-end encryption &nbsp;·&nbsp;
+    <a href="#">Privacy Policy</a> &nbsp;·&nbsp;
+    <a href="#">Terms</a>
+  </div>
+
+</div><!-- /wrapper -->
+
+<script>
+/* ── THEME ── */
+const root = document.documentElement;
+const icon = document.getElementById('themeIcon');
+const saved = localStorage.getItem('pc-theme') || 'dark';
+applyTheme(saved);
+
+function applyTheme(t) {
+  if (t === 'light') {
+    root.classList.add('light');
+    icon.className = 'fas fa-moon';
+  } else {
+    root.classList.remove('light');
+    icon.className = 'fas fa-sun';
+  }
+  localStorage.setItem('pc-theme', t);
+}
+function toggleTheme() {
+  applyTheme(root.classList.contains('light') ? 'dark' : 'light');
+}
+
+/* ── SUBJECT CHIPS ── */
+function selectChip(el, value) {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('subjectInput').value = value;
+  document.getElementById('subjectErr').classList.remove('show');
+  updateProgress();
+}
+
+/* ── PRIORITY ── */
+function setPriority(level, btn) {
+  document.querySelectorAll('.priority-btn').forEach(b => b.className = 'priority-btn');
+  btn.classList.add('sel-' + level);
+  document.getElementById('priorityInput').value = level;
+}
+// default select low
+document.querySelector('.priority-btn').classList.add('sel-low');
+
+/* ── CHAR COUNTER ── */
+function countChars(el) {
+  const len = el.value.length;
+  const max = parseInt(el.getAttribute('maxlength'));
+  const counter = document.getElementById('charCount');
+  counter.textContent = len + ' / ' + max;
+  counter.className = 'char-count' + (len > max * .9 ? (len >= max ? ' over' : ' warn') : '');
+  updateProgress();
+}
+
+/* ── PROGRESS BAR ── */
+function updateProgress() {
+  const fields = [
+    document.getElementById('nameInput').value.trim(),
+    document.getElementById('emailInput').value.trim(),
+    document.getElementById('subjectInput').value.trim(),
+    document.getElementById('msgInput').value.trim()
+  ];
+  const filled = fields.filter(f => f.length > 0).length;
+  document.getElementById('progressFill').style.width = (filled / fields.length * 100) + '%';
+}
+
+['nameInput','emailInput','phoneInput','msgInput'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('input', updateProgress);
+});
+
+/* ── VALIDATION ── */
+document.getElementById('contactForm').addEventListener('submit', function(e) {
+  let valid = true;
+
+  const name  = document.getElementById('nameInput');
+  const email = document.getElementById('emailInput');
+  const subj  = document.getElementById('subjectInput');
+  const msg   = document.getElementById('msgInput');
+
+  // Name
+  if (!name.value.trim()) {
+    name.classList.add('err');
+    document.getElementById('nameErr').classList.add('show');
+    valid = false;
+  } else {
+    name.classList.remove('err');
+    document.getElementById('nameErr').classList.remove('show');
+  }
+
+  // Email
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim());
+  if (!emailOk) {
+    email.classList.add('err');
+    document.getElementById('emailErr').classList.add('show');
+    valid = false;
+  } else {
+    email.classList.remove('err');
+    document.getElementById('emailErr').classList.remove('show');
+  }
+
+  // Subject
+  if (!subj.value.trim()) {
+    document.getElementById('subjectErr').classList.add('show');
+    valid = false;
+  } else {
+    document.getElementById('subjectErr').classList.remove('show');
+  }
+
+  // Message
+  if (!msg.value.trim()) {
+    msg.classList.add('err');
+    document.getElementById('msgErr').classList.add('show');
+    valid = false;
+  } else {
+    msg.classList.remove('err');
+    document.getElementById('msgErr').classList.remove('show');
+  }
+
+  if (!valid) { e.preventDefault(); return; }
+
+  // Loading state
+  const btn = document.getElementById('submitBtn');
+  btn.classList.add('loading');
+  btn.innerHTML = '<i class="fas fa-spinner"></i> Sending…';
+});
+
+/* ── REAL-TIME CLEAR ERRORS ── */
+['nameInput','emailInput','msgInput'].forEach(id => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('input', function() {
+    this.classList.remove('err');
+    const errId = { nameInput:'nameErr', emailInput:'emailErr', msgInput:'msgErr' }[id];
+    if (errId) document.getElementById(errId).classList.remove('show');
+  });
+});
+
+/* ── AUTO-DISMISS ALERTS ── */
+['successAlert','errorAlert'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) setTimeout(() => {
+    el.style.transition = 'opacity .5s, max-height .5s';
+    el.style.opacity = '0';
+    el.style.maxHeight = '0';
+    el.style.padding = '0';
+    el.style.marginBottom = '0';
+    setTimeout(() => el.remove(), 500);
+  }, 6000);
+});
+</script>
+</body>
+</html>

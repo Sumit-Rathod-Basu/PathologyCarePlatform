@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>PCP Admin · Labs</title>
+    <!-- modern, simple font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+    <!-- Font Awesome for clean icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8fafd;
+            color: #1e2a44;
+            padding: 1.25rem;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* header with minimal style */
+        .page-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .page-header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            background: linear-gradient(145deg, #1e2a44, #2b3b5e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .badge {
+            background: #e6edf6;
+            padding: 0.35rem 1rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #1f3a6b;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid #d9e2ef;
+        }
+
+        /* ----- card styles for forms & table (soft, responsive) ----- */
+        .card {
+            background: #ffffff;
+            border-radius: 26px;
+            box-shadow: 0 8px 28px -8px rgba(0, 20, 40, 0.08), 0 2px 8px rgba(0, 0, 0, 0.02);
+            padding: 1.75rem 1.8rem;
+            margin-bottom: 2rem;
+            border: 1px solid #edf2f9;
+            transition: box-shadow 0.2s;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #1f2b44;
+        }
+
+        .card-title i {
+            color: #2f6e9c;
+            font-size: 1.4rem;
+        }
+
+        /* modern grid form – simple, clean, responsive */
+        .lab-form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1rem 1.5rem;
+            align-items: end;
+        }
+
+        .input-field {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .input-field label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            color: #4b6589;
+        }
+
+        .input-field input {
+            background: #f9fcff;
+            border: 1.5px solid #e2eaf2;
+            border-radius: 18px;
+            padding: 0.75rem 1.2rem;
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            transition: 0.15s;
+            outline: none;
+            width: 100%;
+        }
+
+        .input-field input:focus {
+            border-color: #1e6f9c;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(26, 115, 175, 0.08);
+        }
+
+        .btn {
+            background: #1e3f5f;
+            border: none;
+            border-radius: 40px;
+            padding: 0.8rem 2rem;
+            font-weight: 500;
+            font-size: 0.95rem;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: 0.15s;
+            border: 1px solid #15344d;
+            white-space: nowrap;
+            width: fit-content;
+        }
+
+        .btn i {
+            font-size: 0.9rem;
+        }
+
+        .btn:hover {
+            background: #16354d;
+            transform: scale(1.01);
+            box-shadow: 0 6px 14px rgba(24, 60, 94, 0.25);
+        }
+
+        .btn-primary {
+            background: #1c6c9c;
+            border-color: #135780;
+        }
+
+        .btn-primary:hover {
+            background: #135f8c;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid #cbd6e6;
+            color: #24425f;
+            box-shadow: none;
+        }
+
+        .btn-outline:hover {
+            background: #ecf3fa;
+            border-color: #8aa9cc;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-sm {
+            padding: 0.45rem 1.2rem;
+            font-size: 0.85rem;
+            border-radius: 30px;
+        }
+
+        .btn-icon-only {
+            background: none;
+            border: none;
+            color: #a0b6d0;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: color 0.1s;
+            padding: 0.3rem;
+        }
+
+        .btn-icon-only:hover {
+            color: #c42e2e;
+        }
+
+        /* ----- responsive table – turns into cards on mobile ----- */
+        .labs-table-wrapper {
+            overflow-x: auto;
+            border-radius: 22px;
+            background: #ffffff;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.02);
+        }
+
+        .labs-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            min-width: 680px;  /* ensures desktop readability, but mobile gets card fallback via media query */
+        }
+
+        .labs-table th {
+            text-align: left;
+            padding: 1.1rem 1rem;
+            background: #f4f9ff;
+            font-weight: 600;
+            color: #1f3f5c;
+            border-bottom: 2px solid #dde5f0;
+            font-size: 0.85rem;
+            letter-spacing: 0.3px;
+        }
+
+        .labs-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e7edf6;
+            vertical-align: middle;
+            background-color: #ffffff;
+        }
+
+        .labs-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* action buttons inside table (inline forms) */
+        .action-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            align-items: center;
+        }
+
+        .inline-form {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .update-input {
+            background: #f9fcff;
+            border: 1.5px solid #dde5f0;
+            border-radius: 30px;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+            width: 90px;
+            max-width: 100px;
+            transition: 0.1s;
+        }
+
+        .update-input:focus {
+            border-color: #3070a5;
+            outline: none;
+            background: #ffffff;
+        }
+
+        .delete-btn {
+            background: transparent;
+            border: 1.5px solid #f1c0c0;
+            color: #b13e3e;
+            border-radius: 40px;
+            padding: 0.4rem 1rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: 0.1s;
+            cursor: pointer;
+        }
+
+        .delete-btn:hover {
+            background: #fff3f3;
+            border-color: #b13e3e;
+        }
+
+        /* mobile first adjustments */
+        @media (max-width: 700px) {
+            body {
+                padding: 0.75rem;
+            }
+
+            .card {
+                padding: 1.5rem 1.2rem;
+                border-radius: 28px;
+            }
+
+            .lab-form-grid {
+                grid-template-columns: 1fr;
+                gap: 0.8rem;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+                margin-top: 0.6rem;
+            }
+
+            /* table becomes block for horizontal scroll */
+            .labs-table-wrapper {
+                overflow-x: auto;
+            }
+
+            .labs-table {
+                min-width: 600px; /* allow scroll */
+            }
+
+            /* make inputs in table a bit more compact */
+            .update-input {
+                width: 70px;
+                padding: 0.3rem 0.6rem;
+            }
+        }
+
+        /* extra small devices: stack action cells */
+        @media (max-width: 480px) {
+            .action-group {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .delete-btn {
+                width: fit-content;
+            }
+        }
+
+        /* subtle divider */
+        .separator {
+            height: 1px;
+            background: linear-gradient(to right, #d9e2ec, transparent);
+            margin: 1.5rem 0 1rem;
+        }
+        
+        /* empty state */
+        .empty-message {
+            text-align: center;
+            padding: 3rem;
+            color: #6f8fae;
+            font-style: italic;
+        }
+        .empty-message i {
+            font-size: 2.5rem;
+            opacity: 0.5;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- header with simple style -->
+    <div class="page-header">
+        <i class="fas fa-flask" style="font-size: 2rem; color: #26648b;"></i>
+        <h1>Pathology Care Admin</h1>
+        <span class="badge"><i class="fas fa-lab-microscope"></i> labs management</span>
+    </div>
+
+    <!-- card: add new lab -->
+    <div class="card">
+        <div class="card-title">
+            <i class="fas fa-plus-circle"></i> Add new laboratory
+        </div>
+        <form th:action="@{/admin/dashboard/create}" method="post">
+            <div class="lab-form-grid">
+                <div class="input-field">
+                    <label><i class="far fa-building" style="margin-right:4px;"></i> Lab name</label>
+                    <input type="text" name="labName" placeholder="e.g. City Diagnostics" required>
+                </div>
+                <div class="input-field">
+                    <label><i class="far fa-envelope"></i> Email</label>
+                    <input type="email" name="email" placeholder="lab@example.com" required>
+                </div>
+                <div class="input-field">
+                    <label><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" name="password" placeholder="••••••••" required>
+                </div>
+                <div class="input-field">
+                    <label><i class="fas fa-phone-alt"></i> Phone</label>
+                    <input type="text" name="phone" placeholder="+91 98765 43210" required>
+                </div>
+                <div class="input-field">
+                    <label><i class="fas fa-map-pin"></i> Address</label>
+                    <input type="text" name="address" placeholder="Street, area" required>
+                </div>
+                <div class="input-field">
+                    <label><i class="fas fa-city"></i> City</label>
+                    <input type="text" name="city" placeholder="Mumbai" required>
+                </div>
+                <div class="input-field">
+                    <label><i class="fas fa-qrcode"></i> Pincode</label>
+                    <input type="text" name="pincode" placeholder="400001" required>
+                </div>
+                <div class="input-field">
+                    <label><i class="fas fa-id-card"></i> License No.</label>
+                    <input type="text" name="registrationNumber" placeholder="LIC-1234/XX" required>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: flex-end; margin-top: 1.8rem;">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Register lab</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- registered labs card -->
+    <div class="card" style="padding: 0; overflow: hidden;">
+        <div style="padding: 1.8rem 1.8rem 0.5rem 1.8rem;">
+            <div class="card-title" style="margin-bottom: 0.5rem;">
+                <i class="fas fa-hospital"></i> Registered laboratories
+            </div>
+        </div>
+        <div class="labs-table-wrapper">
+            <table class="labs-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Lab name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>City</th>
+                        <th>License</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- thymeleaf loop -->
+                    <tr th:each="lab : ${labs}">
+                        <td th:text="${lab.id}" style="font-weight: 500; color:#1f4662;">101</td>
+                        <td th:text="${lab.labName}">City Diagnostics</td>
+                        <td th:text="${lab.email}">contact@citylab.com</td>
+                        <td th:text="${lab.phone}">9876543210</td>
+                        <td th:text="${lab.city}">Mumbai</td>
+                        <td th:text="${lab.registrationNumber}">LIC-9876</td>
+                        <td>
+                            <div class="action-group">
+                                <!-- inline update form (compact) -->
+                                <form th:action="@{/admin/labs/update}" method="post" class="inline-form" style="display: flex; gap:4px; flex-wrap:wrap;">
+                                    <input type="hidden" name="id" th:value="${lab.id}">
+                                    <input type="text" name="labName" th:value="${lab.labName}" class="update-input" placeholder="name">
+                                    <input type="email" name="email" th:value="${lab.email}" class="update-input" placeholder="email">
+                                    <input type="text" name="phone" th:value="${lab.phone}" class="update-input" placeholder="phone">
+                                    <input type="text" name="city" th:value="${lab.city}" class="update-input" placeholder="city">
+                                    <input type="text" name="registrationNumber" th:value="${lab.registrationNumber}" class="update-input" placeholder="license">
+                                    <button type="submit" class="btn-outline btn-sm" style="border-radius:30px;"><i class="fas fa-pen"></i> update</button>
+                                </form>
+
+                                <!-- delete form, subtle but clear -->
+                                <form th:action="@{/lab/delete}" method="post" class="inline-form">
+                                    <input type="hidden" name="id" th:value="${lab.id}">
+                                    <button type="submit" class="delete-btn"><i class="fas fa-trash-can"></i> delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    <!-- example fallback row if labs list empty (th:block can handle) -->
+                    <tr th:if="${labs == null or labs.isEmpty()}">
+                        <td colspan="7" style="text-align: center; padding: 3rem;">
+                            <div class="empty-message">
+                                <i class="fas fa-microscope"></i><br>
+                                No labs registered yet. Use the form above to add one.
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- subtle footer -->
+        <div style="padding: 0.9rem 1.8rem 1.2rem; border-top: 1px solid #eef4fb; font-size: 0.8rem; color:#6783a5; display: flex; gap: 10px; align-items: center;">
+            <i class="fas fa-shield-alt"></i> <span>All updates require confirmation. Delete is irreversible.</span>
+        </div>
+    </div>
+</div>
+
+<!-- small extra script for mobile interactivity (optional) – just to make it feel responsive -->
+<script>
+    (function() {
+        // you could add dynamic placeholder adjustments, but not needed.
+        // keep all thymeleaf functionality intact.
+    })();
+</script>
+</body>
+</html>

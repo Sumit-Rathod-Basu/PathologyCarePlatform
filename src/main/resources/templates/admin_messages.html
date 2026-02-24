@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admin — Contact Messages · PathoCare</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+<style>
+
+/* ── ALWAYS-ON DEFAULTS (dark) ── */
+:root {
+  --bg:        #0d0d0d;
+  --surface:   #141414;
+  --surface2:  #1c1c1c;
+  --surface3:  #222;
+  --border:    rgba(255,255,255,0.08);
+  --border-hi: rgba(255,255,255,0.18);
+  --text:      #f0f0f0;
+  --text2:     #999;
+  --muted:     #555;
+  --accent:    #19c37d;
+  --accent-d:  rgba(25,195,125,0.13);
+  --accent-g:  rgba(25,195,125,0.28);
+  --red:       #f87171;
+  --red-d:     rgba(248,113,113,0.13);
+  --orange:    #fb923c;
+  --orange-d:  rgba(251,146,60,0.13);
+  --blue:      #60a5fa;
+  --blue-d:    rgba(96,165,250,0.13);
+  --input-bg:  #1c1c1c;
+  --row-hover: rgba(255,255,255,0.03);
+  --shadow:    0 24px 64px rgba(0,0,0,0.55);
+  --topbar-bg: rgba(13,13,13,0.92);
+}
+
+/* ── LIGHT OVERRIDES ── */
+:root.light {
+  --bg:        #f0f2f5;
+  --surface:   #ffffff;
+  --surface2:  #f5f7fa;
+  --surface3:  #ebedf0;
+  --border:    rgba(0,0,0,0.09);
+  --border-hi: rgba(0,0,0,0.22);
+  --text:      #111;
+  --text2:     #666;
+  --muted:     #aaa;
+  --accent:    #0ea373;
+  --accent-d:  rgba(14,163,115,0.11);
+  --accent-g:  rgba(14,163,115,0.24);
+  --red:       #dc2626;
+  --red-d:     rgba(220,38,38,0.09);
+  --orange:    #ea580c;
+  --orange-d:  rgba(234,88,12,0.09);
+  --blue:      #2563eb;
+  --blue-d:    rgba(37,99,235,0.10);
+  --input-bg:  #f0f2f5;
+  --row-hover: rgba(0,0,0,0.025);
+  --shadow:    0 8px 40px rgba(0,0,0,0.10);
+  --topbar-bg: rgba(255,255,255,0.94);
+}
+
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Sora', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  transition: background .35s, color .35s;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* grid background */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(25,195,125,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(25,195,125,0.025) 1px, transparent 1px);
+  background-size: 36px 36px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: .7;
+}
+:root.light body::before { opacity: .4; }
+
+/* ── TOPBAR ── */
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  height: 56px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px;
+  background: var(--topbar-bg);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: background .35s, border-color .35s;
+}
+
+.tb-brand { display: flex; align-items: center; gap: 10px; }
+
+.tb-logo {
+  width: 32px; height: 32px;
+  background: var(--accent);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  box-shadow: 0 0 16px var(--accent-g);
+  flex-shrink: 0;
+}
+
+.tb-name {
+  font-size: 15px; font-weight: 700;
+  color: var(--text); letter-spacing: -.3px;
+  transition: color .35s;
+}
+.tb-name span { color: var(--accent); }
+
+.tb-divider { width: 1px; height: 20px; background: var(--border); }
+
+.tb-pill {
+  font-size: 10.5px; font-weight: 700;
+  letter-spacing: .6px; text-transform: uppercase;
+  color: var(--text2);
+  padding: 4px 10px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  transition: background .35s, color .35s, border-color .35s;
+}
+
+.tb-actions { display: flex; align-items: center; gap: 8px; }
+
+.tb-btn {
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: var(--text2);
+  font-size: 14px;
+  transition: background .15s, color .15s, transform .1s, border-color .35s;
+}
+.tb-btn:hover {
+  background: var(--surface2);
+  color: var(--text);
+  transform: scale(1.06);
+}
+
+/* ── PAGE ── */
+.page {
+  position: relative; z-index: 1;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 30px 20px 60px;
+}
+
+/* ── PAGE HEADER ── */
+.page-header {
+  margin-bottom: 24px;
+  animation: fadeUp .5s ease both;
+}
+.page-header h1 {
+  font-size: 21px; font-weight: 700;
+  color: var(--text); letter-spacing: -.5px;
+  transition: color .35s;
+}
+.page-header p { font-size: 13px; color: var(--text2); margin-top: 4px; }
+
+@keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:none; } }
+
+/* ── STATS ── */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 22px;
+  animation: fadeUp .5s .08s ease both;
+}
+
+.stat {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex; align-items: center; gap: 12px;
+  transition: background .35s, border-color .35s;
+}
+
+.stat-ico {
+  width: 38px; height: 38px; flex-shrink: 0;
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+}
+.ico-blue   { background: var(--blue-d);   color: var(--blue); }
+.ico-orange { background: var(--orange-d); color: var(--orange); }
+.ico-green  { background: var(--accent-d); color: var(--accent); }
+.ico-red    { background: var(--red-d);    color: var(--red); }
+
+.stat-text p      { font-size: 10px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--muted); }
+.stat-text strong { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1.2; transition: color .35s; }
+
+/* ── TOOLBAR ── */
+.toolbar {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  margin-bottom: 14px;
+  animation: fadeUp .5s .14s ease both;
+}
+
+.search-wrap {
+  flex: 1; min-width: 180px;
+  display: flex; align-items: center; gap: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0 14px;
+  transition: border-color .2s, box-shadow .2s, background .35s;
+}
+.search-wrap:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-d);
+}
+.search-wrap i { color: var(--muted); font-size: 12.5px; flex-shrink: 0; }
+.search-wrap input {
+  flex: 1; border: none; background: transparent;
+  color: var(--text); font-family: 'Sora', sans-serif;
+  font-size: 13.5px; padding: 10px 0; outline: none;
+  transition: color .35s;
+}
+.search-wrap input::placeholder { color: var(--muted); }
+
+.flt-btn {
+  padding: 9px 14px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text2);
+  font-size: 12.5px; font-weight: 500;
+  font-family: 'Sora', sans-serif;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 5px;
+  transition: all .15s;
+  white-space: nowrap;
+}
+.flt-btn i { font-size: 10.5px; }
+.flt-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-d); }
+.flt-btn.on    { border-color: var(--accent); color: var(--accent); background: var(--accent-d); font-weight: 600; }
+
+/* ── TABLE CARD ── */
+.tcard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  animation: fadeUp .5s .18s ease both;
+  transition: background .35s, border-color .35s, box-shadow .35s;
+}
+
+/* ── TABLE ── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead tr {
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+  transition: background .35s;
+}
+
+thead th {
+  padding: 11px 14px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .6px;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: left;
+  white-space: nowrap;
+  transition: color .35s;
+}
+thead th i { margin-right: 4px; font-size: 10px; opacity: .7; }
+
+tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background .15s;
+}
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: var(--row-hover); }
+
+tbody td {
+  padding: 13px 14px;
+  font-size: 13px;
+  color: var(--text);
+  vertical-align: middle;
+  transition: color .35s;
+}
+
+/* id */
+.col-id { color: var(--muted) !important; font-size: 11.5px !important; font-weight: 600; width: 52px; }
+
+/* name */
+.name-main { font-weight: 600; font-size: 13px; }
+.name-sub  { font-size: 10.5px; color: var(--muted); margin-top: 2px; }
+
+/* email */
+.col-email { color: var(--text2) !important; font-size: 12.5px !important; max-width: 180px; }
+.col-email span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* message */
+.col-msg { max-width: 220px; }
+.msg-clip {
+  display: block;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  color: var(--text2);
+  font-size: 12.5px;
+  cursor: pointer;
+  transition: color .15s;
+}
+.msg-clip:hover { color: var(--text); }
+
+/* status */
+.badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 11px;
+  border-radius: 20px;
+  font-size: 11px; font-weight: 600;
+  white-space: nowrap;
+}
+.badge-ok {
+  background: var(--accent-d);
+  color: var(--accent);
+  border: 1px solid rgba(25,195,125,.2);
+}
+:root.light .badge-ok { border-color: rgba(14,163,115,.25); }
+.badge-wait {
+  background: var(--orange-d);
+  color: var(--orange);
+  border: 1px solid rgba(251,146,60,.2);
+}
+:root.light .badge-wait { border-color: rgba(234,88,12,.25); }
+
+/* actions */
+.col-actions { width: 100px; }
+.act-wrap { display: flex; gap: 6px; align-items: center; }
+
+.act-btn {
+  width: 30px; height: 30px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: transparent;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: var(--text2);
+  font-size: 12px;
+  transition: all .15s;
+}
+.act-btn:hover { transform: scale(1.1); }
+.act-btn.reply:hover  { border-color: var(--accent); color: var(--accent); background: var(--accent-d); }
+.act-btn.delete:hover { border-color: var(--red);    color: var(--red);    background: var(--red-d); }
+
+/* empty */
+.empty {
+  padding: 60px 20px;
+  text-align: center;
+  color: var(--muted);
+}
+.empty i { font-size: 34px; opacity: .3; display: block; margin-bottom: 10px; }
+.empty p { font-size: 14px; }
+
+/* ── PAGINATION ── */
+.pager {
+  display: flex; align-items: center; justify-content: center;
+  gap: 6px; margin-top: 20px;
+  animation: fadeUp .5s .25s ease both;
+}
+.pg-btn {
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text2); font-size: 13px;
+  font-family: 'Sora', sans-serif;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+}
+.pg-btn:hover, .pg-btn.on {
+  border-color: var(--accent); color: var(--accent); background: var(--accent-d);
+}
+
+/* ── MODAL BASE ── */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  opacity: 0; pointer-events: none;
+  transition: opacity .25s;
+}
+.overlay.open { opacity: 1; pointer-events: all; }
+:root.light .overlay { background: rgba(0,0,0,0.45); }
+
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  width: 100%; max-width: 460px;
+  padding: 26px 28px 28px;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.6);
+  transform: translateY(14px) scale(.98);
+  transition: transform .25s ease, background .35s, border-color .35s;
+}
+.overlay.open .modal { transform: none; }
+
+.modal-hd {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 18px;
+}
+.modal-hd h3 { font-size: 15.5px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px; }
+.modal-hd h3 i { color: var(--accent); }
+
+.modal-x {
+  width: 28px; height: 28px;
+  border-radius: 7px; border: 1px solid var(--border);
+  background: transparent; cursor: pointer;
+  color: var(--text2); font-size: 12px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+}
+.modal-x:hover { background: var(--red-d); color: var(--red); border-color: var(--red); }
+
+.meta-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 10px; margin-bottom: 14px;
+}
+.meta-box {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 10px 13px;
+  transition: background .35s, border-color .35s;
+}
+.meta-box label {
+  font-size: 9.5px; font-weight: 700;
+  letter-spacing: .6px; text-transform: uppercase;
+  color: var(--muted); display: block; margin-bottom: 3px;
+}
+.meta-box span { font-size: 13px; color: var(--text); font-weight: 500; word-break: break-all; }
+
+.msg-box {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  transition: background .35s, border-color .35s;
+}
+.msg-box label {
+  font-size: 9.5px; font-weight: 700;
+  letter-spacing: .6px; text-transform: uppercase;
+  color: var(--muted); display: block; margin-bottom: 6px;
+  display: flex; align-items: center; gap: 5px;
+}
+.msg-box p { font-size: 13.5px; color: var(--text); line-height: 1.7; }
+
+.reply-lbl {
+  font-size: 10.5px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .5px;
+  color: var(--text2);
+  display: flex; align-items: center; gap: 6px;
+  margin-bottom: 8px;
+}
+
+textarea.reply-ta {
+  width: 100%;
+  padding: 11px 14px;
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  color: var(--text);
+  font-family: 'Sora', sans-serif;
+  font-size: 13.5px; line-height: 1.6;
+  outline: none; resize: vertical;
+  min-height: 110px;
+  transition: border-color .2s, box-shadow .2s, background .35s, color .35s;
+  margin-bottom: 14px;
+}
+textarea.reply-ta:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-d);
+  background: var(--surface3);
+}
+textarea.reply-ta::placeholder { color: var(--muted); }
+
+.modal-btns { display: flex; gap: 8px; }
+
+.btn-primary {
+  flex: 1; padding: 11px 16px;
+  background: var(--accent); border: none;
+  border-radius: 9px; color: #fff;
+  font-size: 13.5px; font-weight: 600;
+  font-family: 'Sora', sans-serif;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  transition: background .15s, transform .12s;
+  box-shadow: 0 4px 16px var(--accent-g);
+}
+.btn-primary:hover { background: #15b372; transform: translateY(-1px); }
+
+.btn-ghost {
+  padding: 11px 18px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text2);
+  font-size: 13px; font-weight: 500;
+  font-family: 'Sora', sans-serif;
+  cursor: pointer;
+  transition: all .15s;
+}
+.btn-ghost:hover { background: var(--surface2); color: var(--text); }
+
+/* confirm modal */
+.confirm-ico {
+  width: 52px; height: 52px;
+  border-radius: 13px;
+  background: var(--red-d);
+  border: 1px solid rgba(248,113,113,.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; color: var(--red);
+  margin: 0 auto 14px;
+}
+.confirm-title { text-align: center; font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 7px; }
+.confirm-sub   { text-align: center; font-size: 13px; color: var(--text2); line-height: 1.65; margin-bottom: 20px; }
+
+.btn-danger {
+  flex: 1; padding: 11px;
+  background: var(--red); border: none;
+  border-radius: 9px; color: #fff;
+  font-size: 13.5px; font-weight: 600;
+  font-family: 'Sora', sans-serif;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  transition: background .15s, transform .12s;
+}
+.btn-danger:hover { background: #e05252; transform: translateY(-1px); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 800px) {
+  .stats { grid-template-columns: 1fr 1fr; }
+  .col-email { display: none; }
+}
+@media (max-width: 520px) {
+  .stats { grid-template-columns: 1fr 1fr; }
+  .col-msg, .col-email { display: none; }
+  .page { padding: 18px 12px 48px; }
+  .modal { padding: 20px; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ── TOPBAR ── -->
+<nav class="topbar">
+  <div class="tb-brand">
+    <div class="tb-logo">🔬</div>
+    <span class="tb-name">Patho<span>Care</span></span>
+    <div class="tb-divider"></div>
+    <span class="tb-pill"><i class="fas fa-shield-halved"></i> &nbsp;Admin Panel</span>
+  </div>
+  <div class="tb-actions">
+    <button class="tb-btn" onclick="toggleTheme()" title="Toggle theme"><i class="fas fa-moon" id="themeIco"></i></button>
+    <button class="tb-btn" title="Notifications"><i class="fas fa-bell"></i></button>
+    <button class="tb-btn" title="Settings"><i class="fas fa-gear"></i></button>
+  </div>
+</nav>
+
+<!-- ── PAGE ── -->
+<div class="page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <h1>Contact Messages</h1>
+    <p>Manage, reply and resolve patient &amp; staff inquiries</p>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-ico ico-blue"><i class="fas fa-envelope"></i></div>
+      <div class="stat-text"><p>Total</p><strong id="sTotal">—</strong></div>
+    </div>
+    <div class="stat">
+      <div class="stat-ico ico-orange"><i class="fas fa-clock"></i></div>
+      <div class="stat-text"><p>Pending</p><strong id="sPending">—</strong></div>
+    </div>
+    <div class="stat">
+      <div class="stat-ico ico-green"><i class="fas fa-circle-check"></i></div>
+      <div class="stat-text"><p>Replied</p><strong id="sReplied">—</strong></div>
+    </div>
+    <div class="stat">
+      <div class="stat-ico ico-red"><i class="fas fa-chart-pie"></i></div>
+      <div class="stat-text"><p>Reply Rate</p><strong id="sRate">—</strong></div>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="search-wrap">
+      <i class="fas fa-magnifying-glass"></i>
+      <input type="text" id="searchQ" placeholder="Search name, email or message…" oninput="doFilter()"/>
+    </div>
+    <button class="flt-btn on" onclick="doFlt('all',this)"><i class="fas fa-bars"></i> All</button>
+    <button class="flt-btn"   onclick="doFlt('pending',this)"><i class="fas fa-clock"></i> Pending</button>
+    <button class="flt-btn"   onclick="doFlt('replied',this)"><i class="fas fa-check"></i> Replied</button>
+  </div>
+
+  <!-- Table -->
+  <div class="tcard">
+    <table id="msgTable">
+      <thead>
+        <tr>
+          <th><i class="fas fa-hashtag"></i></th>
+          <th><i class="fas fa-user"></i> Name</th>
+          <th class="col-email"><i class="fas fa-envelope"></i> Email</th>
+          <th class="col-msg"><i class="fas fa-comment"></i> Message</th>
+          <th><i class="fas fa-circle-dot"></i> Status</th>
+          <th class="col-actions"><i class="fas fa-bolt"></i> Actions</th>
+        </tr>
+      </thead>
+      <tbody id="tbody">
+
+        <!-- ── THYMELEAF ROWS ── -->
+        <tr th:each="msg : ${messages}"
+            th:data-status="${msg.reply != null ? 'replied' : 'pending'}"
+            th:data-name="${msg.name}"
+            th:data-email="${msg.email}"
+            th:data-msg="${msg.message}"
+            th:data-id="${msg.id}"
+            th:data-reply="${msg.reply != null ? msg.reply : ''}">
+
+          <!-- ID -->
+          <td class="col-id" th:text="'#' + ${msg.id}"></td>
+
+          <!-- Name -->
+          <td>
+            <div class="name-main" th:text="${msg.name}"></div>
+            <div class="name-sub">Patient</div>
+          </td>
+
+          <!-- Email -->
+          <td class="col-email">
+            <span th:text="${msg.email}"></span>
+          </td>
+
+          <!-- Message preview -->
+          <td class="col-msg">
+            <span class="msg-clip"
+                  th:text="${msg.message}"
+                  th:title="${msg.message}"
+                  th:onclick="'openDetail(' + ${msg.id} + ')'">
+            </span>
+          </td>
+
+          <!-- Status -->
+          <td>
+            <span th:if="${msg.reply != null}" class="badge badge-ok">
+              <i class="fas fa-circle-check"></i> Replied
+            </span>
+            <span th:unless="${msg.reply != null}" class="badge badge-wait">
+              <i class="fas fa-clock"></i> Pending
+            </span>
+          </td>
+
+          <!-- Actions -->
+          <td class="col-actions">
+            <div class="act-wrap">
+              <button class="act-btn reply" title="Reply"
+                      th:onclick="'openReply(' + ${msg.id} + ')'">
+                <i class="fas fa-reply"></i>
+              </button>
+              <button class="act-btn delete" title="Delete"
+                      th:onclick="'openDelete(' + ${msg.id} + ')'">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </td>
+
+        </tr>
+        <!-- ── END THYMELEAF ROWS ── -->
+
+      </tbody>
+    </table>
+
+    <!-- Empty state -->
+    <div class="empty" id="emptyState" style="display:none;">
+      <i class="fas fa-inbox"></i>
+      <p>No messages match your search</p>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pager">
+    <button class="pg-btn"><i class="fas fa-chevron-left"></i></button>
+    <button class="pg-btn on">1</button>
+    <button class="pg-btn">2</button>
+    <button class="pg-btn">3</button>
+    <button class="pg-btn"><i class="fas fa-chevron-right"></i></button>
+  </div>
+
+</div><!-- /page -->
+
+
+<!-- ══════════════════
+     REPLY MODAL
+══════════════════ -->
+<div class="overlay" id="replyOverlay">
+  <div class="modal">
+    <div class="modal-hd">
+      <h3><i class="fas fa-reply"></i> Reply to Message</h3>
+      <button class="modal-x" onclick="close_('replyOverlay')"><i class="fas fa-xmark"></i></button>
+    </div>
+    <div class="meta-grid">
+      <div class="meta-box"><label>From</label><span id="rName">—</span></div>
+      <div class="meta-box"><label>Email</label><span id="rEmail">—</span></div>
+    </div>
+    <div class="msg-box">
+      <label><i class="fas fa-comment"></i> Original Message</label>
+      <p id="rMsg">—</p>
+    </div>
+    <form id="replyForm" method="post">
+      <div class="reply-lbl"><i class="fas fa-pen"></i> Your Reply</div>
+      <textarea class="reply-ta" name="reply" id="replyTa" rows="4" placeholder="Type your reply here…" required></textarea>
+      <div class="modal-btns">
+        <button type="button" class="btn-ghost" onclick="close_('replyOverlay')">Cancel</button>
+        <button type="submit" class="btn-primary"><i class="fas fa-paper-plane"></i> Send Reply</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ══════════════════
+     DETAIL MODAL
+══════════════════ -->
+<div class="overlay" id="detailOverlay">
+  <div class="modal">
+    <div class="modal-hd">
+      <h3><i class="fas fa-envelope-open"></i> Message Detail</h3>
+      <button class="modal-x" onclick="close_('detailOverlay')"><i class="fas fa-xmark"></i></button>
+    </div>
+    <div class="meta-grid">
+      <div class="meta-box"><label>Name</label><span id="dName">—</span></div>
+      <div class="meta-box"><label>Email</label><span id="dEmail">—</span></div>
+    </div>
+    <div class="msg-box">
+      <label><i class="fas fa-comment"></i> Message</label>
+      <p id="dMsg">—</p>
+    </div>
+    <div class="msg-box" id="dReplyBox" style="display:none">
+      <label><i class="fas fa-reply"></i> Reply Sent</label>
+      <p id="dReply" style="color:var(--accent)">—</p>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-ghost" onclick="close_('detailOverlay')" style="flex:1">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════
+     DELETE MODAL
+══════════════════ -->
+<div class="overlay" id="deleteOverlay">
+  <div class="modal">
+    <div class="confirm-ico"><i class="fas fa-trash-can"></i></div>
+    <div class="confirm-title">Delete Message?</div>
+    <div class="confirm-sub" id="delSub">This action cannot be undone.</div>
+    <form id="deleteForm" method="post">
+      <div class="modal-btns">
+        <button type="button" class="btn-ghost" onclick="close_('deleteOverlay')">Cancel</button>
+        <button type="submit" class="btn-danger"><i class="fas fa-trash"></i> Delete</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<script>
+/* ━━━ THEME ━━━ */
+const ROOT = document.documentElement;
+const ico  = document.getElementById('themeIco');
+
+(function init() {
+  applyTheme(localStorage.getItem('pc-theme') || 'dark');
+  calcStats();
+})();
+
+function applyTheme(t) {
+  ROOT.classList.toggle('light', t === 'light');
+  ico.className = t === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+  localStorage.setItem('pc-theme', t);
+}
+function toggleTheme() {
+  applyTheme(ROOT.classList.contains('light') ? 'dark' : 'light');
+}
+
+/* ━━━ STATS ━━━ */
+function calcStats() {
+  const rows    = [...document.querySelectorAll('#tbody tr')];
+  const total   = rows.length;
+  const replied = rows.filter(r => r.dataset.status === 'replied').length;
+  const pending = total - replied;
+  document.getElementById('sTotal').textContent   = total;
+  document.getElementById('sPending').textContent = pending;
+  document.getElementById('sReplied').textContent = replied;
+  document.getElementById('sRate').textContent    = total ? Math.round(replied / total * 100) + '%' : '—';
+}
+
+/* ━━━ FILTER + SEARCH ━━━ */
+let activeFilter = 'all';
+
+function doFlt(f, btn) {
+  activeFilter = f;
+  document.querySelectorAll('.flt-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  doFilter();
+}
+
+function doFilter() {
+  const q    = document.getElementById('searchQ').value.toLowerCase().trim();
+  const rows = [...document.querySelectorAll('#tbody tr')];
+  let shown  = 0;
+
+  rows.forEach(row => {
+    const okFilter = activeFilter === 'all' || row.dataset.status === activeFilter;
+    const okSearch = !q
+      || (row.dataset.name  || '').toLowerCase().includes(q)
+      || (row.dataset.email || '').toLowerCase().includes(q)
+      || (row.dataset.msg   || '').toLowerCase().includes(q);
+
+    const show = okFilter && okSearch;
+    row.style.display = show ? '' : 'none';
+    if (show) shown++;
+  });
+
+  document.getElementById('emptyState').style.display = shown === 0 ? 'block' : 'none';
+}
+
+/* ━━━ MODAL HELPERS ━━━ */
+function open_(id)  { document.getElementById(id).classList.add('open'); }
+function close_(id) { document.getElementById(id).classList.remove('open'); }
+
+document.querySelectorAll('.overlay').forEach(ov =>
+  ov.addEventListener('click', e => { if (e.target === ov) ov.classList.remove('open'); })
+);
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.querySelectorAll('.overlay').forEach(o => o.classList.remove('open'));
+});
+
+/* ━━━ REPLY MODAL ━━━ */
+function openReply(id) {
+  const row = document.querySelector(`#tbody tr[data-id="${id}"]`);
+  if (!row) return;
+  document.getElementById('rName').textContent  = row.dataset.name;
+  document.getElementById('rEmail').textContent = row.dataset.email;
+  document.getElementById('rMsg').textContent   = row.dataset.msg;
+  document.getElementById('replyTa').value      = row.dataset.reply || '';
+  document.getElementById('replyForm').action   = '/contact/admin/reply/' + id;
+  open_('replyOverlay');
+  setTimeout(() => document.getElementById('replyTa').focus(), 180);
+}
+
+/* ━━━ DETAIL MODAL ━━━ */
+function openDetail(id) {
+  const row = document.querySelector(`#tbody tr[data-id="${id}"]`);
+  if (!row) return;
+  document.getElementById('dName').textContent  = row.dataset.name;
+  document.getElementById('dEmail').textContent = row.dataset.email;
+  document.getElementById('dMsg').textContent   = row.dataset.msg;
+  const replyBox = document.getElementById('dReplyBox');
+  if (row.dataset.reply) {
+    replyBox.style.display = 'block';
+    document.getElementById('dReply').textContent = row.dataset.reply;
+  } else {
+    replyBox.style.display = 'none';
+  }
+  open_('detailOverlay');
+}
+
+/* ━━━ DELETE MODAL ━━━ */
+function openDelete(id) {
+  const row = document.querySelector(`#tbody tr[data-id="${id}"]`);
+  const name = row ? row.dataset.name : 'this message';
+  document.getElementById('delSub').textContent = `You are about to permanently delete the message from "${name}". This cannot be undone.`;
+  document.getElementById('deleteForm').action  = '/contact/admin/delete/' + id;
+  open_('deleteOverlay');
+}
+</script>
+</body>
+</html>

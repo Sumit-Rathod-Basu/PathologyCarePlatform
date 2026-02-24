@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PathoCare AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+
+/* ── CSS VARIABLES (dark default, applied to :root always) ── */
+:root {
+  --bg-app:       #0d0d0d;
+  --bg-sidebar:   #111111;
+  --bg-chat:      #141414;
+  --bg-bubble-ai: #1e1e1e;
+  --bg-bubble-usr:#252525;
+  --bg-input:     #1e1e1e;
+  --border:       rgba(255,255,255,0.08);
+  --border-focus: rgba(255,255,255,0.22);
+  --text-pri:     #f0f0f0;
+  --text-sec:     #999;
+  --text-muted:   #555;
+  --accent:       #19c37d;
+  --accent-dim:   rgba(25,195,125,0.13);
+  --accent-glow:  rgba(25,195,125,0.28);
+  --scroll-thumb: #2e2e2e;
+  --send-bg:      #19c37d;
+  --send-hover:   #14a86a;
+  --si-hover:     rgba(255,255,255,0.05);
+  --si-active:    rgba(255,255,255,0.09);
+  --header-bg:    rgba(13,13,13,0.9);
+}
+
+:root.light {
+  --bg-app:       #f5f5f6;
+  --bg-sidebar:   #ffffff;
+  --bg-chat:      #ffffff;
+  --bg-bubble-ai: #f1f1f2;
+  --bg-bubble-usr:#ffffff;
+  --bg-input:     #f5f5f6;
+  --border:       rgba(0,0,0,0.09);
+  --border-focus: rgba(0,0,0,0.25);
+  --text-pri:     #111111;
+  --text-sec:     #666;
+  --text-muted:   #aaa;
+  --accent:       #0ea373;
+  --accent-dim:   rgba(14,163,115,0.10);
+  --accent-glow:  rgba(14,163,115,0.22);
+  --scroll-thumb: #ccc;
+  --send-bg:      #0ea373;
+  --send-hover:   #0b8a61;
+  --si-hover:     rgba(0,0,0,0.04);
+  --si-active:    rgba(0,0,0,0.08);
+  --header-bg:    rgba(255,255,255,0.92);
+}
+
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: 'Sora', system-ui, sans-serif;
+  background: var(--bg-app);
+  color: var(--text-pri);
+  display: flex;
+  height: 100vh;
+  transition: background .3s, color .3s;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: 255px;
+  flex-shrink: 0;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 14px 10px;
+  gap: 4px;
+  transition: background .3s, border-color .3s, transform .3s;
+  overflow: hidden;
+  z-index: 50;
+}
+
+.sb-logo {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 6px 8px 14px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 8px;
+}
+
+.sb-logo-mark {
+  width: 28px; height: 28px;
+  background: var(--accent);
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+
+.sb-logo-name {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--text-pri);
+  letter-spacing: -.3px;
+  transition: color .3s;
+}
+.sb-logo-name b { color: var(--accent); font-weight: 600; }
+
+.new-btn {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 11px;
+  background: var(--accent-dim);
+  border: 1px solid rgba(25,195,125,.22);
+  border-radius: 9px;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: 'Sora', sans-serif;
+  transition: background .15s, transform .15s;
+  margin-bottom: 6px;
+}
+.new-btn:hover { background: var(--accent-glow); transform: translateY(-1px); }
+.new-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+.sb-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .9px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 8px 8px 3px;
+}
+
+.sb-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 12.5px;
+  color: var(--text-sec);
+  transition: background .15s, color .15s;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.sb-item:hover { background: var(--si-hover); color: var(--text-pri); }
+.sb-item.active { background: var(--si-active); color: var(--text-pri); }
+.sb-item svg { width: 13px; height: 13px; flex-shrink: 0; opacity: .6; }
+
+.sb-spacer { flex: 1; }
+
+.sb-footer {
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* theme row */
+.theme-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 12.5px;
+  color: var(--text-sec);
+  transition: background .15s;
+}
+.theme-row:hover { background: var(--si-hover); }
+
+.t-pill {
+  width: 38px; height: 20px;
+  border-radius: 10px;
+  background: var(--border);
+  position: relative;
+  transition: background .3s;
+  flex-shrink: 0;
+}
+.t-pill.on { background: var(--accent); }
+.t-pill::after {
+  content: '';
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+  box-shadow: 0 1px 4px rgba(0,0,0,.3);
+}
+.t-pill.on::after { transform: translateX(18px); }
+
+/* ── MAIN PANEL ── */
+.main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-chat);
+  transition: background .3s;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* topbar */
+.topbar {
+  height: 50px;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--header-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  flex-shrink: 0;
+  transition: background .3s, border-color .3s;
+}
+
+.tb-left { display: flex; align-items: center; gap: 10px; }
+
+.hamburger {
+  display: none;
+  width: 30px; height: 30px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: transparent;
+  align-items: center; justify-content: center;
+  cursor: pointer;
+  color: var(--text-sec);
+}
+.hamburger svg { width: 14px; height: 14px; }
+
+.tb-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text-pri);
+}
+
+.live-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 6px var(--accent-glow);
+  animation: blink 2.5s infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.35} }
+
+.tb-right { display: flex; align-items: center; gap: 8px; }
+
+.icon-btn {
+  width: 30px; height: 30px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: transparent;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: var(--text-sec);
+  transition: background .15s, color .15s;
+}
+.icon-btn:hover { background: var(--si-hover); color: var(--text-pri); }
+.icon-btn svg { width: 14px; height: 14px; }
+
+/* ── CHAT AREA ── */
+.chat-area {
+  flex: 1;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  min-height: 0;
+}
+
+.chat-area::-webkit-scrollbar { width: 5px; }
+.chat-area::-webkit-scrollbar-track { background: transparent; }
+.chat-area::-webkit-scrollbar-thumb { background: var(--scroll-thumb); border-radius: 3px; }
+
+/* welcome */
+.welcome {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  padding: 40px 20px 100px;
+  text-align: center;
+  animation: fadeUp .5s ease both;
+}
+@keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:none} }
+
+.w-icon {
+  width: 58px; height: 58px;
+  background: var(--accent-dim);
+  border: 1px solid rgba(25,195,125,.25);
+  border-radius: 15px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 25px;
+  margin-bottom: 18px;
+  box-shadow: 0 0 22px var(--accent-glow);
+}
+
+.welcome h2 {
+  font-size: 21px;
+  font-weight: 600;
+  color: var(--text-pri);
+  margin-bottom: 8px;
+  letter-spacing: -.4px;
+  transition: color .3s;
+}
+
+.welcome p {
+  font-size: 13.5px;
+  color: var(--text-sec);
+  max-width: 360px;
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+  width: 100%;
+  max-width: 540px;
+}
+
+.card {
+  background: var(--bg-bubble-ai);
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  padding: 13px 15px;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color .2s, background .2s, transform .2s, box-shadow .2s;
+}
+.card:hover {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px var(--accent-glow);
+}
+.card-icon { font-size: 17px; margin-bottom: 7px; display: block; }
+.card-title { font-size: 12.5px; font-weight: 600; color: var(--text-pri); margin-bottom: 3px; transition: color .3s; }
+.card-sub { font-size: 11.5px; color: var(--text-sec); line-height: 1.5; }
+
+/* messages */
+.msgs {
+  padding: 22px 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-width: 740px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.msg-wrap {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 18px;
+  animation: msgIn .32s ease both;
+}
+@keyframes msgIn { from{opacity:0;transform:translateY(9px)} to{opacity:1;transform:none} }
+
+.msg-head {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 5px;
+}
+
+.msg-wrap.user .msg-head {
+  flex-direction: row-reverse;
+}
+
+.av {
+  width: 24px; height: 24px;
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.av.ai { background: var(--accent); color: #fff; box-shadow: 0 0 8px var(--accent-glow); }
+.av.you { background: var(--border); color: var(--text-sec); border: 1px solid var(--border); }
+
+.msg-who {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: .15px;
+}
+
+.msg-body {
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--text-pri);
+  padding: 13px 17px;
+  border-radius: 11px;
+  border: 1px solid var(--border);
+  word-break: break-word;
+  white-space: pre-wrap;
+  transition: background .3s, border-color .3s;
+}
+
+.msg-wrap.ai .msg-body {
+  background: var(--bg-bubble-ai);
+  border-bottom-left-radius: 3px;
+}
+.msg-wrap.user .msg-body {
+  background: var(--bg-bubble-usr);
+  border-bottom-right-radius: 3px;
+  margin-left: auto;
+  max-width: 88%;
+}
+
+/* action bar */
+.msg-actions {
+  display: flex;
+  gap: 3px;
+  margin-top: 5px;
+  opacity: 0;
+  transition: opacity .2s;
+}
+.msg-wrap:hover .msg-actions { opacity: 1; }
+.msg-wrap.user .msg-actions { justify-content: flex-end; }
+
+.act-btn {
+  padding: 3px 8px;
+  border-radius: 5px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 11px;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 3px;
+  font-family: 'Sora', sans-serif;
+  transition: background .15s, color .15s;
+}
+.act-btn:hover { background: var(--si-hover); color: var(--text-sec); }
+.act-btn svg { width: 10px; height: 10px; }
+
+/* typing */
+.typing-wrap { margin-bottom: 18px; }
+.typing-bubble {
+  background: var(--bg-bubble-ai);
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  border-bottom-left-radius: 3px;
+  padding: 15px 18px;
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+}
+.typing-bubble span {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  animation: td 1.3s infinite ease-in-out both;
+}
+.typing-bubble span:nth-child(1) { animation-delay: -.3s; }
+.typing-bubble span:nth-child(2) { animation-delay: -.15s; }
+@keyframes td {
+  0%,80%,100% { transform: scale(.6); opacity: .4; }
+  40% { transform: scale(1); opacity: 1; background: var(--accent); }
+}
+
+/* ── INPUT ── */
+.input-area {
+  flex-shrink: 0;
+  padding: 14px 20px 18px;
+  background: var(--bg-chat);
+  border-top: 1px solid var(--border);
+  transition: background .3s, border-color .3s;
+}
+
+.input-wrap {
+  max-width: 740px;
+  margin: 0 auto;
+}
+
+.input-shell {
+  display: flex;
+  align-items: flex-end;
+  gap: 9px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 9px 9px 9px 16px;
+  transition: border-color .2s, box-shadow .2s, background .3s;
+}
+.input-shell:focus-within {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px var(--accent-dim);
+}
+
+.msg-ta {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--text-pri);
+  font-family: 'Sora', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  resize: none;
+  outline: none;
+  max-height: 160px;
+  min-height: 22px;
+  overflow-y: auto;
+  padding: 3px 0;
+}
+.msg-ta::placeholder { color: var(--text-muted); }
+
+.send-btn {
+  width: 36px; height: 36px;
+  background: var(--send-bg);
+  border: none;
+  border-radius: 9px;
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  opacity: .35;
+  transition: background .15s, transform .1s, opacity .2s;
+}
+.send-btn.ready { opacity: 1; }
+.send-btn:hover { background: var(--send-hover); transform: scale(1.06); }
+.send-btn:active { transform: scale(.96); }
+.send-btn svg { width: 15px; height: 15px; }
+
+.input-note {
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 9px;
+}
+.input-note b { color: var(--text-sec); font-weight: 500; }
+
+/* ── OVERLAY (mobile sidebar backdrop) ── */
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.5);
+  z-index: 40;
+}
+.overlay.show { display: block; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 700px) {
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    transform: translateX(-100%);
+    transition: transform .3s cubic-bezier(.4,0,.2,1);
+  }
+  .sidebar.open { transform: translateX(0); }
+  .hamburger { display: flex; }
+  .cards { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sb-logo">
+    <div class="sb-logo-mark">🔬</div>
+    <span class="sb-logo-name">Patho<b>Care</b></span>
+  </div>
+
+  <button class="new-btn" onclick="newChat()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+      <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+    </svg>
+    New conversation
+  </button>
+
+  <div class="sb-label">Recent</div>
+
+  <div class="sb-item active">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    Pathology Session
+  </div>
+  <div class="sb-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    CBC Analysis · yesterday
+  </div>
+  <div class="sb-item">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    Lipid Panel Review
+  </div>
+
+  <div class="sb-spacer"></div>
+
+  <div class="sb-footer">
+    <div class="theme-row" onclick="toggleTheme()" role="button">
+      <span style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--text-sec)">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+        Light mode
+      </span>
+      <div class="t-pill" id="tPill"></div>
+    </div>
+    <div class="sb-item" style="cursor:default;opacity:.7;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+      PathoCare AI · v2.1
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="tb-left">
+      <button class="hamburger" id="hamburger" onclick="openSidebar()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="8" x2="21" y2="8"/><line x1="3" y1="16" x2="21" y2="16"/>
+        </svg>
+      </button>
+      <div class="tb-title">
+        <div class="live-dot"></div>
+        PathoCare Diagnostic AI
+      </div>
+    </div>
+    <div class="tb-right">
+      <button class="icon-btn" title="New chat" onclick="newChat()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Chat area -->
+  <div class="chat-area" id="chatArea">
+
+    <!-- Welcome -->
+    <div class="welcome" id="welcome">
+      <div class="w-icon">🧬</div>
+      <h2>How can I help you today?</h2>
+      <p>Ask me about lab results, histology findings, differential diagnoses, or clinical interpretations.</p>
+      <div class="cards">
+        <div class="card" onclick="suggest('Explain elevated AST and ALT levels in a liver panel')">
+          <span class="card-icon">🫀</span>
+          <div class="card-title">Liver function tests</div>
+          <div class="card-sub">Elevated AST and ALT explained</div>
+        </div>
+        <div class="card" onclick="suggest('What does a CBC with high WBC and low platelets indicate?')">
+          <span class="card-icon">🩸</span>
+          <div class="card-title">CBC interpretation</div>
+          <div class="card-sub">High WBC and low platelet count</div>
+        </div>
+        <div class="card" onclick="suggest('What does a PAP smear Class III result mean?')">
+          <span class="card-icon">🔬</span>
+          <div class="card-title">PAP smear Class III</div>
+          <div class="card-sub">Meaning and next clinical steps</div>
+        </div>
+        <div class="card" onclick="suggest('Interpret a lipid panel: LDL 180 mg/dL and HDL 35 mg/dL')">
+          <span class="card-icon">💊</span>
+          <div class="card-title">Lipid panel review</div>
+          <div class="card-sub">High LDL, low HDL interpretation</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Messages -->
+    <div class="msgs" id="msgs" style="display:none;"></div>
+
+  </div><!-- /chat-area -->
+
+  <!-- Input -->
+  <div class="input-area">
+    <div class="input-wrap">
+      <div class="input-shell">
+        <textarea
+          class="msg-ta"
+          id="ta"
+          placeholder="Ask about lab results, diagnoses, symptoms…"
+          rows="1"
+          autocomplete="off"
+        ></textarea>
+        <button class="send-btn" id="sendBtn" onclick="send()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="22" y1="2" x2="11" y2="13"/>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+        </button>
+      </div>
+      <div class="input-note">
+        <b>PathoCare AI</b> may produce inaccuracies · Always verify with a licensed pathologist
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<script>
+(function () {
+
+  /* ── ELEMENTS ── */
+  const chatArea  = document.getElementById('chatArea');
+  const welcome   = document.getElementById('welcome');
+  const msgs      = document.getElementById('msgs');
+  const ta        = document.getElementById('ta');
+  const sendBtn   = document.getElementById('sendBtn');
+  const tPill     = document.getElementById('tPill');
+  const overlay   = document.getElementById('overlay');
+  const sidebar   = document.getElementById('sidebar');
+
+  let busy = false;
+
+  /* ── THEME ── */
+  const savedTheme = localStorage.getItem('pc-theme') || 'dark';
+  applyTheme(savedTheme);
+
+  function applyTheme(t) {
+    if (t === 'light') {
+      document.documentElement.classList.add('light');
+      tPill.classList.add('on');
+    } else {
+      document.documentElement.classList.remove('light');
+      tPill.classList.remove('on');
+    }
+    localStorage.setItem('pc-theme', t);
+  }
+
+  window.toggleTheme = function () {
+    const isLight = document.documentElement.classList.contains('light');
+    applyTheme(isLight ? 'dark' : 'light');
+  };
+
+  /* ── SIDEBAR ── */
+  window.openSidebar = function () {
+    sidebar.classList.add('open');
+    overlay.classList.add('show');
+  };
+  window.closeSidebar = function () {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('show');
+  };
+
+  /* ── TEXTAREA AUTO-RESIZE ── */
+  ta.addEventListener('input', function () {
+    this.style.height = 'auto';
+    this.style.height = Math.min(this.scrollHeight, 160) + 'px';
+    sendBtn.classList.toggle('ready', this.value.trim().length > 0);
+  });
+
+  ta.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      send();
+    }
+  });
+
+  /* ── NEW CHAT ── */
+  window.newChat = function () {
+    msgs.innerHTML = '';
+    msgs.style.display = 'none';
+    welcome.style.display = 'flex';
+    ta.value = '';
+    ta.style.height = 'auto';
+    sendBtn.classList.remove('ready');
+    closeSidebar();
+    busy = false;
+  };
+
+  /* ── SUGGESTIONS ── */
+  window.suggest = function (text) {
+    ta.value = text;
+    sendBtn.classList.add('ready');
+    send();
+  };
+
+  /* ── SEND ── */
+  window.send = function () {
+    const text = ta.value.trim();
+    if (!text || busy) return;
+
+    welcome.style.display = 'none';
+    msgs.style.display = 'flex';
+
+    addMsg('user', text);
+    ta.value = '';
+    ta.style.height = 'auto';
+    sendBtn.classList.remove('ready');
+
+    const typingEl = addTyping();
+    busy = true;
+
+    fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: 'message=' + encodeURIComponent(text)
+    })
+    .then(r => r.ok ? r.text() : Promise.reject())
+    .then(reply => {
+      typingEl.remove();
+      busy = false;
+      addMsg('ai', reply);
+    })
+    .catch(() => {
+      typingEl.remove();
+      busy = false;
+      addMsg('ai', fallback(text));
+    });
+  };
+
+  /* ── ADD MESSAGE ── */
+  function addMsg(role, text) {
+    const wrap = document.createElement('div');
+    wrap.className = 'msg-wrap ' + role;
+
+    // header row
+    const head = document.createElement('div');
+    head.className = 'msg-head';
+
+    const av = document.createElement('div');
+    av.className = 'av ' + (role === 'ai' ? 'ai' : 'you');
+    av.textContent = role === 'ai' ? 'AI' : 'You';
+
+    const who = document.createElement('div');
+    who.className = 'msg-who';
+    who.textContent = role === 'ai' ? 'PathoCare AI' : 'You';
+
+    head.appendChild(av);
+    head.appendChild(who);
+
+    // body
+    const body = document.createElement('div');
+    body.className = 'msg-body';
+    body.textContent = text;
+
+    // actions (AI only)
+    const acts = document.createElement('div');
+    acts.className = 'msg-actions';
+    if (role === 'ai') {
+      acts.innerHTML =
+        '<button class="act-btn" onclick="cp(this)" data-t="' + esc(text) + '">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy</button>' +
+        '<button class="act-btn">👍 Good</button>' +
+        '<button class="act-btn">👎 Bad</button>';
+    }
+
+    wrap.appendChild(head);
+    wrap.appendChild(body);
+    wrap.appendChild(acts);
+    msgs.appendChild(wrap);
+    chatArea.scrollTop = chatArea.scrollHeight;
+  }
+
+  /* ── TYPING INDICATOR ── */
+  function addTyping() {
+    const wrap = document.createElement('div');
+    wrap.className = 'msg-wrap ai typing-wrap';
+    wrap.innerHTML =
+      '<div class="msg-head"><div class="av ai">AI</div><div class="msg-who">PathoCare AI</div></div>' +
+      '<div class="typing-bubble"><span></span><span></span><span></span></div>';
+    msgs.appendChild(wrap);
+    chatArea.scrollTop = chatArea.scrollHeight;
+    return wrap;
+  }
+
+  /* ── COPY ── */
+  window.cp = function (btn) {
+    navigator.clipboard.writeText(btn.dataset.t).then(() => {
+      btn.textContent = '✓ Copied';
+      setTimeout(() => { btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy'; }, 2000);
+    });
+  };
+
+  /* ── FALLBACK RESPONSES ── */
+  function fallback(q) {
+    const m = q.toLowerCase();
+    if (/cbc|wbc|platelet|white blood/.test(m))
+      return 'A CBC (Complete Blood Count) measures key blood components. Elevated WBC may signal infection, inflammation, or hematological malignancy. Thrombocytopenia (low platelets) can result from bone marrow suppression, ITP, or liver disease. I recommend correlating with a peripheral blood smear and full clinical history. Would you like to go through specific values?';
+    if (/ast|alt|liver|hepat/.test(m))
+      return 'Elevated AST and ALT indicate hepatocellular injury. An AST:ALT ratio >2:1 strongly suggests alcoholic liver disease; a ratio <1 favors viral hepatitis or NAFLD. Isolated ALT elevation is more liver-specific. Bilirubin, ALP, and GGT should be reviewed alongside. Shall I walk through the full LFT panel?';
+    if (/lipid|ldl|hdl|cholesterol|triglyceride/.test(m))
+      return 'LDL ≥160 mg/dL is classified as "high" per ACC/AHA 2019 guidelines. HDL <40 mg/dL is a recognised cardiovascular risk factor. This profile warrants assessment of the 10-year ASCVD risk score, non-HDL cholesterol, and lipoprotein(a). Do you have the triglyceride value to complete the picture?';
+    if (/pap|cervical|smear/.test(m))
+      return 'A PAP smear Class III (moderate dysplasia / CIN II) indicates cervical intraepithelial neoplasia requiring colposcopy with directed biopsy. This is NOT a cancer diagnosis — it is a precancerous change. HPV genotyping (16/18) should accompany the evaluation. Would you like to discuss the management pathway in detail?';
+    if (/haemoglobin|hemoglobin|anaemia|anemia/.test(m))
+      return 'Anaemia is defined as Hb <13 g/dL in men and <12 g/dL in women. The morphological approach (microcytic, normocytic, macrocytic) combined with reticulocyte count and iron studies guides the differential. Iron-deficiency, B12/folate deficiency, chronic disease, and haemolysis are common causes. What value and MCV are you working with?';
+    return 'Thank you for your question. To provide an accurate pathology interpretation, I\'d benefit from more clinical context — patient age, symptoms, and the specific test values. Could you share more details?';
+  }
+
+  function esc(s) { return s.replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
+
+  ta.focus();
+
+})();
+</script>
+</body>
+</html>

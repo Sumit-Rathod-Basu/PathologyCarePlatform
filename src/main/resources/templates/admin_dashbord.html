@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCP Admin · Dashboard</title>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Font Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: #f0f6fd;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            color: #1f2b44;
+        }
+
+        /* ========== SIDEBAR ========== */
+        .sidebar {
+            width: 280px;
+            background: #0d2742;
+            color: #e0edfa;
+            display: flex;
+            flex-direction: column;
+            transition: width 0.2s ease;
+            box-shadow: 4px 0 20px rgba(0, 20, 40, 0.2);
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 28px 20px 20px 24px;
+            border-bottom: 1px solid #1e3f60;
+        }
+
+        .sidebar-header h2 {
+            font-weight: 600;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            letter-spacing: -0.3px;
+        }
+
+        .sidebar-header h2 i {
+            color: #5cb3ff;
+            background: #1e4b73;
+            padding: 8px;
+            border-radius: 16px;
+        }
+
+        .nav-menu {
+            flex: 1;
+            padding: 25px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 18px;
+            border-radius: 20px;
+            color: #bdd3ec;
+            font-weight: 500;
+            transition: 0.15s;
+            cursor: pointer;
+            margin-bottom: 2px;
+        }
+
+        .nav-item i {
+            font-size: 1.4rem;
+            width: 30px;
+            text-align: center;
+        }
+
+        .nav-item.active {
+            background: #1c4c78;
+            color: white;
+            box-shadow: 0 6px 14px rgba(0, 60, 120, 0.4);
+        }
+
+        .nav-item:not(.active):hover {
+            background: #153e5e;
+            color: #e3f0ff;
+        }
+
+        .nav-item span {
+            font-size: 1rem;
+        }
+
+        .bottom-info {
+            padding: 20px 18px 30px;
+            border-top: 1px solid #1b3a57;
+            font-size: 0.8rem;
+            color: #8fbbeb;
+        }
+
+        /* ========== MAIN CONTENT ========== */
+        .main-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            background: #f5faff;
+        }
+
+        /* top bar */
+        .top-bar {
+            background: white;
+            padding: 18px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #dbe6f2;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        }
+
+        .page-title h1 {
+            font-size: 1.7rem;
+            font-weight: 600;
+            background: linear-gradient(145deg, #134979, #1e5f8e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .admin-badge {
+            background: #ddeeff;
+            padding: 8px 22px;
+            border-radius: 40px;
+            font-weight: 500;
+            color: #0d3f64;
+            border: 1px solid #bcd3f0;
+        }
+
+        /* content area where pages are loaded */
+        .content-area {
+            padding: 28px 30px;
+            overflow-y: auto;
+        }
+
+        /* stats row (cards) */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 22px;
+            margin-bottom: 35px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 30px;
+            padding: 1.8rem 1.5rem;
+            box-shadow: 0 12px 28px -12px rgba(0, 66, 118, 0.12);
+            border: 1px solid #e1eefa;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .stat-info h3 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: #164d78;
+        }
+        .stat-info p { color: #4f6f94; font-weight: 500; }
+        .stat-icon { font-size: 2.5rem; color: #b8d6ff; }
+
+        /* chart card */
+        .chart-card {
+            background: white;
+            border-radius: 32px;
+            padding: 1.8rem 1.8rem;
+            margin-bottom: 35px;
+            border: 1px solid #e3effb;
+        }
+
+        /* dynamic section (patient list, labs, messages) */
+        .section-card {
+            background: white;
+            border-radius: 32px;
+            padding: 1.8rem 1.8rem;
+            border: 1px solid #e2eefa;
+            margin-top: 20px;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #15456b;
+        }
+
+        /* tables */
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: 22px;
+            background: #fafdff;
+            border: 1px solid #d5e7f7;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        th {
+            background: #e5f0fc;
+            padding: 1rem 1.2rem;
+            text-align: left;
+            color: #124872;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 1rem 1.2rem;
+            border-bottom: 1px solid #ddebfa;
+        }
+
+        /* admin action forms */
+        .action-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .inline-form {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px;
+            background: #f3f9ff;
+            border-radius: 40px;
+            padding: 0.3rem 0.3rem 0.3rem 1rem;
+        }
+
+        .inline-form input {
+            border: 1px solid #c7ddf5;
+            border-radius: 30px;
+            padding: 0.4rem 0.8rem;
+            width: 85px;
+            font-size: 0.8rem;
+        }
+
+        .btn-sm {
+            background: #1c6ca6;
+            border: none;
+            border-radius: 30px;
+            color: white;
+            padding: 0.4rem 1.2rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .btn-outline-red {
+            background: transparent;
+            border: 1.5px solid #fbc1c1;
+            border-radius: 30px;
+            color: #b13e3e;
+            padding: 0.4rem 1.2rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: #196097;
+            border: none;
+            border-radius: 40px;
+            padding: 0.7rem 2rem;
+            color: white;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        /* message items */
+        .message-item {
+            background: #f6fafe;
+            border-radius: 24px;
+            padding: 1.2rem;
+            margin-bottom: 10px;
+            border-left: 6px solid #3080c0;
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+        }
+
+        .hidden-page {
+            display: none;
+        }
+
+        .active-page {
+            display: block;
+        }
+
+        /* small */
+        @media (max-width: 800px) {
+            .sidebar { width: 90px; }
+            .sidebar-header h2 span, .nav-item span, .bottom-info span { display: none; }
+            .nav-item { justify-content: center; }
+            .nav-item i { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- SIDEBAR with new items: patient list, labs list, messages -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2><i class="fas fa-flask"></i> <span>Pathology Care</span></h2>
+        </div>
+        <div class="nav-menu">
+            <!-- Dashboard (main) -->
+            <div class="nav-item active" id="nav-dashboard" onclick="switchPage('dashboard')">
+                <i class="fas fa-chart-pie"></i><span>Dashboard</span>
+            </div>
+            <!-- Patient List -->
+            <div class="nav-item" id="nav-patients" onclick="switchPage('patients')">
+                <i class="fas fa-user-injured"></i><span>Patient List</span>
+            </div>
+            <!-- Labs List -->
+            <div class="nav-item" id="nav-labs" onclick="switchPage('labs')">
+                <i class="fas fa-microscope"></i><span>Labs List</span>
+            </div>
+            <!-- Customer Messages -->
+            <div class="nav-item" id="nav-messages" onclick="switchPage('messages')">
+                <i class="fas fa-envelope"></i><span>Messages</span>
+            </div>
+            <!-- additional admin link (optional) -->
+            <div class="nav-item" onclick="switchPage('admins')">
+                <i class="fas fa-user-cog"></i><span>Manage Admins</span>
+            </div>
+        </div>
+        <div class="bottom-info">
+            <i class="fas fa-shield-alt"></i> <span>v2.4 · PCP</span>
+        </div>
+    </div>
+
+    <!-- MAIN PANEL -->
+    <div class="main-panel">
+        <div class="top-bar">
+            <div class="page-title">
+                <h1 id="main-heading">Dashboard overview</h1>
+            </div>
+            <div class="admin-badge">
+                <i class="fas fa-user-lock"></i> Admin
+            </div>
+        </div>
+
+        <div class="content-area" id="content-area">
+            <!-- ========== DASHBOARD PAGE ========== (visible by default) -->
+            <div id="page-dashboard" class="active-page">
+                <!-- Stats cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3 th:text="${totalPatients}">218</h3>
+                            <p><i class="fas fa-user"></i> Patients</p>
+                        </div>
+                        <div class="stat-icon"><i class="fas fa-users"></i></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3 th:text="${totalLabs}">36</h3>
+                            <p><i class="fas fa-flask"></i> Labs</p>
+                        </div>
+                        <div class="stat-icon"><i class="fas fa-microscope"></i></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3 th:text="${totalAdmins}">7</h3>
+                            <p><i class="fas fa-user-tie"></i> Admins</p>
+                        </div>
+                        <div class="stat-icon"><i class="fas fa-shield-alt"></i></div>
+                    </div>
+                </div>
+
+                <!-- Chart -->
+                <div class="chart-card">
+                    <canvas id="statsChart" style="width:100%; height:240px;"></canvas>
+                </div>
+
+                <!-- Quick admin management snippet (optional) -->
+                <div class="section-card">
+                    <div class="section-title"><i class="fas fa-user-gear"></i> Recent Admins</div>
+                    <div class="table-responsive" th:fragment="admin-table">
+                        <table>
+                            <tr><th>ID</th><th>Username</th><th>Email</th><th>Actions</th></tr>
+                            <tr th:each="admin : ${admins}">
+                                <td th:text="${admin.id}">1</td>
+                                <td th:text="${admin.username}">ajay</td>
+                                <td th:text="${admin.email}">admin@lab.com</td>
+                                <td>
+                                    <div class="action-group">
+                                        <form th:action="@{/admin/dashboard/admin/update}" method="post" class="inline-form">
+                                            <input type="hidden" name="id" th:value="${admin.id}">
+                                            <input type="text" name="username" th:value="${admin.username}" placeholder="user">
+                                            <input type="email" name="email" th:value="${admin.email}" placeholder="email">
+                                            <input type="password" name="password" placeholder="pass">
+                                            <button class="btn-sm"><i class="fas fa-pen"></i> upd</button>
+                                        </form>
+                                        <form th:action="@{/admin/dashboard/admin/delete/{id}(id=${admin.id})}" method="post" style="display:inline;">
+                                            <button class="btn-outline-red"><i class="fas fa-trash"></i> del</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== PATIENT LIST PAGE ========== (hidden by default) -->
+            <div id="page-patients" class="hidden-page">
+                <div class="section-card">
+                    <div class="section-title"><i class="fas fa-notes-medical"></i> Registered Patients</div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>City</th></tr></thead>
+                            <tbody>
+                                <!-- thymeleaf patients loop (example) -->
+                                <tr th:each="p : ${patientList}">
+                                    <td th:text="${p.id}">101</td>
+                                    <td th:text="${p.name}">Ravi Sharma</td>
+                                    <td th:text="${p.email}">ravi@mail.com</td>
+                                    <td th:text="${p.phone}">9876543210</td>
+                                    <td th:text="${p.city}">Mumbai</td>
+                                </tr>
+                                <!-- fallback static rows for demo if list empty -->
+                                <tr th:if="${patientList == null or patientList.isEmpty()}">
+                                    <td colspan="5" style="text-align:center; padding:2rem;">No patient data yet</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== LABS LIST PAGE ========== -->
+            <div id="page-labs" class="hidden-page">
+                <div class="section-card">
+                    <div class="section-title"><i class="fas fa-flask"></i> Laboratory List</div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead><tr><th>ID</th><th>Lab Name</th><th>Email</th><th>City</th><th>License</th></tr></thead>
+                            <tbody>
+                                <tr th:each="lab : ${labList}">
+                                    <td th:text="${lab.id}">5</td>
+                                    <td th:text="${lab.labName}">City Diagnostics</td>
+                                    <td th:text="${lab.email}">contact@citylab.com</td>
+                                    <td th:text="${lab.city}">Delhi</td>
+                                    <td th:text="${lab.registrationNumber}">LIC-987</td>
+                                </tr>
+                                <tr th:if="${labList == null or labList.isEmpty()}">
+                                    <td colspan="5" style="text-align:center;">No labs registered</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== CUSTOMER MESSAGES PAGE ========== -->
+            <div id="page-messages" class="hidden-page">
+                <div class="section-card">
+                    <div class="section-title"><i class="fas fa-comment-dots"></i> Customer Messages</div>
+                    <div th:each="msg : ${messages}" class="message-item">
+                        <div class="message-header">
+                            <span th:text="${msg.name}">Amit Patel</span>
+                            <span th:text="${msg.date}">25 Feb 2026</span>
+                        </div>
+                        <p th:text="${msg.email}">amit@example.com</p>
+                        <p style="background:white; padding:10px; border-radius:16px;" th:text="${msg.message}">Need help with lab report.</p>
+                    </div>
+                    <div th:if="${messages == null or messages.isEmpty()}" style="padding:2rem; text-align:center;">
+                        <i class="fas fa-inbox" style="font-size:3rem; opacity:0.3;"></i><br>No messages yet
+                    </div>
+                </div>
+            </div>
+
+            <!-- hidden fallback for manage admins page (same as dashboard snippet, but we can keep or link) -->
+            <div id="page-admins" class="hidden-page">
+                <div class="section-card">
+                    <div class="section-title"><i class="fas fa-users-cog"></i> All Administrators</div>
+                    <div class="table-responsive">
+                        <table>
+                            <tr><th>ID</th><th>Username</th><th>Email</th><th>Actions</th></tr>
+                            <tr th:each="admin : ${admins}">
+                                <td th:text="${admin.id}">2</td>
+                                <td th:text="${admin.username}">admin1</td>
+                                <td th:text="${admin.email}">a@b.com</td>
+                                <td> <!-- actions similar --> </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CHART SCRIPT -->
+    <script th:inline="javascript">
+        /* global chart for dashboard */
+        const ctx = document.getElementById('statsChart')?.getContext('2d');
+        if (ctx) {
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Patients', 'Labs', 'Admins'],
+                    datasets: [{
+                        label: 'Registered',
+                        data: [
+                            [[${totalPatients}]],
+                            [[${totalLabs}]],
+                            [[${totalAdmins}]]
+                        ],
+                        backgroundColor: ['#2d7fc1', '#33a580', '#c74f4f']
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
+
+        /* page switching */
+        function switchPage(page) {
+            // hide all pages
+            document.querySelectorAll('[id^="page-"]').forEach(el => {
+                el.classList.remove('active-page');
+                el.classList.add('hidden-page');
+            });
+            // show selected
+            const activePage = document.getElementById('page-' + page);
+            if (activePage) {
+                activePage.classList.remove('hidden-page');
+                activePage.classList.add('active-page');
+            }
+
+            // update heading text
+            const headingMap = {
+                'dashboard': 'Dashboard overview',
+                'patients': 'Patient List',
+                'labs': 'Labs List',
+                'messages': 'Customer Messages',
+                'admins': 'Manage Administrators'
+            };
+            document.getElementById('main-heading').innerText = headingMap[page] || 'Dashboard';
+
+            // update active nav item
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.getElementById('nav-' + page)?.classList.add('active');
+        }
+
+        // ensure dashboard active on load (in case of reload)
+        window.onload = function() {
+            // if no fragment identifier, dashboard is default
+            if (!location.hash) switchPage('dashboard');
+        };
+    </script>
+    <!-- Thymeleaf fragments for dynamic lists (just placeholders) 
+         ensure your model contains: patientList, labList, messages -->
+</body>
+</html>

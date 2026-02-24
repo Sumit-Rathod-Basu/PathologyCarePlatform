@@ -37,6 +37,9 @@ public class PageshandlingControler {
 public String showLogin(Model model) {
     return "patient-login";
 }
+
+
+
 @GetMapping("/labs/register")
 public String labsregitser(Model model  ) {
     return "lab-regester";

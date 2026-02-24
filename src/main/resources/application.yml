@@ -19,7 +19,7 @@ spring:
           auth: true
           starttls:
             enable: true
-  
+
 
   jpa:
     hibernate:
@@ -30,7 +30,15 @@ spring:
         format_sql: true
 
 
+
 server:
-  port: 9191
+  port: 5151
+
+openrouter:
+  api-key: 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
+  url: https://openrouter.ai/api/v1/chat/completions
+  model: openai/gpt-3.5-turbo
+
+
 
  
