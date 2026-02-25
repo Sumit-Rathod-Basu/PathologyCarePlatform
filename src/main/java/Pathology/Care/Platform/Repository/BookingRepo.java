@@ -10,5 +10,6 @@ public interface BookingRepo extends JpaRepository<BookingInfo, Long> {
    List<BookingInfo> findByLabId(Long labId);
        // Get latest booking of patient using email
        List<BookingInfo> findBypatientEmail(String email);
-    BookingInfo findTopByPatientEmailOrderByIdDesc(String patientEmail);
+    BookingInfo findTopByPatientEmailOrderByIdDesc(String patientEmail); 
+    
 }

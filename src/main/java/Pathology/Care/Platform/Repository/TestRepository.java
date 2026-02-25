@@ -11,4 +11,5 @@ public interface TestRepository extends JpaRepository<TestInfo, Long> {
     List<TestInfo> findByLabId(Long labId);
 
     List<TestInfo> findByPublish(String string);
+    
 }

@@ -13,6 +13,10 @@ public class AdminUser {
     public String username;
     public String email;
     public String password; // store hashed password in production
+    public AdminUser orElseThrow(Object object) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'orElseThrow'");
+    }
     
 
     // Getters and Setters

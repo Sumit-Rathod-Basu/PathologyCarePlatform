@@ -318,6 +318,7 @@
         .active-page {
             display: block;
         }
+        
 
         /* small */
         @media (max-width: 800px) {
@@ -326,6 +327,42 @@
             .nav-item { justify-content: center; }
             .nav-item i { font-size: 1.8rem; }
         }
+        .logout-form {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #ff4d4d, #cc0000);
+    color: #ffffff;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.logout-btn i {
+    font-size: 14px;
+}
+
+.logout-btn:hover {
+    background: linear-gradient(135deg, #e60000, #990000);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+}
+
+.logout-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
     </style>
 </head>
 <body>
@@ -370,6 +407,12 @@
             <div class="admin-badge">
                 <i class="fas fa-user-lock"></i> Admin
             </div>
+<form th:action="@{/admin/dashboard/logout}" method="post" class="logout-form">
+    <button type="submit" class="logout-btn">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Logout</span>
+    </button>
+</form>
         </div>
 
         <div class="content-area" id="content-area">
@@ -441,15 +484,15 @@
                     <div class="section-title"><i class="fas fa-notes-medical"></i> Registered Patients</div>
                     <div class="table-responsive">
                         <table>
-                            <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>City</th></tr></thead>
+                            <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th></tr></thead>
                             <tbody>
                                 <!-- thymeleaf patients loop (example) -->
-                                <tr th:each="p : ${patientList}">
+                                <tr th:each="p : ${patients}">
                                     <td th:text="${p.id}">101</td>
                                     <td th:text="${p.name}">Ravi Sharma</td>
                                     <td th:text="${p.email}">ravi@mail.com</td>
                                     <td th:text="${p.phone}">9876543210</td>
-                                    <td th:text="${p.city}">Mumbai</td>
+                                  
                                 </tr>
                                 <!-- fallback static rows for demo if list empty -->
                                 <tr th:if="${patientList == null or patientList.isEmpty()}">
@@ -469,7 +512,7 @@
                         <table>
                             <thead><tr><th>ID</th><th>Lab Name</th><th>Email</th><th>City</th><th>License</th></tr></thead>
                             <tbody>
-                                <tr th:each="lab : ${labList}">
+                                <tr th:each="lab : ${labs}">
                                     <td th:text="${lab.id}">5</td>
                                     <td th:text="${lab.labName}">City Diagnostics</td>
                                     <td th:text="${lab.email}">contact@citylab.com</td>
@@ -489,17 +532,9 @@
             <div id="page-messages" class="hidden-page">
                 <div class="section-card">
                     <div class="section-title"><i class="fas fa-comment-dots"></i> Customer Messages</div>
-                    <div th:each="msg : ${messages}" class="message-item">
-                        <div class="message-header">
-                            <span th:text="${msg.name}">Amit Patel</span>
-                            <span th:text="${msg.date}">25 Feb 2026</span>
-                        </div>
-                        <p th:text="${msg.email}">amit@example.com</p>
-                        <p style="background:white; padding:10px; border-radius:16px;" th:text="${msg.message}">Need help with lab report.</p>
-                    </div>
-                    <div th:if="${messages == null or messages.isEmpty()}" style="padding:2rem; text-align:center;">
-                        <i class="fas fa-inbox" style="font-size:3rem; opacity:0.3;"></i><br>No messages yet
-                    </div>
+   <a th:href="@{/contact/admin}">
+    <i class="fas fa-comment-dots"></i> Customer Messages
+</a>
                 </div>
             </div>
 

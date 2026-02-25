@@ -43,4 +43,9 @@ public class AdminService {
     public AdminUser saveAdmin(AdminUser admin) {
         return adminRepo.save(admin);
     }
+
+    public AdminUser findByEmail(String email) {
+        // TODO Auto-generated method stub
+        return adminRepo.findByEmail(email);
+    }
 }

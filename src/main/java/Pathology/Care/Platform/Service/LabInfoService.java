@@ -1,5 +1,7 @@
 package Pathology.Care.Platform.Service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import Pathology.Care.Platform.Model.LabInfo;
@@ -38,6 +40,11 @@ public class LabInfoService {
     public LabInfo saveLab(LabInfo lab) {
         // TODO Auto-generated method stub
         return repo.save(lab);
+    }
+
+    public LabInfo getLabById(Long labId) {
+        // TODO Auto-generated method stub
+        return repo.findById(labId).orElse(null);
     }
 
 }

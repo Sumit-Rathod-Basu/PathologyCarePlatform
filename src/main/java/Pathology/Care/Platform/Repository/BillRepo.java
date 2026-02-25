@@ -11,4 +11,7 @@ import Pathology.Care.Platform.Model.Bill;
 public interface BillRepo  extends JpaRepository<Bill, Long> {
 
     List<Bill> findByPatientId(Long patientId);
+
+    List<Bill> findByPatientIdIn(List<Long> patientIds);
+    
 }

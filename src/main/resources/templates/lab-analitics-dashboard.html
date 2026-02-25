@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Pathology Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ---------- Global Styles ---------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ---------- Header Section ---------- */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-left h1 {
+            color: white;
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-left p {
+            color: rgba(255,255,255,0.9);
+            font-size: 16px;
+            margin-top: 8px;
+        }
+
+        .date-badge {
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            padding: 12px 24px;
+            border-radius: 50px;
+            color: white;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .date-badge i {
+            font-size: 18px;
+        }
+
+        /* ---------- Stats Cards ---------- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .stat-card:nth-child(1)::before { background: linear-gradient(180deg, #3949ab, #5c6bc0); }
+        .stat-card:nth-child(2)::before { background: linear-gradient(180deg, #06b6d4, #22d3ee); }
+        .stat-card:nth-child(3)::before { background: linear-gradient(180deg, #8b5cf6, #a78bfa); }
+        .stat-card:nth-child(4)::before { background: linear-gradient(180deg, #f59e0b, #fbbf24); }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 50px rgba(0,0,0,0.15);
+        }
+
+        .stat-card:hover::before {
+            width: 100%;
+            opacity: 0.1;
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            background: #f8fafc;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+
+        .stat-card:nth-child(1) .stat-icon { color: #3949ab; }
+        .stat-card:nth-child(2) .stat-icon { color: #06b6d4; }
+        .stat-card:nth-child(3) .stat-icon { color: #8b5cf6; }
+        .stat-card:nth-child(4) .stat-icon { color: #f59e0b; }
+
+        .stat-card:hover .stat-icon {
+            transform: scale(1.1);
+            background: white;
+        }
+
+        .stat-content {
+            flex: 1;
+            z-index: 1;
+        }
+
+        .stat-content h2 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 5px;
+            line-height: 1;
+        }
+
+        .stat-content p {
+            color: #64748b;
+            font-weight: 500;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-trend {
+            font-size: 13px;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .trend-up { color: #10b981; }
+        .trend-down { color: #ef4444; }
+
+        /* ---------- Chart Section ---------- */
+        .chart-wrapper {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .chart-header h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chart-header h3 i {
+            color: #667eea;
+        }
+
+        .chart-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chart-btn {
+            padding: 8px 16px;
+            border: 1px solid #e2e8f0;
+            background: white;
+            border-radius: 8px;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .chart-btn:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .chart-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+        }
+
+        /* ---------- Summary Cards ---------- */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .summary-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .summary-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #64748b;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .summary-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 4px;
+            transition: width 0.8s ease;
+        }
+
+        /* ---------- Responsive Design ---------- */
+        @media (max-width: 768px) {
+            body { padding: 15px; }
+            .header-left h1 { font-size: 28px; }
+            .stat-card { padding: 20px; }
+            .stat-content h2 { font-size: 28px; }
+            .chart-container { height: 300px; }
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard-container">
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <h1>📊 Pathology Dashboard</h1>
+            <p>Comprehensive analytics and insights at your fingertips</p>
+        </div>
+        <div class="date-badge">
+            <i class="far fa-calendar-alt"></i>
+            <span th:text="${#dates.format(new java.util.Date(), 'EEEE, MMMM d, yyyy')}">Monday, January 1, 2024</span>
+        </div>
+    </div>
+
+    <!-- Stats Cards with Icons -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-content">
+                <h2 th:text="${totalPatients}">0</h2>
+                <p>Total Patients</p>
+                <div class="stat-trend">
+                    <i class="fas fa-arrow-up trend-up"></i>
+                    <span class="trend-up">+12%</span>
+                    <span>vs last month</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-calendar-check"></i>
+            </div>
+            <div class="stat-content">
+                <h2 th:text="${totalBookings}">0</h2>
+                <p>Total Bookings</p>
+                <div class="stat-trend">
+                    <i class="fas fa-arrow-up trend-up"></i>
+                    <span class="trend-up">+8%</span>
+                    <span>vs last month</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-flask"></i>
+            </div>
+            <div class="stat-content">
+                <h2 th:text="${totalTests}">0</h2>
+                <p>Total Tests</p>
+                <div class="stat-trend">
+                    <i class="fas fa-arrow-up trend-up"></i>
+                    <span class="trend-up">+15%</span>
+                    <span>vs last month</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-rupee-sign"></i>
+            </div>
+            <div class="stat-content">
+                <h2 th:text="${totalRevenue}">₹0.00</h2>
+                <p>Total Revenue</p>
+                <div class="stat-trend">
+                    <i class="fas fa-arrow-up trend-up"></i>
+                    <span class="trend-up">+23%</span>
+                    <span>vs last month</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart Section -->
+    <div class="chart-wrapper">
+        <div class="chart-header">
+            <h3>
+                <i class="fas fa-chart-bar"></i>
+                Analytics Overview
+            </h3>
+            <div class="chart-actions">
+                <button class="chart-btn active" onclick="changeChartType('bar')">
+                    <i class="fas fa-chart-bar"></i> Bar
+                </button>
+                <button class="chart-btn" onclick="changeChartType('line')">
+                    <i class="fas fa-chart-line"></i> Line
+                </button>
+                <button class="chart-btn" onclick="changeChartType('doughnut')">
+                    <i class="fas fa-chart-pie"></i> Doughnut
+                </button>
+            </div>
+        </div>
+        <div class="chart-container">
+            <canvas id="statsChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+   
+</div>
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+    // Initialize chart
+    const statsCtx = document.getElementById('statsChart').getContext('2d');
+    const totalPatients = [[${totalPatients}]];
+    const totalBookings = [[${totalBookings}]];
+    const totalTests = [[${totalTests}]];
+    const totalRevenue = [[${totalRevenue}]];
+
+    let statsChart = new Chart(statsCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Patients', 'Bookings', 'Tests', 'Revenue'],
+            datasets: [{
+                label: 'Count / Revenue',
+                data: [totalPatients, totalBookings, totalTests, totalRevenue],
+                backgroundColor: [
+                    'rgba(57, 73, 171, 0.8)',
+                    'rgba(6, 182, 212, 0.8)',
+                    'rgba(139, 92, 246, 0.8)',
+                    'rgba(245, 158, 11, 0.8)'
+                ],
+                borderColor: [
+                    '#3949ab',
+                    '#06b6d4',
+                    '#8b5cf6',
+                    '#f59e0b'
+                ],
+                borderWidth: 2,
+                borderRadius: 8,
+                hoverBackgroundColor: [
+                    '#3949ab',
+                    '#06b6d4',
+                    '#8b5cf6',
+                    '#f59e0b'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: 'rgba(0,0,0,0.8)',
+                    titleFont: { size: 14, weight: 'bold' },
+                    bodyFont: { size: 13 },
+                    padding: 12,
+                    cornerRadius: 8,
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) label += ': ';
+                            if (context.dataIndex === 3) {
+                                label += '₹' + context.raw.toLocaleString('en-IN');
+                            } else {
+                                label += context.raw.toLocaleString('en-IN');
+                            }
+                            return label;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0,0,0,0.05)',
+                        drawBorder: false
+                    },
+                    ticks: {
+                        callback: function(value) {
+                            if (this.getLabelForValue(value) === 'Revenue') {
+                                return '₹' + value.toLocaleString('en-IN');
+                            }
+                            return value.toLocaleString('en-IN');
+                        }
+                    }
+                },
+                x: {
+                    grid: { display: false }
+                }
+            },
+            animation: {
+                duration: 2000,
+                easing: 'easeInOutQuart'
+            }
+        }
+    });
+
+    // Chart type changer
+    function changeChartType(type) {
+        statsChart.destroy();
+        statsChart = new Chart(statsCtx, {
+            type: type,
+            data: {
+                labels: ['Patients', 'Bookings', 'Tests', 'Revenue'],
+                datasets: [{
+                    label: 'Count / Revenue',
+                    data: [totalPatients, totalBookings, totalTests, totalRevenue],
+                    backgroundColor: [
+                        'rgba(57, 73, 171, 0.8)',
+                        'rgba(6, 182, 212, 0.8)',
+                        'rgba(139, 92, 246, 0.8)',
+                        'rgba(245, 158, 11, 0.8)'
+                    ],
+                    borderColor: [
+                        '#3949ab',
+                        '#06b6d4',
+                        '#8b5cf6',
+                        '#f59e0b'
+                    ],
+                    borderWidth: 2,
+                    borderRadius: type === 'bar' ? 8 : 0,
+                    fill: type === 'line' ? false : true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: type === 'doughnut' ? true : false },
+                    tooltip: {
+                        backgroundColor: 'rgba(0,0,0,0.8)',
+                        callbacks: {
+                            label: function(context) {
+                                if (context.dataIndex === 3) {
+                                    return 'Revenue: ₹' + context.raw.toLocaleString('en-IN');
+                                }
+                                return context.dataset.label + ': ' + context.raw.toLocaleString('en-IN');
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Update active button state
+        document.querySelectorAll('.chart-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        event.target.closest('.chart-btn').classList.add('active');
+    }
+
+    // Add animation on page load
+    window.addEventListener('load', function() {
+        const statCards = document.querySelectorAll('.stat-card');
+        statCards.forEach((card, index) => {
+            card.style.animation = `fadeIn 0.5s ease-out ${index * 0.1}s forwards`;
+            card.style.opacity = '0';
+        });
+    });
+/*]]>*/
+</script>
+</body>
+</html>

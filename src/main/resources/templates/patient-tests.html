@@ -629,6 +629,11 @@
     <a class="btn" th:href="@{/book-test/{id}(id=${t.id})}">
         <i class="fas fa-calendar-plus"></i> Book Test
     </a>
+            <a class="btn" 
+th:href="'https://www.google.com/maps/search/?api=1&query=' + ${t.labName}  + ' Pune'"
+           target="_blank">
+            <i class="fas fa-map-marker-alt"></i> View Location
+        </a>
 </div>
         </div>
     </div>
