@@ -269,7 +269,7 @@
         <i class="fas fa-flask"></i> Register Your Laboratory
     </h2>
 
-    <form action="/lab/register" method="post">
+<!--     <form action="/lab/register" method="post">
         <div class="form-group">
             <label for="labName">Laboratory Name</label>
             <div class="input-container">
@@ -359,7 +359,108 @@
         <button type="submit">
             <i class="fas fa-user-plus"></i> Register Laboratory
         </button>
-    </form>
+    </form> -->
+    <form id="labRegisterForm" action="/lab/register" method="post">
+    <!-- Existing fields -->
+    <div class="form-group">
+        <label for="labName">Laboratory Name</label>
+        <div class="input-container">
+            <input type="text" id="labName" name="labName" placeholder="Enter laboratory name" required>
+            <div class="input-icon"><i class="fas fa-hospital"></i></div>
+        </div>
+    </div>
+
+    <!-- Email + Send OTP Button -->
+    <div class="form-group">
+        <label for="email">Email (Login ID)</label>
+        <div class="input-container">
+            <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            <div class="input-icon"><i class="fas fa-envelope"></i></div>
+        </div>
+        <button type="button" id="sendOtpBtn">Send OTP</button>
+        <p id="sendOtpMsg" style="color:green;"></p>
+    </div>
+
+    <!-- OTP Input -->
+    <div class="form-group" id="otpContainer" style="display:none;">
+        <label for="otp">Enter OTP</label>
+        <div class="input-container">
+            <input type="text" id="otp" name="otp" placeholder="6-digit OTP" maxlength="6">
+            <div class="input-icon"><i class="fas fa-key"></i></div>
+        </div>
+        <button type="button" id="verifyOtpBtn">Verify OTP</button>
+        <p id="otpMsg" style="color:red;"></p>
+    </div>
+
+
+    <!-- Other fields -->
+    <div class="form-group">
+        <label for="password">Password</label>
+        <div class="input-container">
+            <input type="password" id="password" name="password" placeholder="Create a password" required>
+            <div class="input-icon"><i class="fas fa-lock"></i></div>
+            <span class="password-toggle" id="passwordToggle"><i class="fas fa-eye"></i></span>
+        </div>
+        <div class="password-strength">
+            <div class="strength-bar" id="passwordStrength"></div>
+        </div>
+    </div>
+    <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <div class="input-container">
+                <input type="text" id="phone" name="phone" placeholder="Enter phone number" required>
+                <div class="input-icon">
+                    <i class="fas fa-phone"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="address">Complete Address</label>
+            <div class="input-container">
+                <input type="text" id="address" name="address" placeholder="Enter complete address" required>
+                <div class="input-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="city">City</label>
+            <div class="input-container">
+                <input type="text" id="city" name="city" placeholder="Enter city" required>
+                <div class="input-icon">
+                    <i class="fas fa-city"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="pincode">Pincode</label>
+            <div class="input-container">
+                <input type="text" id="pincode" name="pincode" placeholder="Enter pincode" required>
+                <div class="input-icon">
+                    <i class="fas fa-map-pin"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="registrationNumber">Registration / License Number</label>
+            <div class="input-container">
+                <input type="text" id="registrationNumber" name="registrationNumber" placeholder="Enter registration number" required>
+                <div class="input-icon">
+                    <i class="fas fa-id-card"></i>
+                </div>
+            </div>
+        </div>
+
+    <!-- Other input fields like phone, address, city, pincode, registrationNumber -->
+    
+    <button type="submit" id="submitBtn" disabled>
+        <i class="fas fa-user-plus"></i> Register Laboratory
+    </button>
+</form>
 
     <p>Already Registered? <a href="/lab-login">Login to your account</a></p>
 </div>
@@ -410,6 +511,71 @@
             icon.classList.add('fa-eye');
         }
     });
+const emailField = document.getElementById('email');
+const sendOtpBtn = document.getElementById('sendOtpBtn');
+const sendOtpMsg = document.getElementById('sendOtpMsg');
+const otpContainer = document.getElementById('otpContainer');
+const otpInput = document.getElementById('otp');
+const verifyOtpBtn = document.getElementById('verifyOtpBtn');
+const otpMsg = document.getElementById('otpMsg');
+const submitBtn = document.getElementById('submitBtn');
+
+// Disable submit button initially
+submitBtn.disabled = true;
+
+// ---- SEND OTP ----
+sendOtpBtn.addEventListener('click', () => {
+    const email = emailField.value.trim();
+    if (!email) {
+        sendOtpMsg.style.color = 'red';
+        sendOtpMsg.textContent = "Please enter your email first!";
+        return;
+    }
+
+    fetch(`/lab/send-otp?email=${encodeURIComponent(email)}`)
+        .then(res => res.json())
+        .then(data => {
+            otpContainer.style.display = 'block';
+            sendOtpMsg.style.color = 'green';
+            sendOtpMsg.textContent = "OTP sent to your email!";
+        })
+        .catch(err => {
+            sendOtpMsg.style.color = 'red';
+            sendOtpMsg.textContent = "Error sending OTP!";
+        });
+});
+
+// ---- VERIFY OTP ----
+verifyOtpBtn.addEventListener('click', () => {
+    const email = emailField.value.trim();
+    const otp = otpInput.value.trim();
+
+    if (!otp) {
+        otpMsg.style.color = 'red';
+        otpMsg.textContent = "Please enter OTP!";
+        return;
+    }
+
+    fetch('/lab/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp)}`
+    })
+    .then(res => {
+        if (res.ok) return res.text();
+        else return res.text().then(t => { throw new Error(t); });
+    })
+    .then(data => {
+        otpMsg.style.color = 'green';
+        otpMsg.textContent = data;
+        submitBtn.disabled = false; // Enable submit after verification
+    })
+    .catch(err => {
+        otpMsg.style.color = 'red';
+        otpMsg.textContent = err.message;
+        submitBtn.disabled = true;
+    });
+});
 </script>
 </body>
 </html>

@@ -503,18 +503,7 @@
             <div class="stat-value" th:text="${tests.size()}">24</div>
             <div class="stat-label">Total Tests</div>
         </div>
-        <div class="stat-item">
-            <div class="stat-value">18</div>
-            <div class="stat-label">Blood Tests</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-value">6</div>
-            <div class="stat-label">Imaging Tests</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-value">12</div>
-            <div class="stat-label">Home Collection</div>
-        </div>
+
     </div>
 
     <div class="search-container">
@@ -528,18 +517,7 @@
         <button class="filter-btn active" onclick="filterTests('all')">
             <i class="fas fa-layer-group"></i> All Tests
         </button>
-        <button class="filter-btn" onclick="filterTests('blood')">
-            <i class="fas fa-tint"></i> Blood Tests
-        </button>
-        <button class="filter-btn" onclick="filterTests('urine')">
-            <i class="fas fa-flask"></i> Urine Tests
-        </button>
-        <button class="filter-btn" onclick="filterTests('imaging')">
-            <i class="fas fa-x-ray"></i> Imaging
-        </button>
-        <button class="filter-btn" onclick="filterTests('home')">
-            <i class="fas fa-home"></i> Home Collection
-        </button>
+
     </div>
 
     <div class="test-grid">
@@ -581,19 +559,13 @@
                     <div class="detail-value" th:text="${t.sampleType}">Blood</div>
                 </div>
 
-                <div class="detail-item">
-                    <div class="detail-icon">
-                        <i class="fas fa-clock"></i>
-                    </div>
-                    <div class="detail-label">Report Time:</div>
-                    <div class="detail-value" th:text="${t.reportTime}">24 Hours</div>
-                </div>
+
 
                 <div class="detail-item">
                     <div class="detail-icon">
                         <i class="fas fa-info-circle"></i>
                     </div>
-                    <div class="detail-label">Status:</div>
+                    <div class="detail-label">Status:</div> 
                     <div class="detail-value">
                         <span th:if="${t.status == 'Active'}" class="status-badge status-active">
                             <i class="fas fa-check-circle"></i> Active

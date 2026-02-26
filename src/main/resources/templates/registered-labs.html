@@ -491,14 +491,7 @@
             <div class="stat-value" th:text="${labs.size()}">12</div>
             <div class="stat-label">Total Labs</div>
         </div>
-        <div class="stat-item">
-            <div class="stat-value">8</div>
-            <div class="stat-label">Verified Labs</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-value">4</div>
-            <div class="stat-label">New This Month</div>
-        </div>
+        
     </div>
 
     <div class="search-container">
@@ -511,18 +504,6 @@
     <div class="filter-container">
         <button class="filter-btn active" onclick="filterLabs('all')">
             <i class="fas fa-layer-group"></i> All Labs
-        </button>
-        <button class="filter-btn" onclick="filterLabs('verified')">
-            <i class="fas fa-check-circle"></i> Verified
-        </button>
-        <button class="filter-btn" onclick="filterLabs('blood')">
-            <i class="fas fa-tint"></i> Blood Tests
-        </button>
-        <button class="filter-btn" onclick="filterLabs('imaging')">
-            <i class="fas fa-x-ray"></i> Imaging
-        </button>
-        <button class="filter-btn" onclick="filterLabs('city')">
-            <i class="fas fa-map-marker-alt"></i> Nearby
         </button>
     </div>
 
@@ -595,9 +576,9 @@
                     <span class="badge">Blood Tests</span>
                     <span class="badge">Urine Analysis</span>
                 </div>
-                <a class="btn" th:href="@{'/patient/lab/' + ${lab.id}}">
+<!--                 <a class="btn" th:href="@{'/patient/lab/' + ${lab.id}}">
                     <i class="fas fa-eye"></i> View Details
-                </a>
+                </a> -->
             </div>
         </div>
     </div>

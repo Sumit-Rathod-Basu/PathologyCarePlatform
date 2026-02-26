@@ -136,9 +136,10 @@
         <span th:text="'Generated On : ' + ${generatedDate}">Generated On : 03 Jan 2026</span>
     </div>
 
-    <button class="btn" th:onclick="|window.location='@{/reports/view/{id}(id=${reportId})}'|">
-        View Report
-    </button>
+<button class="btn"
+        onclick="window.location.href='http://localhost:5151/api/test/all'">
+    View Report
+</button>
 
     <div class="footer">
         RR Diagnostic Lab ✔ Secure & Verified

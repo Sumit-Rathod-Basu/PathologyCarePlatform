@@ -65,6 +65,7 @@ public class AdminDashboardController {
     // ✅ UPDATE ADMIN
     @PostMapping("/admin/update")
     public String updateAdmin(@ModelAttribute AdminUser admin) {
+        admin.setPassword(passwordEncoder.encode(admin.getPassword()));
         service.updateAdmin(admin);
         return "redirect:/admin/dashboard/admin";
     }

@@ -357,6 +357,48 @@
             opacity: 0.5;
             margin-bottom: 0.5rem;
         }
+        /* Common Button Style */
+button {
+    padding: 8px 18px;
+    border: none;
+    border-radius: 25px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 120px;
+}
+
+/* Approve Button */
+.approve-btn {
+    background: linear-gradient(135deg, #1cc88a, #17a673);
+    color: white;
+    box-shadow: 0 4px 12px rgba(28, 200, 138, 0.3);
+}
+
+.approve-btn:hover {
+    background: linear-gradient(135deg, #17a673, #13855c);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(28, 200, 138, 0.4);
+}
+
+/* Pending Button */
+.pending-btn {
+    background: linear-gradient(135deg, #f6c23e, #dda20a);
+    color: white;
+    box-shadow: 0 4px 12px rgba(246, 194, 62, 0.3);
+}
+
+.pending-btn:hover {
+    background: linear-gradient(135deg, #dda20a, #c48a00);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(246, 194, 62, 0.4);
+}
+
+/* Click Effect */
+button:active {
+    transform: scale(0.97);
+}
     </style>
 </head>
 <body>
@@ -432,6 +474,8 @@
                         <th>City</th>
                         <th>License</th>
                         <th>Actions</th>
+                        <th>Status</th>
+                        <th>Status Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -463,6 +507,34 @@
                                 </form>
                             </div>
                         </td>
+                            <td>
+        <span th:text="${lab.status}"
+              th:classappend="${lab.status == 'APPROVED'} ? 'badge-approved' : 'badge-pending'">
+        </span>
+    </td> <td>
+        <form th:action="@{/lab/admin/lab/update-status/{id}(id=${lab.id})}" method="post">
+
+            <!-- If Pending → Show Approve -->
+            <button type="submit"
+                    name="status"
+                    value="APPROVED"
+                    class="approve-btn"
+                    th:if="${lab.status == 'PENDING'}">
+                Approve
+            </button>
+
+            <!-- If Approved → Show Set Pending -->
+            <button type="submit"
+                    name="status"
+                    value="PENDING"
+                    class="pending-btn"
+                    th:if="${lab.status == 'APPROVED'}">
+                Set Pending
+            </button>
+
+        </form>
+    </td>
+
                     </tr>
                     <!-- example fallback row if labs list empty (th:block can handle) -->
                     <tr th:if="${labs == null or labs.isEmpty()}">

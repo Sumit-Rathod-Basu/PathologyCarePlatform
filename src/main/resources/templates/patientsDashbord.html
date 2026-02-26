@@ -783,8 +783,8 @@
                     <th>Test Name</th>
                     <th>Price (₹)</th>
                     <th>Date</th>
-                    <th>Status</th>
-                    <th>Track</th>
+<!--                     <th>Status</th>
+                    <th>Track</th> -->
                 </tr>
             </thead>
             <tbody>
@@ -795,22 +795,14 @@
                     <td th:text="${lastBooking.bookingDate}"></td>
 
                     <!-- Status with dynamic color -->
-                    <td>
-                        <span th:text="${lastBooking.status}"
-                              th:style="'color:' + 
-                              (${lastBooking.status} == 'PENDING' ? 'orange' : 
-                              (${lastBooking.status} == 'CONFIRMED' ? 'blue' : 'green')) 
-                              + '; font-weight:bold;'">
-                        </span>
-                    </td>
 
                     <!-- Track Button -->
-                    <td>
+<!--                     <td>
                         <a th:href="@{/track-report/{id}(id=${lastBooking.id})}"
                            class="btn-track">
                             Track
                         </a>
-                    </td>
+                    </td> -->
                 </tr>
             </tbody>
         </table>

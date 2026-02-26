@@ -28,9 +28,11 @@ public class TestInfo {
 
     private Double price;
 
-    private String sampleType;  // Blood / Urine / Swab
+    private String sampleType = "Depend on Health";  // Blood / Urine / Swab
 
     private String reportTime;  // 24 hrs, 48 hrs, Same Day
 
-    private String status; // Active / Inactive
+    private String status ="Active"; // Active / Inactive
+
+
 }

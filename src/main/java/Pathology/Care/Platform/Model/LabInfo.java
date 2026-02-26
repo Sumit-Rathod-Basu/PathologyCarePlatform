@@ -36,6 +36,7 @@ public class LabInfo {
 
     private String pincode;
 
-    private String registrationNumber;   // LAB LICENSE NO.
-
+    private String registrationNumber; 
+    
+    private String status = "PENDING";
 }

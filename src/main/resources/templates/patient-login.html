@@ -5,17 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Patient Portal - Pathology Care</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {
             /* Professional Medical Palette */
-            --primary: #0e7490; /* Ocean Blue */
+            --primary: #0e7490;
             --primary-dark: #155e75;
+            --primary-light: #cffafe;
             --accent: #22d3ee;
+            --accent-bright: #06b6d4;
             --surface: #ffffff;
-            --surface-alt: #f8fafc; /* For segmented control background */
+            --surface-alt: #f8fafc;
             --bg-body: #f0fdfa;
             --text-main: #0f172a;
             --text-muted: #64748b;
@@ -24,9 +26,12 @@
             --error-light: #fef2f2;
             --success: #10b981;
             --success-light: #f0fdf4;
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --warning: #f59e0b;
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
             --radius: 12px;
-            --transition: all 0.3s ease;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * {
@@ -35,86 +40,97 @@
             box-sizing: border-box;
         }
 
+        html, body {
+            height: 100%;
+        }
+
         body {
-            /* Abstract Medical Background Image */
-            background:
-                linear-gradient(135deg, rgba(14, 116, 144, 0.9), rgba(6, 78, 59, 0.8)),
-                url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80');
+            background: linear-gradient(135deg, rgba(14, 116, 144, 0.95), rgba(6, 78, 59, 0.85)),
+                        url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Lato', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             padding: 20px;
+            color: var(--text-main);
         }
 
+        /* Main wrapper container */
         .wrapper {
             width: 100%;
-            max-width: 460px;
+            max-width: 500px;
             background: var(--surface);
             border-radius: var(--radius);
-            padding: 40px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            padding: 45px;
+            box-shadow: var(--shadow-lg);
             position: relative;
             overflow: hidden;
-            animation: slideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: slideInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* Decorative top bar */
+        /* Decorative top gradient bar */
         .wrapper::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            height: 6px;
-            background: linear-gradient(90deg, var(--accent), var(--primary));
+            height: 8px;
+            background: linear-gradient(90deg, var(--accent), var(--primary), var(--accent-bright));
+            animation: slideInDown 0.6s ease-out;
         }
 
+        /* Header styling */
         .header {
-             text-align: center;
-             margin-bottom: 30px;
-        }
-        
-        .header h2 {
             text-align: center;
+            margin-bottom: 35px;
+            animation: fadeInDown 0.7s ease-out;
+        }
+
+        .header h1 {
             color: var(--text-main);
-            margin-bottom: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 32px;
             font-weight: 800;
-            font-size: 26px;
-            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, var(--primary), var(--accent-bright));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        /* Subtitle */
-        .header h2 span {
-            display: block;
-            font-size: 13px;
+        .header p {
             color: var(--text-muted);
+            font-size: 12px;
             font-weight: 500;
-            margin-top: 5px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            margin-top: 8px;
         }
 
-        /* --- Modern Segmented Control (Toggle) --- */
+        /* Toggle buttons (segmented control) */
         .toggle-buttons {
             display: flex;
             background: var(--surface-alt);
-            padding: 4px;
-            border-radius: 12px;
-            margin: 25px 0 30px; /* Added bottom margin */
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            padding: 5px;
+            border-radius: 10px;
+            margin-bottom: 35px;
+            box-shadow: var(--shadow-sm);
+            animation: fadeIn 0.8s ease-out 0.2s both;
         }
 
         .toggle-buttons button {
             flex: 1;
-            padding: 10px;
+            padding: 12px 16px;
             border: none;
             background: transparent;
             color: var(--text-muted);
+            font-family: 'Poppins', sans-serif;
             font-weight: 600;
             font-size: 14px;
             cursor: pointer;
@@ -124,90 +140,104 @@
             z-index: 2;
         }
 
+        .toggle-buttons button:hover {
+            color: var(--primary);
+        }
+
         .toggle-buttons button.active {
             background: var(--surface);
             color: var(--primary);
             box-shadow: var(--shadow-md);
         }
 
-        /* --- Forms & Inputs --- */
+        /* Form visibility */
         form {
             display: none;
-        }
-        form.active {
-            display: block;
             animation: fadeIn 0.4s ease-out;
         }
 
-        /* CSS Grid for Register Form Layout - MODIFIED FOR SINGLE COLUMN */
-        #registerForm.active {
-            display: grid;
-            /* Forces single column layout on all screen sizes */
-            grid-template-columns: 1fr; 
-            gap: 16px;
+        form.active {
+            display: block;
         }
 
-        /* Full width items in grid - MODIFIED TO SPAN 1 COLUMN */
-        #registerForm input[name="name"],
-        #registerForm input[name="email"],
-        #registerForm input[name="address"],
-        #registerForm button,
-        .password-group {
-            /* All items must explicitly span only 1 column in the new 1fr grid */
-            grid-column: span 1 !important;
+        #registerForm.active {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            animation: fadeIn 0.4s ease-out;
         }
-        
-        /* Two-column layout for password fields in registration - MODIFIED TO SINGLE COLUMN */
+
+        /* Ensure all form elements span correctly */
+        #registerForm input[type="text"],
+        #registerForm input[type="email"],
+        #registerForm input[type="password"],
+        #registerForm select,
+        #registerForm button,
+        .password-group,
+        .otp-container {
+            grid-column: span 1;
+        }
+
+        /* Password group layout */
         .password-group {
             display: grid;
-            /* Forces single column layout for password fields */
-            grid-template-columns: 1fr; 
+            grid-template-columns: 1fr;
             gap: 16px;
-            grid-column: span 1 !important; /* Ensures the whole group spans 1 column */
+            grid-column: span 1 !important;
         }
 
         .password-group .form-group {
-            /* Each password field takes one line */
-            grid-column: span 1; 
+            grid-column: span 1;
         }
 
-        /* Password strength indicator now spans 1 column */
-        .password-strength-bar {
-            grid-column: span 1 !important; 
-        }
-        
-        /* Form group wrapper for input and icon */
+        /* Form group styles */
         .form-group {
             position: relative;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* Add margin bottom for login form specifically */
         #loginForm .form-group {
             margin-bottom: 18px;
         }
 
-        input, select {
+        /* Input and select styling */
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        select {
             width: 100%;
-            padding: 14px 14px 14px 44px; /* Left padding for icon */
-            border-radius: 10px; /* Slightly smaller radius for inputs */
-            border: 1px solid var(--border);
+            padding: 14px 14px 14px 48px;
+            border-radius: 10px;
+            border: 2px solid var(--border);
             background-color: var(--surface);
             color: var(--text-main);
             font-size: 15px;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Lato', sans-serif;
+            font-weight: 500;
             transition: var(--transition);
         }
 
-        input:focus, select:focus {
+        input[type="text"]::placeholder,
+        input[type="email"]::placeholder,
+        input[type="password"]::placeholder {
+            color: var(--text-muted);
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        select:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(14, 116, 144, 0.1);
+            box-shadow: 0 0 0 4px rgba(14, 116, 144, 0.1);
+            background-color: rgba(207, 250, 254, 0.2);
         }
 
         /* Input icons */
         .input-icon {
             position: absolute;
-            left: 14px;
+            left: 16px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-muted);
@@ -216,87 +246,237 @@
             pointer-events: none;
         }
 
-        input:focus + .input-icon {
+        input:focus + .input-icon,
+        select:focus + .input-icon {
             color: var(--primary);
+            transform: translateY(-50%) scale(1.1);
         }
 
-        /* Select styling */
+        /* Select specific styling */
         select {
             appearance: none;
             -webkit-appearance: none;
-            padding-right: 40px; /* Space for custom arrow */
+            -moz-appearance: none;
+            padding-right: 44px;
+            cursor: pointer;
         }
-        
-        /* Select arrow using Font Awesome */
+
         .select-arrow {
             position: absolute;
-            right: 14px;
+            right: 16px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-muted);
             font-size: 14px;
             pointer-events: none;
+            transition: var(--transition);
+        }
+
+        select:focus ~ .select-arrow {
+            color: var(--primary);
+            transform: translateY(-50%) rotate(180deg);
         }
 
         /* Password strength indicator */
         .password-strength-bar {
-            height: 4px;
-            border-radius: 2px;
-            margin-top: 5px;
+            height: 5px;
+            border-radius: 3px;
+            margin-top: 8px;
             background: var(--border);
             overflow: hidden;
-            /* grid-column: span 2; - REMOVED, now spans 1 */
+            grid-column: span 1 !important;
         }
 
         .strength-indicator {
             height: 100%;
             width: 0;
-            transition: width 0.3s ease;
-            border-radius: 2px;
+            transition: width 0.3s ease, background-color 0.3s ease;
+            border-radius: 3px;
         }
 
-        .strength-weak { background: #ef4444; width: 33%; }
-        .strength-medium { background: #f59e0b; width: 66%; }
-        .strength-strong { background: #10b981; width: 100%; }
+        .strength-indicator.strength-weak {
+            background: linear-gradient(90deg, #ef4444, #f87171);
+            width: 33%;
+        }
 
+        .strength-indicator.strength-medium {
+            background: linear-gradient(90deg, #f59e0b, #fbbf24);
+            width: 66%;
+        }
 
-        /* --- Buttons --- */
+        .strength-indicator.strength-strong {
+            background: linear-gradient(90deg, #10b981, #34d399);
+            width: 100%;
+        }
+
+        /* OTP Container */
+        .otp-container {
+            background: linear-gradient(135deg, rgba(207, 250, 254, 0.4), rgba(240, 253, 250, 0.6));
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 20px 0;
+            grid-column: span 1 !important;
+            animation: slideInUp 0.5s ease-out;
+        }
+
+        .otp-container h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 18px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .otp-container h3::before {
+            content: '';
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, var(--accent), var(--primary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .otp-section {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .otp-section .form-group {
+            margin-bottom: 0;
+        }
+
+        .otp-section input {
+            padding: 12px 14px 12px 44px;
+            font-size: 14px;
+        }
+
+        .otp-buttons {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .otp-btn {
+            width: 100%;
+            padding: 11px 16px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .otp-btn.send {
+            background: linear-gradient(135deg, var(--accent), var(--accent-bright));
+            color: white;
+            box-shadow: 0 4px 12px -2px rgba(34, 211, 238, 0.3);
+        }
+
+        .otp-btn.send:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px -2px rgba(34, 211, 238, 0.4);
+        }
+
+        .otp-btn.verify {
+            background: linear-gradient(135deg, var(--success), #34d399);
+            color: white;
+            box-shadow: 0 4px 12px -2px rgba(16, 185, 129, 0.3);
+        }
+
+        .otp-btn.verify:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px -2px rgba(16, 185, 129, 0.4);
+        }
+
+        .otp-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Message display */
+        .message {
+            margin-top: 12px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            text-align: center;
+            min-height: 20px;
+            transition: var(--transition);
+        }
+
+        .message.success {
+            background: var(--success-light);
+            color: #047857;
+            border-left: 3px solid var(--success);
+        }
+
+        .message.error {
+            background: var(--error-light);
+            color: #991b1b;
+            border-left: 3px solid var(--error);
+        }
+
+        /* Main submit button */
         .btn {
             width: 100%;
-            padding: 14px;
+            padding: 14px 20px;
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
             font-size: 15px;
+            font-family: 'Poppins', sans-serif;
             border: none;
             border-radius: 10px;
             cursor: pointer;
             font-weight: 600;
-            margin-top: 10px;
+            margin-top: 12px;
             transition: var(--transition);
-            box-shadow: 0 6px 15px -3px rgba(14, 116, 144, 0.4);
+            box-shadow: 0 6px 20px -3px rgba(14, 116, 144, 0.3);
+            grid-column: span 1 !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
-        .btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 8px 20px -3px rgba(14, 116, 144, 0.5);
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px -3px rgba(14, 116, 144, 0.4);
         }
 
-        /* --- Notifications (Improved from the original CSS) --- */
-        .error-msg, .success-msg {
-            padding: 14px;
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Alert messages */
+        .error-msg,
+        .success-msg {
+            padding: 14px 16px;
             border-radius: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             font-weight: 500;
             font-size: 14px;
             display: flex;
             align-items: center;
-            border-left: 4px solid; /* Use solid line for visual pop */
-            animation: slideDown 0.3s ease-out;
-        }
-        
-        .error-msg i, .success-msg i {
-            margin-right: 10px;
-            font-size: 16px;
+            gap: 10px;
+            border-left: 4px solid;
+            animation: slideDownFade 0.4s ease-out;
         }
 
         .error-msg {
@@ -311,114 +491,198 @@
             border-color: var(--success);
         }
 
-        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .error-msg i,
+        .success-msg i {
+            font-size: 18px;
+            flex-shrink: 0;
+        }
 
-
-        /* Mobile fixes (Kept for robust mobile support) */
-        @media (max-width: 500px) {
-            body { align-items: flex-start; } 
-            .wrapper { 
-                padding: 30px 20px; 
-                border-radius: 0; 
-                min-height: 100vh;
-                box-shadow: none;
+        /* Animations */
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
             }
-            .wrapper::before { height: 4px; }
-            /* Mobile settings are now largely covered by the main 1fr styles, 
-               but these remain for maximal compatibility: */
-            #registerForm.active { grid-template-columns: 1fr; }
-            #registerForm input, #registerForm select, 
-            .password-group, .password-group .form-group, .password-strength-bar { 
-                grid-column: span 1 !important; 
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDownFade {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            body {
+                align-items: flex-start;
+                padding-top: 40px;
+            }
+
+            .wrapper {
+                max-width: 100%;
+                padding: 35px 24px;
+                border-radius: 20px 20px 0 0;
+                min-height: auto;
+                margin-bottom: 20px;
+            }
+
+            .header h1 {
+                font-size: 26px;
+            }
+
+            .otp-container {
+                padding: 18px;
+                margin: 16px 0;
+            }
+
+            input[type="text"],
+            input[type="email"],
+            input[type="password"],
+            select {
+                padding: 12px 12px 12px 42px;
+                font-size: 16px;
+            }
+
+            .btn {
+                padding: 12px 16px;
+                font-size: 14px;
+            }
+
+            .toggle-buttons button {
+                font-size: 13px;
+                padding: 10px 12px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .wrapper {
+                padding: 28px 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .header p {
+                font-size: 11px;
+                letter-spacing: 1px;
+            }
+        }
+
+        /* Accessibility improvements */
+        button:focus,
+        input:focus,
+        select:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        .btn:focus {
+            outline: 2px solid white;
+            outline-offset: 2px;
+        }
+
+        /* Prevent focus ring doubling on active state */
+        button:focus-visible,
+        input:focus-visible,
+        select:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        /* Loading state */
+        .btn.loading {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        .btn.loading i {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
             }
         }
     </style>
-
-    <script>
-        function showForm(formId) {
-            document.getElementById("loginForm").classList.remove("active");
-            document.getElementById("registerForm").classList.remove("active");
-            document.getElementById(formId).classList.add("active");
-
-            document.getElementById("loginBtn").classList.remove("active");
-            document.getElementById("registerBtn").classList.remove("active");
-            document.getElementById(formId + "Btn").classList.add("active");
-        }
-        
-        // --- Password Strength & Validation Functions ---
-
-        function checkPasswordStrength(password) {
-            const strengthBar = document.getElementById('passwordStrengthIndicator');
-            if (!strengthBar) return;
-            
-            let strength = 0;
-            if (password.length >= 8) strength++; // Length
-            if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++; // Mixed case
-            if (password.match(/\d/)) strength++; // Numbers
-            if (password.match(/[^a-zA-Z\d]/)) strength++; // Special characters
-            
-            strengthBar.className = 'strength-indicator';
-            
-            if (password.length === 0) {
-                strengthBar.style.width = '0';
-            } else if (strength <= 2) {
-                strengthBar.classList.add('strength-weak');
-            } else if (strength === 3) {
-                strengthBar.classList.add('strength-medium');
-            } else {
-                strengthBar.classList.add('strength-strong');
-            }
-        }
-
-        function validatePassword() {
-            const password = document.querySelector('#registerForm input[name="password"]');
-            const confirmPassword = document.querySelector('#registerForm input[name="confirmPassword"]');
-            
-            if (password && confirmPassword) {
-                if (password.value !== confirmPassword.value) {
-                    confirmPassword.setCustomValidity("Passwords don't match");
-                } else {
-                    confirmPassword.setCustomValidity('');
-                }
-            }
-        }
-
-        // Initialize event listeners when DOM is loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            const passwordInput = document.querySelector('#registerForm input[name="password"]');
-            const confirmPasswordInput = document.querySelector('#registerForm input[name="confirmPassword"]');
-            
-            if (passwordInput) {
-                passwordInput.addEventListener('input', function() {
-                    checkPasswordStrength(this.value);
-                    validatePassword();
-                });
-            }
-            
-            if (confirmPasswordInput) {
-                confirmPasswordInput.addEventListener('input', validatePassword);
-            }
-            
-            // Set initial form state
-            showForm('loginForm');
-        });
-    </script>
 </head>
 <body>
 
 <div class="wrapper">
-
+    <!-- Header -->
     <div class="header">
-        <h2>Pathology Care <span>Secure Patient Portal</span></h2>
+        <h1>Pathology Care</h1>
+        <p>Secure Patient Portal</p>
     </div>
 
+    <!-- Toggle buttons for form switching -->
     <div class="toggle-buttons" role="tablist">
-        <button id="loginBtn" onclick="showForm('loginForm')" role="tab" aria-selected="true" aria-controls="loginForm">Sign In</button>
-        <button id="registerBtn" onclick="showForm('registerForm')" role="tab" aria-selected="false" aria-controls="registerForm">Register Patient</button>
+        <button 
+            id="loginBtn" 
+            onclick="showForm('loginForm')" 
+            role="tab" 
+            aria-selected="true" 
+            aria-controls="loginForm"
+            class="active"
+        >
+            <i class="fas fa-sign-in-alt"></i> Sign In
+        </button>
+        <button 
+            id="registerBtn" 
+            onclick="showForm('registerForm')" 
+            role="tab" 
+            aria-selected="false" 
+            aria-controls="registerForm"
+        >
+            <i class="fas fa-user-plus"></i> Register
+        </button>
     </div>
 
+    <!-- Alert messages -->
     <div th:if="${error}" class="error-msg" role="alert">
         <i class="fas fa-exclamation-circle" aria-hidden="true"></i>
         <span th:text="${error}">An error occurred during login/registration.</span>
@@ -428,76 +692,507 @@
         <span th:text="${success}">Account created successfully!</span>
     </div>
 
+    <!-- LOGIN FORM -->
     <form id="loginForm" th:action="@{/patients/patient/login}" method="post" role="form" aria-labelledby="loginBtn">
+        
         <div class="form-group">
-            <input type="email" name="email" placeholder="Email Address" required aria-label="Email Address" />
+            <input 
+                type="email" 
+                name="email" 
+                placeholder="Email Address" 
+                required 
+                aria-label="Email Address"
+            />
             <div class="input-icon" aria-hidden="true"><i class="fas fa-envelope"></i></div>
         </div>
 
         <div class="form-group">
-            <input type="password" name="password" placeholder="Password" required aria-label="Password" />
+            <input 
+                type="password" 
+                name="password" 
+                placeholder="Password" 
+                required 
+                aria-label="Password"
+            />
             <div class="input-icon" aria-hidden="true"><i class="fas fa-lock"></i></div>
         </div>
 
         <button type="submit" class="btn">
-            <i class="fas fa-sign-in-alt" aria-hidden="true"></i> Login to Portal
+            <i class="fas fa-sign-in-alt" aria-hidden="true"></i> 
+            Login to Portal
         </button>
     </form>
 
+    <!-- REGISTRATION FORM -->
     <form id="registerForm" th:action="@{/patients/insert}" method="post" role="form" aria-labelledby="registerBtn">
         
+        <!-- Full Name -->
         <div class="form-group">
-            <input type="text" name="name" placeholder="Full Legal Name" required aria-label="Full Legal Name" />
+            <input 
+                type="text" 
+                name="name" 
+                placeholder="Full Legal Name" 
+                required 
+                aria-label="Full Legal Name"
+            />
             <div class="input-icon" aria-hidden="true"><i class="fas fa-user"></i></div>
         </div>
 
+        <!-- Email -->
         <div class="form-group">
-            <input type="email" name="email" placeholder="Email Address" required aria-label="Email Address" />
+            <input 
+                type="email" 
+                name="email" 
+                id="mainEmail" 
+                placeholder="Email Address" 
+                required 
+                aria-label="Email Address"
+            />
             <div class="input-icon" aria-hidden="true"><i class="fas fa-envelope"></i></div>
         </div>
 
+        <!-- Phone -->
         <div class="form-group">
-            <input type="text" name="phone" placeholder="Phone Number" required aria-label="Phone Number" />
+            <input 
+                type="text" 
+                name="phone" 
+                placeholder="Phone Number" 
+                required 
+                aria-label="Phone Number"
+            />
             <div class="input-icon" aria-hidden="true"><i class="fas fa-phone"></i></div>
         </div>
 
+        <!-- Gender -->
         <div class="form-group">
             <select name="gender" required aria-label="Gender Selection">
                 <option value="">Select Gender</option>
-                <option>Male</option>
-                <option>Female</option>
-                <option>Other</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
             </select>
             <div class="input-icon" aria-hidden="true"><i class="fas fa-venus-mars"></i></div>
             <div class="select-arrow" aria-hidden="true"><i class="fas fa-chevron-down"></i></div>
         </div>
 
+        <!-- Address -->
         <div class="form-group">
-            <input type="text" name="address" placeholder="Home Address" required aria-label="Home Address" />
+            <input 
+                type="text" 
+                name="address" 
+                placeholder="Home Address" 
+                required 
+                aria-label="Home Address"
+            />
             <div class="input-icon" aria-hidden="true"><i class="fas fa-map-marker-alt"></i></div>
         </div>
 
+        <!-- Password Group -->
         <div class="password-group">
             <div class="form-group">
-                <input type="password" name="password" placeholder="Create Password" required aria-label="Create Password" />
+                <input 
+                    type="password" 
+                    name="password" 
+                    id="passwordInput" 
+                    placeholder="Create Password" 
+                    required 
+                    aria-label="Create Password"
+                />
                 <div class="input-icon" aria-hidden="true"><i class="fas fa-lock"></i></div>
             </div>
 
             <div class="form-group">
-                <input type="password" name="confirmPassword" placeholder="Confirm Password" required aria-label="Confirm Password" />
+                <input 
+                    type="password" 
+                    name="confirmPassword" 
+                    id="confirmPasswordInput" 
+                    placeholder="Confirm Password" 
+                    required 
+                    aria-label="Confirm Password"
+                />
                 <div class="input-icon" aria-hidden="true"><i class="fas fa-lock"></i></div>
             </div>
             
-            <div class="password-strength-bar">
+            <div class="password-strength-bar" aria-hidden="true">
                 <div id="passwordStrengthIndicator" class="strength-indicator"></div>
             </div>
         </div>
-        <button type="submit" class="btn">
-            <i class="fas fa-user-plus" aria-hidden="true"></i> Create Account
+
+        <!-- OTP VERIFICATION CONTAINER -->
+        <div class="otp-container">
+            <h3>
+                <i class="fas fa-shield-alt" aria-hidden="true"></i>
+                Email Verification
+            </h3>
+
+            <div class="otp-section">
+                <!-- Email input for OTP -->
+                <div class="form-group">
+                    <input 
+                        type="email" 
+                        id="emailOtp" 
+                        placeholder="Email for OTP verification" 
+                        required 
+                        aria-label="Email for OTP"
+                    />
+                    <div class="input-icon" aria-hidden="true"><i class="fas fa-envelope"></i></div>
+                </div>
+
+                <!-- Send OTP button -->
+                <div class="otp-buttons">
+                    <button 
+                        type="button" 
+                        class="otp-btn send" 
+                        onclick="sendOtp()"
+                        aria-label="Send OTP to email"
+                    >
+                        <i class="fas fa-paper-plane" aria-hidden="true"></i> Send OTP
+                    </button>
+                </div>
+
+                <!-- OTP input -->
+                <div class="form-group">
+                    <input 
+                        type="text" 
+                        id="otp" 
+                        placeholder="Enter 6-digit OTP" 
+                        maxlength="6" 
+                        inputmode="numeric"
+                        required 
+                        aria-label="One-Time Password"
+                    />
+                    <div class="input-icon" aria-hidden="true"><i class="fas fa-key"></i></div>
+                </div>
+
+                <!-- Verify OTP button -->
+                <div class="otp-buttons">
+                    <button 
+                        type="button" 
+                        class="otp-btn verify" 
+                        id="verifyOtpBtn"
+                        onclick="verifyOtp()"
+                        aria-label="Verify OTP"
+                    >
+                        <i class="fas fa-check" aria-hidden="true"></i> Verify OTP
+                    </button>
+                </div>
+
+                <!-- Message display -->
+                <div class="message" id="message" role="status" aria-live="polite"></div>
+            </div>
+        </div>
+
+        <!-- Submit button - disabled until OTP verified -->
+        <button 
+            type="submit" 
+            id="submitBtn" 
+            class="btn" 
+            disabled
+            aria-disabled="true"
+        >
+            <i class="fas fa-user-check" aria-hidden="true"></i> Create Account
         </button>
     </form>
 
 </div>
+
+<!-- JavaScript -->
+<script>
+    // ==================== FORM SWITCHING ====================
+    
+    /**
+     * Switch between login and registration forms
+     */
+    function showForm(formId) {
+        const loginForm = document.getElementById("loginForm");
+        const registerForm = document.getElementById("registerForm");
+        const loginBtn = document.getElementById("loginBtn");
+        const registerBtn = document.getElementById("registerBtn");
+
+        // Remove active class from all forms and buttons
+        loginForm.classList.remove("active");
+        registerForm.classList.remove("active");
+        loginBtn.classList.remove("active");
+        registerBtn.classList.remove("active");
+
+        // Add active class to selected form and button
+        document.getElementById(formId).classList.add("active");
+        document.getElementById(formId + "Btn").classList.add("active");
+
+        // Update aria-selected attributes
+        if (formId === "loginForm") {
+            loginBtn.setAttribute("aria-selected", "true");
+            registerBtn.setAttribute("aria-selected", "false");
+        } else {
+            loginBtn.setAttribute("aria-selected", "false");
+            registerBtn.setAttribute("aria-selected", "true");
+        }
+    }
+
+    // ==================== PASSWORD VALIDATION ====================
+
+    /**
+     * Check password strength and update indicator
+     */
+    function checkPasswordStrength(password) {
+        const strengthBar = document.getElementById('passwordStrengthIndicator');
+        if (!strengthBar) return;
+
+        let strength = 0;
+        
+        // Length check
+        if (password.length >= 8) strength++;
+        // Mixed case check
+        if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+        // Numbers check
+        if (/\d/.test(password)) strength++;
+        // Special characters check
+        if (/[^a-zA-Z\d]/.test(password)) strength++;
+
+        strengthBar.className = 'strength-indicator';
+
+        if (password.length === 0) {
+            strengthBar.style.width = '0';
+        } else if (strength <= 2) {
+            strengthBar.classList.add('strength-weak');
+        } else if (strength === 3) {
+            strengthBar.classList.add('strength-medium');
+        } else {
+            strengthBar.classList.add('strength-strong');
+        }
+    }
+
+    /**
+     * Validate that both password fields match
+     */
+    function validatePassword() {
+        const password = document.querySelector('#registerForm input[name="password"]');
+        const confirmPassword = document.querySelector('#registerForm input[name="confirmPassword"]');
+
+        if (password && confirmPassword) {
+            if (password.value !== confirmPassword.value) {
+                confirmPassword.setCustomValidity("Passwords don't match");
+                confirmPassword.classList.add('invalid');
+            } else {
+                confirmPassword.setCustomValidity('');
+                confirmPassword.classList.remove('invalid');
+            }
+        }
+    }
+
+    // ==================== OTP LOGIC ====================
+
+    let otpVerified = false;
+
+    /**
+     * Send OTP to the provided email
+     */
+    function sendOtp() {
+        const email = document.getElementById('emailOtp').value.trim();
+        const messageDiv = document.getElementById('message');
+        const sendBtn = document.querySelector('.otp-btn.send');
+
+        messageDiv.textContent = '';
+        messageDiv.className = '';
+
+        if (!email) {
+            messageDiv.textContent = 'Please enter your email address!';
+            messageDiv.className = 'message error';
+            return;
+        }
+
+        // Basic email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            messageDiv.textContent = 'Please enter a valid email address!';
+            messageDiv.className = 'message error';
+            return;
+        }
+
+        // Disable button and show loading state
+        sendBtn.disabled = true;
+        sendBtn.innerHTML = '<i class="fas fa-spinner" style="animation: spin 1s linear infinite;"></i> Sending...';
+
+        // Reset OTP verification on new send
+        otpVerified = false;
+        updateSubmitButton();
+
+        fetch(`/patients/send-otp?email=${encodeURIComponent(email)}`)
+            .then(response => response.json())
+            .then(data => {
+                messageDiv.innerHTML = `<i class="fas fa-check-circle"></i> OTP sent! Check your email. <strong>(Test: ${data.otp})</strong>`;
+                messageDiv.className = 'message success';
+                sendBtn.disabled = false;
+                sendBtn.innerHTML = '<i class="fas fa-paper-plane" aria-hidden="true"></i> Send OTP';
+            })
+            .catch(error => {
+                console.error('OTP send error:', error);
+                messageDiv.textContent = 'Error sending OTP. Please try again.';
+                messageDiv.className = 'message error';
+                sendBtn.disabled = false;
+                sendBtn.innerHTML = '<i class="fas fa-paper-plane" aria-hidden="true"></i> Send OTP';
+            });
+    }
+
+    /**
+     * Verify the OTP entered by the user
+     */
+    function verifyOtp() {
+        const email = document.getElementById('emailOtp')?.value.trim();
+        const otp = document.getElementById('otp')?.value.trim();
+        const messageDiv = document.getElementById('message');
+        const verifyBtn = document.getElementById('verifyOtpBtn');
+
+        messageDiv.textContent = '';
+        messageDiv.className = '';
+
+        if (!email || !otp) {
+            messageDiv.textContent = 'Please enter both email and OTP!';
+            messageDiv.className = 'message error';
+            return;
+        }
+
+        if (otp.length !== 6 || !/^\d{6}$/.test(otp)) {
+            messageDiv.textContent = 'OTP must be a 6-digit number!';
+            messageDiv.className = 'message error';
+            return;
+        }
+
+        // Disable button and show loading state
+        verifyBtn.disabled = true;
+        verifyBtn.innerHTML = '<i class="fas fa-spinner" style="animation: spin 1s linear infinite;"></i> Verifying...';
+
+        fetch('/patients/verify-otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp)}`
+        })
+        .then(response => {
+            return response.text().then(text => ({ 
+                status: response.status, 
+                text: text 
+            }));
+        })
+        .then(result => {
+            verifyBtn.disabled = false;
+            verifyBtn.innerHTML = '<i class="fas fa-check" aria-hidden="true"></i> Verify OTP';
+
+            if (result.status === 200) {
+                messageDiv.innerHTML = `<i class="fas fa-check-circle"></i> ${result.text}`;
+                messageDiv.className = 'message success';
+                otpVerified = true;
+                updateSubmitButton();
+            } else {
+                messageDiv.innerHTML = `<i class="fas fa-times-circle"></i> ${result.text}`;
+                messageDiv.className = 'message error';
+                otpVerified = false;
+                updateSubmitButton();
+            }
+        })
+        .catch(error => {
+            console.error('OTP verification error:', error);
+            messageDiv.textContent = 'Error verifying OTP. Please try again.';
+            messageDiv.className = 'message error';
+            otpVerified = false;
+            verifyBtn.disabled = false;
+            verifyBtn.innerHTML = '<i class="fas fa-check" aria-hidden="true"></i> Verify OTP';
+            updateSubmitButton();
+        });
+    }
+
+    /**
+     * Update submit button state based on OTP verification
+     */
+    function updateSubmitButton() {
+        const submitBtn = document.getElementById('submitBtn');
+        if (otpVerified) {
+            submitBtn.disabled = false;
+            submitBtn.setAttribute('aria-disabled', 'false');
+        } else {
+            submitBtn.disabled = true;
+            submitBtn.setAttribute('aria-disabled', 'true');
+        }
+    }
+
+    // ==================== EMAIL AUTO-FILL ====================
+
+    /**
+     * Setup email auto-fill from main email to OTP email
+     */
+    function setupEmailAutoFill() {
+        const mainEmailInput = document.getElementById('mainEmail');
+        const otpEmailInput = document.getElementById('emailOtp');
+
+        if (mainEmailInput && otpEmailInput) {
+            // Copy main email to OTP email when user types
+            mainEmailInput.addEventListener('input', () => {
+                if (!otpEmailInput.dataset.userEdited) {
+                    otpEmailInput.value = mainEmailInput.value;
+                }
+            });
+
+            // Track if user manually edits OTP email field
+            otpEmailInput.addEventListener('input', () => {
+                otpEmailInput.dataset.userEdited = 'true';
+            });
+
+            // Reset manual edit flag when OTP email is cleared
+            otpEmailInput.addEventListener('change', () => {
+                if (otpEmailInput.value === '') {
+                    otpEmailInput.dataset.userEdited = 'false';
+                }
+            });
+        }
+    }
+
+    // ==================== FORM SUBMISSION ====================
+
+    /**
+     * Prevent form submission if OTP is not verified
+     */
+    function setupFormValidation() {
+        const registerForm = document.getElementById('registerForm');
+
+        registerForm.addEventListener('submit', function(e) {
+            if (!otpVerified) {
+                e.preventDefault();
+                const messageDiv = document.getElementById('message');
+                messageDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Please verify your email OTP before submitting!';
+                messageDiv.className = 'message error';
+                // Scroll to OTP section
+                document.querySelector('.otp-container').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        });
+    }
+
+    // ==================== DOM INITIALIZATION ====================
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize password strength and validation listeners
+        const passwordInput = document.querySelector('#registerForm input[name="password"]');
+        const confirmPasswordInput = document.querySelector('#registerForm input[name="confirmPassword"]');
+
+        if (passwordInput) {
+            passwordInput.addEventListener('input', function() {
+                checkPasswordStrength(this.value);
+                validatePassword();
+            });
+        }
+
+        if (confirmPasswordInput) {
+            confirmPasswordInput.addEventListener('input', validatePassword);
+        }
+
+        // Setup email auto-fill
+        setupEmailAutoFill();
+
+        // Setup form submission validation
+        setupFormValidation();
+
+        // Set initial form state to login
+        showForm('loginForm');
+    });
+</script>
 
 </body>
 </html>

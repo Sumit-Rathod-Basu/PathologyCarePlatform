@@ -1,68 +1,249 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Book Test</title>
+    <title>Book Test · enhanced</title>
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        /* modern improved css – cleaner, softer, accessible */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+
         body {
-            background: #eef2ff;
-            font-family: Arial, sans-serif;
-            padding: 20px;
+            background: linear-gradient(145deg, #d9e2f9 0%, #f0f4ff 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            margin: 0;
         }
 
         .card {
-            background: #fff;
-            padding: 20px;
-            border-radius: 12px;
-            max-width: 600px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(2px);
+            padding: 2rem 2.5rem;
+            border-radius: 32px;
+            max-width: 680px;
+            width: 100%;
             margin: auto;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.25),
+                0 0 0 1px rgba(79, 70, 229, 0.15) inset,
+                0 10px 20px -5px rgba(47, 43, 143, 0.2);
+            transition: transform 0.25s ease, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            box-shadow: 
+                0 30px 55px -10px rgba(37, 33, 128, 0.3),
+                0 0 0 1px rgba(79, 70, 229, 0.3) inset;
         }
 
         h2 {
             text-align: center;
+            background: linear-gradient(115deg, #4f46e5, #7c3aed);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 1.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        h2 i {
             color: #4f46e5;
-            margin-bottom: 20px;
+            background: rgba(79, 70, 229, 0.1);
+            padding: 10px;
+            border-radius: 50%;
+            font-size: 1.6rem;
         }
 
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        /* label styling */
         label {
-            font-weight: bold;
-            margin-top: 10px;
-            display: block;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.3px;
+            color: #1f2937;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
+        label i {
+            color: #4f46e5;
+            font-size: 0.95rem;
+            width: 18px;
+        }
+
+        /* input base */
         input, button {
             width: 100%;
-            padding: 12px;
-            margin-top: 8px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
+            padding: 14px 18px;
+            border-radius: 18px;
+            border: 1.5px solid #e0e7ff;
+            background: white;
+            transition: all 0.2s ease;
+            font-size: 1rem;
         }
 
+        input:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
+        }
+
+        /* disabled fields: elegant and readable */
         input:disabled {
-            background: #f3f4f6;
-            font-weight: bold;
+            background: #f8fafd;
+            border-color: #d2d9f0;
+            color: #1e293b;
+            font-weight: 500;
+            opacity: 1;  /* no faded-out look */
+            -webkit-text-fill-color: #1e293b; /* for safari */
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
         }
 
+        /* special price style */
+        input[disabled][value*="₹"] {
+            font-weight: 600;
+            color: #0f172b;
+            background: #f1f4fe;
+        }
+
+        /* email, name, date fields */
+        input[type="email"],
+        input[type="text"],
+        input[type="date"] {
+            background-color: #ffffff;
+        }
+
+        input[type="date"] {
+            color-scheme: light;
+        }
+
+        /* placeholder color */
+        ::placeholder {
+            color: #9aa4bf;
+            font-weight: 400;
+            opacity: 1;
+        }
+
+        /* button modern */
         button {
-            background: #4f46e5;
+            background: linear-gradient(105deg, #4f46e5, #6366f1);
             color: white;
             border: none;
             cursor: pointer;
-            font-size: 16px;
-            margin-top: 18px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-top: 24px;
+            padding: 16px 20px;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            letter-spacing: 0.3px;
+            box-shadow: 0 16px 24px -8px rgba(79, 70, 229, 0.4);
+            transition: all 0.25s;
+        }
+
+        button i {
+            font-size: 1.2rem;
+            transition: transform 0.15s;
         }
 
         button:hover {
-            background: #4338ca;
+            background: linear-gradient(105deg, #4338ca, #4f46e5);
+            transform: scale(1.02) translateY(-2px);
+            box-shadow: 0 24px 32px -10px rgba(79, 70, 229, 0.6);
+        }
+
+        button:active {
+            transform: scale(0.98) translateY(2px);
+            box-shadow: 0 8px 16px -4px #4f46e5;
+        }
+
+        /* subtle spacing & extras */
+        .field-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* add small icon inside disabled fields (optional decorative) */
+        .card form label[for] {
+            position: relative;
+        }
+
+        /* responsive touch */
+        @media (max-width: 480px) {
+            .card {
+                padding: 1.5rem 1.2rem;
+            }
+            h2 {
+                font-size: 1.8rem;
+            }
+            button {
+                font-size: 1rem;
+                padding: 14px 16px;
+            }
+            input, button {
+                border-radius: 24px;
+            }
+        }
+
+        /* smooth date input */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            background: transparent;
+            color: #4f46e5;
+            filter: invert(0.3) sepia(1) hue-rotate(200deg);
+            cursor: pointer;
+        }
+
+        /* hidden fields stay hidden but no extra style needed */
+        input[type="hidden"] {
+            display: none;
+        }
+
+        /* highlight for mandatory fields: tiny star effect */
+        label:has(+ input[required])::after {
+            content: " *";
+            color: #e11d48;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-left: 2px;
+        }
+
+        /* optional remove if you want no star on disabled */
+        label:has(+ input:disabled)::after {
+            content: "";
         }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h2>Book Test</h2>
+    <h2>
+        <i class="fa-solid fa-flask"></i> 
+        Book Test
+    </h2>
 
     <form th:action="@{/book-test/save}" th:object="${booking}" method="post">
 
@@ -71,28 +252,30 @@
         <input type="hidden" th:field="*{testName}">
         <input type="hidden" th:field="*{labId}">
         <input type="hidden" th:field="*{labName}">
-       <input type="hidden" name="price" th:value="${test.price}">
+        <input type="hidden" name="price" th:value="${test.price}">
 
-
-        <label>Test Name:</label>
+        <!-- disabled summary with subtle icons -->
+        <label><i class="fa-solid fa-vial"></i> Test Name:</label>
         <input type="text" th:value="${test.testName}" disabled>
 
-        <label>Lab:</label>
+        <label><i class="fa-solid fa-microscope"></i> Lab:</label>
         <input type="text" th:value="${test.labName}" disabled>
 
-        <label>Price:</label>
+        <label><i class="fa-solid fa-indian-rupee-sign"></i> Price:</label>
         <input type="text" th:value="'₹ ' + ${test.price}" disabled>
 
-        <label>Your Email</label>
-        <input type="email" th:field="*{patientEmail}" placeholder="Enter your email" required>
+        <label><i class="fa-regular fa-envelope"></i> Your Email</label>
+        <input type="email" th:field="*{patientEmail}" placeholder="eg: name@example.com" required>
 
-        <label>Your Name</label>
-        <input type="text" th:field="*{patientName}" placeholder="Enter your name" required>
+        <label><i class="fa-regular fa-user"></i> Your Name</label>
+        <input type="text" th:field="*{patientName}" placeholder="Full name" required>
 
-        <label>Booking Date</label>
+        <label><i class="fa-regular fa-calendar-check"></i> Booking Date</label>
         <input type="date" th:field="*{bookingDate}" required>
 
-        <button type="submit"><i class="fa-solid fa-check"></i> Confirm Booking</button>
+        <button type="submit">
+            <i class="fa-solid fa-check-circle"></i> Confirm Booking
+        </button>
     </form>
 </div>
 
