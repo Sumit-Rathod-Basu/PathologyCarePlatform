@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pathology Care Platform - Trusted Medical Diagnostics</title>
     
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS with JIT -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Font Awesome for icons -->
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts - Better typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <script>
         tailwind.config = {
@@ -20,725 +20,916 @@
                 extend: {
                     colors: {
                         primary: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            700: '#0369a1',
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
                         },
-                        teal: {
-                            400: '#2dd4bf',
-                            500: '#14b8a6',
-                            600: '#0d9488',
-                        }
+                        accent: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                        },
+                        dark: '#0f172a',
                     },
                     fontFamily: {
+                        'poppins': ['Poppins', 'sans-serif'],
                         'inter': ['Inter', 'sans-serif'],
-                    }
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 15px rgba(0, 0, 0, 0.08)',
+                        'medium': '0 8px 25px rgba(0, 0, 0, 0.12)',
+                        'card': '0 2px 12px rgba(37, 99, 235, 0.08)',
+                        'hover': '0 12px 35px rgba(37, 99, 235, 0.15)',
+                    },
+                    animation: {
+                        'fadeIn': 'fadeIn 0.6s ease-out',
+                        'slideUp': 'slideUp 0.6s ease-out',
+                        'pulse-soft': 'pulseSoft 3s ease-in-out infinite',
+                        'shimmer': 'shimmer 2s infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        pulseSoft: {
+                            '0%, 100%': { opacity: '1' },
+                            '50%': { opacity: '0.5' },
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-1000px 0' },
+                            '100%': { backgroundPosition: '1000px 0' },
+                        },
+                    },
                 }
             }
         }
     </script>
     
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
+            color: #1f2937;
+            background: #ffffff;
         }
-        
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+        }
+
+        h2 {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            line-height: 1.3;
+        }
+
+        h3 {
+            font-size: clamp(1.1rem, 3vw, 1.5rem);
+        }
+
+        /* Gradient Text */
+        .gradient-text {
+            background: linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Glass Morphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Animations */
         .fade-in {
             opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
+            animation: fadeIn 0.8s ease-out forwards;
         }
-        
-        .fade-in.visible {
-            opacity: 1;
+
+        .fade-in-1 { animation-delay: 0.1s; }
+        .fade-in-2 { animation-delay: 0.2s; }
+        .fade-in-3 { animation-delay: 0.3s; }
+        .fade-in-4 { animation-delay: 0.4s; }
+        .fade-in-5 { animation-delay: 0.5s; }
+
+        .slide-up {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: slideUp 0.8s ease-out forwards;
+        }
+
+        /* Card Styles */
+        .card {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 2px 12px rgba(37, 99, 235, 0.08);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card:hover {
+            box-shadow: 0 12px 35px rgba(37, 99, 235, 0.15);
+            transform: translateY(-6px);
+            border-color: #bfdbfe;
+        }
+
+        /* Button Styles */
+        .btn-primary {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+            padding: 12px 28px;
+            border-radius: 10px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:active {
             transform: translateY(0);
         }
-        
-        .hero-bg {
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+
+        .btn-secondary {
+            background: transparent;
+            color: #2563eb;
+            padding: 12px 28px;
+            border-radius: 10px;
+            font-weight: 600;
+            border: 2px solid #2563eb;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
-        
-        .card-hover {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+        .btn-secondary:hover {
+            background: #dbeafe;
+            border-color: #1d4ed8;
         }
-        
-        .card-hover:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+        .btn-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
         }
-        
-        /* Mobile Menu Styles */
+
+        /* Hero Background */
+        .hero-gradient {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 50%, #e0f2fe 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-gradient::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulse-soft 4s ease-in-out infinite;
+        }
+
+        .hero-gradient::after {
+            content: '';
+            position: absolute;
+            bottom: -40%;
+            left: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(14, 165, 233, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        /* Icon Box */
+        .icon-box {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+            font-size: 1.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .icon-box-primary {
+            background: linear-gradient(135deg, #dbeafe 0%, #e0f2fe 100%);
+            color: #1d4ed8;
+        }
+
+        .icon-box-accent {
+            background: linear-gradient(135deg, #dcfce7 0%, #e8f5e9 100%);
+            color: #16a34a;
+        }
+
+        .card:hover .icon-box {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        /* Badge Styles */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            background: rgba(37, 99, 235, 0.1);
+            border-radius: 20px;
+            color: #2563eb;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border: 1px solid #bfdbfe;
+        }
+
+        .badge-success {
+            background: rgba(34, 197, 94, 0.1);
+            color: #16a34a;
+            border-color: #86efac;
+        }
+
+        /* Mobile Menu */
         .mobile-menu {
             transform: translateX(-100%);
-            transition: transform 0.3s ease;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
         }
-        
+
         .mobile-menu.open {
             transform: translateX(0);
         }
-        
+
         .overlay {
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.3s ease, visibility 0.3s ease;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
         }
-        
+
         .overlay.open {
             opacity: 1;
             visibility: visible;
         }
+
+        /* Feature Grid */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        /* Stats Counter */
+        .stat-number {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 { font-size: 1.75rem; }
+            h2 { font-size: 1.5rem; }
+            h3 { font-size: 1.125rem; }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
-<body class="font-inter bg-white text-gray-800">
+<body class="bg-white text-gray-900">
     <!-- Mobile Menu Overlay -->
-    <div class="overlay fixed inset-0 bg-black bg-opacity-50 z-50" id="overlay"></div>
+    <div class="overlay fixed inset-0 z-40" id="overlay"></div>
     
     <!-- Mobile Menu -->
-    <div class="mobile-menu fixed top-0 left-0 h-full w-80 bg-white shadow-xl z-50 p-6 overflow-y-auto" id="mobileMenu">
+    <div class="mobile-menu fixed top-0 left-0 h-full w-80 bg-white z-50 p-6 overflow-y-auto" id="mobileMenu">
         <div class="flex justify-between items-center mb-8">
-            <div class="flex items-center space-x-2">
-                <div class="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center">
-                    <i class="fas fa-microscope text-white"></i>
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-700 rounded-xl flex items-center justify-center shadow-sm">
+                    <i class="fas fa-microscope text-white text-lg"></i>
                 </div>
-                <span class="text-xl font-bold text-primary-700">Pathology Care</span>
+                <span class="text-lg font-bold font-poppins text-dark">PathCare</span>
             </div>
-            <button id="closeMenu" class="text-gray-600">
-                <i class="fas fa-times text-xl"></i>
+            <button id="closeMenu" class="text-gray-500 hover:text-gray-700 transition-colors">
+                <i class="fas fa-times text-2xl"></i>
             </button>
         </div>
         
-        <nav class="flex flex-col space-y-6">
-            <a href="#" class="text-gray-700 hover:text-primary-600 font-medium text-lg transition-colors py-2 border-b border-gray-100">
-                <i class="fas fa-home mr-3 w-6 text-center"></i> Home
+        <nav class="space-y-1">
+            <a href="#" class="block px-4 py-3 rounded-lg text-gray-700 hover:bg-primary-50 hover:text-primary-600 font-medium transition-colors">
+                <i class="fas fa-home w-5 mr-3"></i> Home
             </a>
-            <a href="#" class="text-gray-700 hover:text-primary-600 font-medium text-lg transition-colors py-2 border-b border-gray-100">
-                <i class="fas fa-vial mr-3 w-6 text-center"></i> Tests
+            <a href="/patient/login" class="block px-4 py-3 rounded-lg text-gray-700 hover:bg-primary-50 hover:text-primary-600 font-medium transition-colors">
+                <i class="fas fa-vial w-5 mr-3"></i> Book Tests
             </a>
-            <a href="/labs/login" class="text-gray-700 hover:text-primary-600 font-medium text-lg transition-colors py-2 border-b border-gray-100">
-                <i class="fas fa-sign-in-alt mr-3 w-6 text-center"></i> Login - Labs
+            <a href="/labs/login" class="block px-4 py-3 rounded-lg text-gray-700 hover:bg-primary-50 hover:text-primary-600 font-medium transition-colors">
+                <i class="fas fa-sign-in-alt w-5 mr-3"></i> Lab Login
             </a>
-            <a href="/labs/register" class="text-gray-700 hover:text-primary-600 font-medium text-lg transition-colors py-2 border-b border-gray-100">
-                <i class="fas fa-clipboard-list mr-3 w-6 text-center"></i> Register - Lab
+            <a href="/labs/register" class="block px-4 py-3 rounded-lg text-gray-700 hover:bg-primary-50 hover:text-primary-600 font-medium transition-colors">
+                <i class="fas fa-hospital w-5 mr-3"></i> Register Lab
             </a>
-            <a href="#" class="text-gray-700 hover:text-primary-600 font-medium text-lg transition-colors py-2 border-b border-gray-100">
-                <i class="fas fa-file-medical mr-3 w-6 text-center"></i> Reports
-            </a>
-            <a href="#" class="text-gray-700 hover:text-primary-600 font-medium text-lg transition-colors py-2 border-b border-gray-100">
-                <i class="fas fa-phone mr-3 w-6 text-center"></i> Contact
-            </a>
-            <a href="/patient/login" class="text-gray-700 hover:text-primary-600 font-medium text-lg transition-colors py-2 border-b border-gray-100">
-                <i class="fas fa-user mr-3 w-6 text-center"></i> Patient Login
+            <a href="/patient/login" class="block px-4 py-3 rounded-lg text-gray-700 hover:bg-primary-50 hover:text-primary-600 font-medium transition-colors">
+                <i class="fas fa-file-medical w-5 mr-3"></i> My Reports
             </a>
         </nav>
         
         <div class="mt-8 pt-6 border-t border-gray-200">
-            <button class="w-full bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 rounded-lg font-medium transition-colors shadow-md">
-                <i class="fas fa-calendar-plus mr-2"></i> Book Test Now
+            <button onclick="window.location.href='/patient/login'" class="w-full btn-primary flex items-center justify-center gap-2">
+                <i class="fas fa-calendar-check"></i> Book Test Now
             </button>
         </div>
     </div>
 
-    <!-- Header Section -->
-    <header class="sticky top-0 z-40 bg-white shadow-sm">
-        <div class="container mx-auto px-4 py-4">
+    <!-- Header -->
+    <header class="sticky top-0 z-30 bg-white/80 glass border-b border-gray-200/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div class="flex justify-between items-center">
                 <!-- Logo -->
-                <div class="flex items-center space-x-2">
-                    <div class="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-700 rounded-xl flex items-center justify-center shadow-soft">
                         <i class="fas fa-microscope text-white"></i>
                     </div>
-                    <span class="text-xl font-bold text-primary-700 hidden sm:block">Pathology Care Platform</span>
-                    <span class="text-xl font-bold text-primary-700 sm:hidden">Pathology Care</span>
+                    <span class="text-xl font-bold font-poppins text-dark hidden sm:block">Pathology Care</span>
+                    <span class="text-xl font-bold font-poppins text-dark sm:hidden">PathCare</span>
                 </div>
                 
-                <!-- Navigation - Hidden on mobile -->
-                <nav class="hidden md:flex space-x-6 lg:space-x-8">
-                    <a href="#" class="text-gray-600 hover:text-primary-600 font-medium transition-colors">Home</a>
-                    <a href="#" class="text-gray-600 hover:text-primary-600 font-medium transition-colors">Tests</a>
-                    <a href="/labs/login" class="text-gray-600 hover:text-primary-600 font-medium transition-colors">Login-Labs</a>
-                    <a href="/labs/register" class="text-gray-600 hover:text-primary-600 font-medium transition-colors">Register-Lab</a>
-                    <a href="#" class="text-gray-600 hover:text-primary-600 font-medium transition-colors">Reports</a>
-                    <a href="#" class="text-gray-600 hover:text-primary-600 font-medium transition-colors">Contact</a>
-                    <a href="/patient/login" class="text-gray-600 hover:text-primary-600 font-medium transition-colors">Login</a>
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="#how-it-works" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">How It Works</a>
+                    <a href="/labs/register" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">Partner Labs</a>
+                    <a href="#why-us" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">Why Us</a>
+                    <a href="/labs/login" class="text-gray-700 hover:text-primary-600 font-medium transition-colors">Lab Login</a>
                 </nav>
                 
-                <!-- CTA Button - Hidden on mobile -->
-                <button class="hidden md:block bg-primary-500 hover:bg-primary-600 text-white px-6 py-2 rounded-lg font-medium transition-colors shadow-md">
-                    Book Test
-                </button>
+                <!-- Desktop CTA -->
+                <div class="hidden md:flex items-center gap-3">
+                    <a href="/patient/login" class="btn-secondary">Login</a>
+                    <button onclick="window.location.href='/patient/login'" class="btn-primary">
+                        <i class="fas fa-calendar-check mr-2"></i>Book Test
+                    </button>
+                </div>
                 
-                <!-- Mobile menu button -->
-                <button id="openMenu" class="md:hidden text-gray-600">
-                    <i class="fas fa-bars text-xl"></i>
+                <!-- Mobile Menu Button -->
+                <button id="openMenu" class="md:hidden text-gray-700 hover:text-primary-600 transition-colors">
+                    <i class="fas fa-bars text-2xl"></i>
                 </button>
             </div>
         </div>
     </header>
 
     <!-- Hero Section -->
-    <section class="hero-bg py-12 md:py-20">
-        <div class="container mx-auto px-4">
-            <div class="flex flex-col md:flex-row items-center">
-                <div class="md:w-1/2 mb-10 md:mb-0 fade-in">
-                    <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
-                        Your Trusted Online Pathology Test Booking Platform
+    <section class="hero-gradient py-16 md:py-24 lg:py-28 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+                <!-- Left Content -->
+                <div class="fade-in">
+                    <div class="mb-6">
+                        <span class="badge badge-success">
+                            <i class="fas fa-check-circle"></i> Trusted by 50,000+ Users
+                        </span>
+                    </div>
+                    
+                    <h1 class="mb-6 leading-tight">
+                        Your Trusted <span class="gradient-text">Digital Pathology</span> Partner
                     </h1>
-                    <p class="text-base sm:text-lg text-gray-600 mb-8 max-w-lg">
-                        Get any medical test from trusted labs. Fast, Affordable, and Home Sample Collection.
+                    
+                    <p class="text-lg text-gray-600 mb-8 leading-relaxed max-w-lg">
+                        Book lab tests online from trusted labs. Fast, affordable, and with home sample collection. Get secure digital reports in your account.
                     </p>
                     
-                    <!-- Search Form -->
-                    <form th:action="@{/search}" method="get" class="mb-8">
-                        <div class="flex shadow-lg rounded-lg overflow-hidden max-w-lg">
-                            <input type="text" name="query" placeholder="Search tests like CBC, Sugar, Thyroid…" 
-                                   class="flex-grow px-4 py-3 focus:outline-none text-sm sm:text-base">
-                            <button type="submit" class="bg-primary-500 hover:bg-primary-600 text-white px-4 sm:px-6 py-3 transition-colors">
-                                <i class="fas fa-search"></i>
-                            </button>
+                    <!-- Key Features -->
+                    <div class="space-y-3 mb-10">
+                        <div class="flex items-center gap-3">
+                            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-accent-500 flex items-center justify-center">
+                                <i class="fas fa-check text-white text-sm"></i>
+                            </div>
+                            <span class="text-gray-700 font-medium">100+ Certified Partner Labs</span>
                         </div>
-                    </form>
+                        <div class="flex items-center gap-3">
+                            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-accent-500 flex items-center justify-center">
+                                <i class="fas fa-check text-white text-sm"></i>
+                            </div>
+                            <span class="text-gray-700 font-medium">Home Sample Collection</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-accent-500 flex items-center justify-center">
+                                <i class="fas fa-check text-white text-sm"></i>
+                            </div>
+                            <span class="text-gray-700 font-medium">Reports in 24 Hours</span>
+                        </div>
+                    </div>
                     
-                    <div class="flex flex-wrap gap-3">
-                        <span class="bg-white px-3 py-1 rounded-full text-xs sm:text-sm font-medium shadow-sm">
-                            <i class="fas fa-check-circle text-teal-500 mr-1"></i> 100+ Labs
-                        </span>
-                        <span class="bg-white px-3 py-1 rounded-full text-xs sm:text-sm font-medium shadow-sm">
-                            <i class="fas fa-check-circle text-teal-500 mr-1"></i> Home Collection
-                        </span>
-                        <span class="bg-white px-3 py-1 rounded-full text-xs sm:text-sm font-medium shadow-sm">
-                            <i class="fas fa-check-circle text-teal-500 mr-1"></i> Fast Reports
-                        </span>
+                    <!-- CTA Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button onclick="window.location.href='/patient/login'" class="btn-primary text-lg px-8 py-3 flex items-center justify-center gap-2">
+                            <i class="fas fa-calendar-check"></i> Book Your Test
+                        </button>
+<!--                         <button class="btn-secondary text-lg px-8 py-3 flex items-center justify-center gap-2">
+                            <i class="fas fa-play-circle"></i> Watch Demo
+                        </button> -->
                     </div>
                 </div>
                 
-                <div class="md:w-1/2 flex justify-center fade-in">
-                    <div class="relative">
-                        <div class="bg-white rounded-2xl p-4 sm:p-6 shadow-xl max-w-md w-full">
-                            <div class="flex items-center mb-4">
-                                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-primary-100 rounded-full flex items-center justify-center mr-3 sm:mr-4">
-                                    <i class="fas fa-vial text-primary-600 text-sm sm:text-base"></i>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <h3 class="font-semibold text-sm sm:text-base truncate">Complete Blood Count</h3>
-                                    <p class="text-xs sm:text-sm text-gray-500">Reports in 24 hours</p>
-                                </div>
-                                <span class="ml-2 font-bold text-primary-600 text-sm sm:text-base">₹499</span>
-                            </div>
-                            
-                            <div class="flex items-center mb-4">
-                                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-teal-100 rounded-full flex items-center justify-center mr-3 sm:mr-4">
-                                    <i class="fas fa-heartbeat text-teal-600 text-sm sm:text-base"></i>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <h3 class="font-semibold text-sm sm:text-base truncate">Thyroid Profile</h3>
-                                    <p class="text-xs sm:text-sm text-gray-500">Reports in 24 hours</p>
-                                </div>
-                                <span class="ml-2 font-bold text-teal-600 text-sm sm:text-base">₹699</span>
-                            </div>
-                            
-                            <div class="flex items-center">
-                                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-primary-100 rounded-full flex items-center justify-center mr-3 sm:mr-4">
-                                    <i class="fas fa-stethoscope text-primary-600 text-sm sm:text-base"></i>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <h3 class="font-semibold text-sm sm:text-base truncate">Full Body Checkup</h3>
-                                    <p class="text-xs sm:text-sm text-gray-500">Reports in 48 hours</p>
-                                </div>
-                                <span class="ml-2 font-bold text-primary-600 text-sm sm:text-base">₹1999</span>
-                            </div>
-                            
-                            <button class="w-full mt-4 sm:mt-6 bg-primary-500 hover:bg-primary-600 text-white py-2 sm:py-3 rounded-lg font-medium transition-colors text-sm sm:text-base">
-                                Book Package Now
-                            </button>
+                <!-- Right Illustration -->
+                <div class="fade-in-2 hidden lg:flex justify-center">
+                    <div class="relative w-full h-80 bg-gradient-to-br from-primary-100 to-primary-200 rounded-3xl flex items-center justify-center shadow-medium">
+                        <div class="text-8xl">🔬</div>
+                        <!-- Floating Elements -->
+                        <div class="absolute top-8 right-8 w-20 h-20 bg-white rounded-2xl shadow-soft flex items-center justify-center text-4xl animate-pulse-soft">
+                            ✅
                         </div>
-                        
-                        <!-- Floating elements for visual interest -->
-                        <div class="absolute -top-2 -right-2 sm:-top-4 sm:-right-4 bg-teal-500 text-white p-2 sm:p-3 rounded-xl shadow-lg">
-                            <i class="fas fa-home text-sm sm:text-xl"></i>
-                        </div>
-                        <div class="absolute -bottom-2 -left-2 sm:-bottom-4 sm:-left-4 bg-primary-500 text-white p-2 sm:p-3 rounded-xl shadow-lg">
-                            <i class="fas fa-bolt text-sm sm:text-xl"></i>
+                        <div class="absolute bottom-8 left-8 w-16 h-16 bg-accent-100 rounded-2xl shadow-soft flex items-center justify-center text-3xl animate-pulse-soft" style="animation-delay: 0.5s;">
+                            📋
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-12 md:py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-12">
+                <div class="text-center fade-in-1">
+                    <div class="stat-number">50K+</div>
+                    <p class="text-gray-600 font-medium mt-2">Tests Booked</p>
+                </div>
+                <div class="text-center fade-in-2">
+                    <div class="stat-number">100+</div>
+                    <p class="text-gray-600 font-medium mt-2">Partner Labs</p>
+                </div>
+                <div class="text-center fade-in-3">
+                    <div class="stat-number">98%</div>
+                    <p class="text-gray-600 font-medium mt-2">Satisfaction Rate</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- How It Works Section -->
-    <section class="py-12 sm:py-16 bg-white">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-12 sm:mb-16 fade-in">
-                <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">How It Works</h2>
-                <p class="text-gray-600 max-w-2xl mx-auto text-sm sm:text-base">Booking your pathology tests has never been easier. Follow these simple steps to get your reports.</p>
+    <section class="py-16 md:py-24 bg-gray-50" id="how-it-works">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="mb-4">How It <span class="gradient-text">Works</span></h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Simple steps to get your pathology tests done in minutes</p>
             </div>
             
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <!-- Step 1 -->
-                <div class="text-center p-4 sm:p-6 fade-in card-hover bg-white rounded-xl shadow-md">
-                    <div class="w-12 h-12 sm:w-16 sm:h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-search text-primary-600 text-lg sm:text-2xl"></i>
+                <div class="card fade-in-1">
+                    <div class="relative pb-6">
+                        <div class="icon-box icon-box-primary mb-6">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        
+                        <div class="absolute top-6 right-0 w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center text-primary-600 font-bold text-sm">1</div>
                     </div>
-                    <h3 class="text-lg sm:text-xl font-semibold mb-2">Search Test</h3>
-                    <p class="text-gray-600 text-sm sm:text-base">Find the test you need from our comprehensive catalog</p>
-                    <div class="mt-4 text-primary-500 font-bold text-sm sm:text-base">Step 1</div>
+                    
+                    <h3 class="mb-2">Search Test</h3>
+                    <p class="text-gray-600 text-sm">Find the test you need from our comprehensive catalog of pathology services.</p>
                 </div>
                 
                 <!-- Step 2 -->
-                <div class="text-center p-4 sm:p-6 fade-in card-hover bg-white rounded-xl shadow-md">
-                    <div class="w-12 h-12 sm:w-16 sm:h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-clipboard-list text-teal-600 text-lg sm:text-2xl"></i>
+                <div class="card fade-in-2">
+                    <div class="relative pb-6">
+                        <div class="icon-box icon-box-accent mb-6">
+                            <i class="fas fa-hospital"></i>
+                        </div>
+                        
+                        <div class="absolute top-6 right-0 w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center text-primary-600 font-bold text-sm">2</div>
                     </div>
-                    <h3 class="text-lg sm:text-xl font-semibold mb-2">Select Lab</h3>
-                    <p class="text-gray-600 text-sm sm:text-base">Choose from verified labs with ratings and reviews</p>
-                    <div class="mt-4 text-primary-500 font-bold text-sm sm:text-base">Step 2</div>
+                    
+                    <h3 class="mb-2">Select Lab</h3>
+                    <p class="text-gray-600 text-sm">Choose from verified labs with ratings, reviews, and best prices.</p>
                 </div>
                 
                 <!-- Step 3 -->
-                <div class="text-center p-4 sm:p-6 fade-in card-hover bg-white rounded-xl shadow-md">
-                    <div class="w-12 h-12 sm:w-16 sm:h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-home text-primary-600 text-lg sm:text-2xl"></i>
+                <div class="card fade-in-3">
+                    <div class="relative pb-6">
+                        <div class="icon-box icon-box-primary mb-6">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        
+                        <div class="absolute top-6 right-0 w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center text-primary-600 font-bold text-sm">3</div>
                     </div>
-                    <h3 class="text-lg sm:text-xl font-semibold mb-2">Home Collection</h3>
-                    <p class="text-gray-600 text-sm sm:text-base">Our certified technician collects sample at your home</p>
-                    <div class="mt-4 text-primary-500 font-bold text-sm sm:text-base">Step 3</div>
+                    
+                    <h3 class="mb-2">Home Collection</h3>
+                    <p class="text-gray-600 text-sm">Our certified phlebotomist collects sample at your convenient time.</p>
                 </div>
                 
                 <!-- Step 4 -->
-                <div class="text-center p-4 sm:p-6 fade-in card-hover bg-white rounded-xl shadow-md">
-                    <div class="w-12 h-12 sm:w-16 sm:h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-file-medical text-teal-600 text-lg sm:text-2xl"></i>
+                <div class="card fade-in-4">
+                    <div class="relative pb-6">
+                        <div class="icon-box icon-box-accent mb-6">
+                            <i class="fas fa-file-medical"></i>
+                        </div>
+                        
+                        <div class="absolute top-6 right-0 w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center text-primary-600 font-bold text-sm">4</div>
                     </div>
-                    <h3 class="text-lg sm:text-xl font-semibold mb-2">Get Reports Online</h3>
-                    <p class="text-gray-600 text-sm sm:text-base">Receive digital reports securely in your account</p>
-                    <div class="mt-4 text-primary-500 font-bold text-sm sm:text-base">Step 4</div>
+                    
+                    <h3 class="mb-2">Get Reports</h3>
+                    <p class="text-gray-600 text-sm">Receive digital reports securely in your account within 24 hours.</p>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Top Booked Tests Section -->
-    <section class="py-12 sm:py-16 bg-gray-50">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-12 sm:mb-16 fade-in">
-                <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Top Booked Tests</h2>
-                <p class="text-gray-600 max-w-2xl mx-auto text-sm sm:text-base">Most popular diagnostic tests booked by our users</p>
-            </div>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Dynamic test cards using Thymeleaf -->
-                <div th:each="test : ${tests}" class="bg-white rounded-xl shadow-md overflow-hidden fade-in card-hover">
-                    <div class="p-4 sm:p-6">
-                        <div class="flex justify-between items-start mb-4">
-                            <h3 class="text-lg sm:text-xl font-semibold" th:text="${test.name}">Test Name</h3>
-                            <span class="bg-primary-100 text-primary-700 text-xs sm:text-sm font-medium px-2 sm:px-3 py-1 rounded-full">
-                                Popular
-                            </span>
-                        </div>
-                        <p class="text-gray-600 mb-4 sm:mb-6 text-sm sm:text-base" th:text="${test.description}">Test description goes here with details about what the test includes.</p>
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <span class="text-xl sm:text-2xl font-bold text-primary-600">₹<span th:text="${test.price}">499</span></span>
-                                <span class="text-xs sm:text-sm text-gray-500 line-through ml-2">₹699</span>
-                            </div>
-                            <a th:href="@{'/book/' + ${test.id}}" class="bg-primary-500 hover:bg-primary-600 text-white px-4 sm:px-6 py-2 rounded-lg font-medium transition-colors text-sm sm:text-base">
-                                Book Now
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Static example cards (will be replaced by Thymeleaf dynamic content) -->
-                <div class="bg-white rounded-xl shadow-md overflow-hidden fade-in card-hover">
-                    <div class="p-4 sm:p-6">
-                        <div class="flex justify-between items-start mb-4">
-                            <h3 class="text-lg sm:text-xl font-semibold">Complete Blood Count (CBC)</h3>
-                            <span class="bg-primary-100 text-primary-700 text-xs sm:text-sm font-medium px-2 sm:px-3 py-1 rounded-full">
-                                Popular
-                            </span>
-                        </div>
-                        <p class="text-gray-600 mb-4 sm:mb-6 text-sm sm:text-base">Complete blood count test to evaluate your overall health and detect disorders.</p>
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <span class="text-xl sm:text-2xl font-bold text-primary-600">₹499</span>
-                                <span class="text-xs sm:text-sm text-gray-500 line-through ml-2">₹699</span>
-                            </div>
-                            <a href="#" class="bg-primary-500 hover:bg-primary-600 text-white px-4 sm:px-6 py-2 rounded-lg font-medium transition-colors text-sm sm:text-base">
-                                Book Now
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="bg-white rounded-xl shadow-md overflow-hidden fade-in card-hover">
-                    <div class="p-4 sm:p-6">
-                        <div class="flex justify-between items-start mb-4">
-                            <h3 class="text-lg sm:text-xl font-semibold">Thyroid Profile</h3>
-                            <span class="bg-teal-100 text-teal-700 text-xs sm:text-sm font-medium px-2 sm:px-3 py-1 rounded-full">
-                                Recommended
-                            </span>
-                        </div>
-                        <p class="text-gray-600 mb-4 sm:mb-6 text-sm sm:text-base">Complete thyroid function test including T3, T4, and TSH levels.</p>
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <span class="text-xl sm:text-2xl font-bold text-teal-600">₹699</span>
-                                <span class="text-xs sm:text-sm text-gray-500 line-through ml-2">₹899</span>
-                            </div>
-                            <a href="#" class="bg-teal-500 hover:bg-teal-600 text-white px-4 sm:px-6 py-2 rounded-lg font-medium transition-colors text-sm sm:text-base">
-                                Book Now
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="text-center mt-8 sm:mt-12 fade-in">
-                <a href="#" class="inline-flex items-center text-primary-600 hover:text-primary-700 font-medium text-sm sm:text-base">
-                    View All Tests
-                    <i class="fas fa-arrow-right ml-2"></i>
-                </a>
             </div>
         </div>
     </section>
 
     <!-- Partner Labs Section -->
-    <section class="py-12 sm:py-16 bg-white">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-12 sm:mb-16 fade-in">
-                <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Trusted Partner Labs</h2>
-                <p class="text-gray-600 max-w-2xl mx-auto text-sm sm:text-base">We partner with certified and accredited laboratories across the country</p>
+    <section class="py-16 md:py-24 bg-white" id="labs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="mb-4">Our <span class="gradient-text">Partner Labs</span></h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Certified and accredited laboratories trusted by thousands</p>
             </div>
             
-            <div class="flex flex-wrap justify-center gap-4 sm:gap-8 md:gap-12 fade-in">
-                <!-- Dynamic lab logos using Thymeleaf -->
-                <div th:each="lab : ${labs}" class="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-center h-16 sm:h-24 w-32 sm:w-48">
-                    <span class="text-sm sm:text-xl font-bold text-gray-700" th:text="${lab.name}">Lab Name</span>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
+                <!-- Lab 1 -->
+                <div class="card flex flex-col items-center justify-center py-8 fade-in-1">
+                    <div class="text-4xl mb-3">🔬</div>
+                    <p class="text-sm md:text-base font-semibold text-center text-gray-800">RR Diagnostics</p>
                 </div>
                 
-                <!-- Static examples (will be replaced by Thymeleaf dynamic content) -->
-                <div class="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-center h-16 sm:h-24 w-32 sm:w-48">
-                    <span class="text-sm sm:text-xl font-bold text-gray-700">MediLab</span>
+                <!-- Lab 2 -->
+                <div class="card flex flex-col items-center justify-center py-8 fade-in-2">
+                    <div class="text-4xl mb-3">⚕️</div>
+                    <p class="text-sm md:text-base font-semibold text-center text-gray-800">Uni Diagnostics</p>
                 </div>
-                <div class="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-center h-16 sm:h-24 w-32 sm:w-48">
-                    <span class="text-sm sm:text-xl font-bold text-gray-700">HealthFirst</span>
+                
+                <!-- Lab 3 -->
+                <div class="card flex flex-col items-center justify-center py-8 fade-in-3">
+                    <div class="text-4xl mb-3">🏥</div>
+                    <p class="text-sm md:text-base font-semibold text-center text-gray-800">ThyroCare</p>
                 </div>
-                <div class="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-center h-16 sm:h-24 w-32 sm:w-48">
-                    <span class="text-sm sm:text-xl font-bold text-gray-700">BioTest</span>
+                
+                <!-- Lab 4 -->
+                <div class="card flex flex-col items-center justify-center py-8 fade-in-4">
+                    <div class="text-4xl mb-3">💊</div>
+                    <p class="text-sm md:text-base font-semibold text-center text-gray-800">Nig Labs</p>
                 </div>
-                <div class="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-center h-16 sm:h-24 w-32 sm:w-48">
-                    <span class="text-sm sm:text-xl font-bold text-gray-700">CarePath</span>
-                </div>
-                <div class="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-center h-16 sm:h-24 w-32 sm:w-48">
-                    <span class="text-sm sm:text-xl font-bold text-gray-700">DiagnoCare</span>
+                
+                <!-- Lab 5 -->
+                <div class="card flex flex-col items-center justify-center py-8 fade-in-5">
+                    <div class="text-4xl mb-3">🧬</div>
+                    <p class="text-sm md:text-base font-semibold text-center text-gray-800">Metro Labs</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Why Choose Us Section -->
-    <section class="py-12 sm:py-16 bg-gray-50">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-12 sm:mb-16 fade-in">
-                <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Why Choose Us</h2>
-                <p class="text-gray-600 max-w-2xl mx-auto text-sm sm:text-base">We are committed to providing the best pathology testing experience</p>
+    <section class="py-16 md:py-24 bg-gray-50" id="why-us">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="mb-4">Why Choose <span class="gradient-text">Pathology Care</span></h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Experience healthcare the way it should be</p>
             </div>
             
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Feature 1 -->
-                <div class="flex fade-in">
-                    <div class="mr-4">
-                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-primary-100 rounded-full flex items-center justify-center">
-                            <i class="fas fa-shield-alt text-primary-600 text-sm sm:text-base"></i>
-                        </div>
+                <div class="card p-8 fade-in-1">
+                    <div class="icon-box icon-box-primary mb-4">
+                        <i class="fas fa-shield-alt"></i>
                     </div>
-                    <div>
-                        <h3 class="text-lg sm:text-xl font-semibold mb-2">100+ Verified Labs</h3>
-                        <p class="text-gray-600 text-sm sm:text-base">All our partner labs are certified and regularly audited for quality.</p>
-                    </div>
+                    <h3 class="mb-3">100+ Verified Labs</h3>
+                    <p class="text-gray-600">All partner labs are certified, accredited, and regularly audited for quality and safety standards.</p>
                 </div>
                 
                 <!-- Feature 2 -->
-                <div class="flex fade-in">
-                    <div class="mr-4">
-                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-teal-100 rounded-full flex items-center justify-center">
-                            <i class="fas fa-rupee-sign text-teal-600 text-sm sm:text-base"></i>
-                        </div>
+                <div class="card p-8 fade-in-2">
+                    <div class="icon-box icon-box-accent mb-4">
+                        <i class="fas fa-rupee-sign"></i>
                     </div>
-                    <div>
-                        <h3 class="text-lg sm:text-xl font-semibold mb-2">Affordable Prices</h3>
-                        <p class="text-gray-600 text-sm sm:text-base">Get the best prices with discounts and offers on all tests.</p>
-                    </div>
+                    <h3 class="mb-3">Best Prices</h3>
+                    <p class="text-gray-600">Compare prices across labs and save up to 40% on tests. Transparent pricing with no hidden charges.</p>
                 </div>
                 
                 <!-- Feature 3 -->
-                <div class="flex fade-in">
-                    <div class="mr-4">
-                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-primary-100 rounded-full flex items-center justify-center">
-                            <i class="fas fa-user-md text-primary-600 text-sm sm:text-base"></i>
-                        </div>
+                <div class="card p-8 fade-in-3">
+                    <div class="icon-box icon-box-primary mb-4">
+                        <i class="fas fa-home"></i>
                     </div>
-                    <div>
-                        <h3 class="text-lg sm:text-xl font-semibold mb-2">Certified Technicians</h3>
-                        <p class="text-gray-600 text-sm sm:text-base">Our phlebotomists are trained and certified for safe sample collection.</p>
-                    </div>
+                    <h3 class="mb-3">Home Collection</h3>
+                    <p class="text-gray-600">Professional phlebotomists collect samples at your home at your preferred time, completely hassle-free.</p>
                 </div>
                 
                 <!-- Feature 4 -->
-                <div class="flex fade-in">
-                    <div class="mr-4">
-                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-teal-100 rounded-full flex items-center justify-center">
-                            <i class="fas fa-bolt text-teal-600 text-sm sm:text-base"></i>
-                        </div>
+                <div class="card p-8 fade-in-4">
+                    <div class="icon-box icon-box-accent mb-4">
+                        <i class="fas fa-bolt"></i>
                     </div>
-                    <div>
-                        <h3 class="text-lg sm:text-xl font-semibold mb-2">Fastest Report Delivery</h3>
-                        <p class="text-gray-600 text-sm sm:text-base">Get most reports within 24 hours directly on your phone or email.</p>
-                    </div>
+                    <h3 class="mb-3">Fast Reports</h3>
+                    <p class="text-gray-600">Get most reports within 24 hours. Digital delivery straight to your phone, email, or secure account.</p>
                 </div>
                 
                 <!-- Feature 5 -->
-                <div class="flex fade-in">
-                    <div class="mr-4">
-                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-primary-100 rounded-full flex items-center justify-center">
-                            <i class="fas fa-lock text-primary-600 text-sm sm:text-base"></i>
-                        </div>
+                <div class="card p-8 fade-in-5">
+                    <div class="icon-box icon-box-primary mb-4">
+                        <i class="fas fa-lock"></i>
                     </div>
-                    <div>
-                        <h3 class="text-lg sm:text-xl font-semibold mb-2">Secure Online Reports</h3>
-                        <p class="text-gray-600 text-sm sm:text-base">Your medical reports are securely stored and accessible only to you.</p>
-                    </div>
+                    <h3 class="mb-3">Secure & Private</h3>
+                    <p class="text-gray-600">Medical-grade encryption ensures your health data is secure and accessible only to you.</p>
                 </div>
                 
                 <!-- Feature 6 -->
-                <div class="flex fade-in">
-                    <div class="mr-4">
-                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-teal-100 rounded-full flex items-center justify-center">
-                            <i class="fas fa-headset text-teal-600 text-sm sm:text-base"></i>
-                        </div>
+                <div class="card p-8 fade-in-1" style="animation-delay: 0.1s;">
+                    <div class="icon-box icon-box-accent mb-4">
+                        <i class="fas fa-headset"></i>
                     </div>
-                    <div>
-                        <h3 class="text-lg sm:text-xl font-semibold mb-2">24/7 Customer Support</h3>
-                        <p class="text-gray-600 text-sm sm:text-base">Our support team is available round the clock to assist you.</p>
-                    </div>
+                    <h3 class="mb-3">24/7 Support</h3>
+                    <p class="text-gray-600">Our dedicated support team is always available to help you with any questions or concerns.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Customer Reviews Section -->
-    <section class="py-12 sm:py-16 bg-white">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-12 sm:mb-16 fade-in">
-                <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">What Our Customers Say</h2>
-                <p class="text-gray-600 max-w-2xl mx-auto text-sm sm:text-base">Read genuine reviews from thousands of satisfied customers</p>
+    <!-- Testimonials Section -->
+    <section class="py-16 md:py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="mb-4">What Our <span class="gradient-text">Customers</span> Say</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Real experiences from thousands of satisfied patients</p>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-                <!-- Review 1 -->
-                <div class="bg-white p-4 sm:p-6 rounded-xl shadow-md fade-in card-hover">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Testimonial 1 -->
+                <div class="card p-8 fade-in-1">
                     <div class="flex items-center mb-4">
-                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-primary-100 rounded-full flex items-center justify-center mr-3 sm:mr-4">
-                            <i class="fas fa-user text-primary-600 text-sm sm:text-base"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-semibold text-sm sm:text-base">Rahul Sharma</h4>
-                            <div class="flex text-yellow-400 text-xs sm:text-sm">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
+                        <div class="flex gap-1">
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-yellow-400"></i>
                         </div>
                     </div>
-                    <p class="text-gray-600 text-sm sm:text-base">"Very convenient service. The technician came on time and was very professional. Got my reports within 24 hours. Highly recommended!"</p>
+                    <p class="text-gray-700 mb-4 leading-relaxed">"Very convenient service. The technician came on time and was professional. Got my reports within 24 hours. Highly recommended!"</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white font-bold">RS</div>
+                        <div>
+                            <p class="font-semibold text-gray-900">Rahul Sharma</p>
+                            <p class="text-gray-600 text-sm">Patient, Mumbai</p>
+                        </div>
+                    </div>
                 </div>
                 
-                <!-- Review 2 -->
-                <div class="bg-white p-4 sm:p-6 rounded-xl shadow-md fade-in card-hover">
+                <!-- Testimonial 2 -->
+                <div class="card p-8 fade-in-2">
                     <div class="flex items-center mb-4">
-                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-teal-100 rounded-full flex items-center justify-center mr-3 sm:mr-4">
-                            <i class="fas fa-user text-teal-600 text-sm sm:text-base"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-semibold text-sm sm:text-base">Priya Patel</h4>
-                            <div class="flex text-yellow-400 text-xs sm:text-sm">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
+                        <div class="flex gap-1">
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-yellow-400"></i>
                         </div>
                     </div>
-                    <p class="text-gray-600 text-sm sm:text-base">"Booked a full body checkup for my parents. The home collection service was excellent and the reports were very detailed with explanations."</p>
+                    <p class="text-gray-700 mb-4 leading-relaxed">"Booked for my parents' full body checkup. Home collection was excellent and the reports were detailed with explanations."</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-accent-400 to-accent-600 flex items-center justify-center text-white font-bold">PP</div>
+                        <div>
+                            <p class="font-semibold text-gray-900">Priya Patel</p>
+                            <p class="text-gray-600 text-sm">Patient, Bangalore</p>
+                        </div>
+                    </div>
                 </div>
                 
-                <!-- Review 3 -->
-                <div class="bg-white p-4 sm:p-6 rounded-xl shadow-md fade-in card-hover">
+                <!-- Testimonial 3 -->
+                <div class="card p-8 fade-in-3">
                     <div class="flex items-center mb-4">
-                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-primary-100 rounded-full flex items-center justify-center mr-3 sm:mr-4">
-                            <i class="fas fa-user text-primary-600 text-sm sm:text-base"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-semibold text-sm sm:text-base">Anil Kumar</h4>
-                            <div class="flex text-yellow-400 text-xs sm:text-sm">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star-half-alt"></i>
-                            </div>
+                        <div class="flex gap-1">
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star-half-alt text-yellow-400"></i>
                         </div>
                     </div>
-                    <p class="text-gray-600 text-sm sm:text-base">"The platform is very user-friendly. I compared prices across multiple labs and saved 30% on my thyroid test. Will use again for sure."</p>
+                    <p class="text-gray-700 mb-4 leading-relaxed">"Platform is user-friendly. Compared prices across labs and saved 30% on my thyroid test. Will definitely use again!"</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white font-bold">AK</div>
+                        <div>
+                            <p class="font-semibold text-gray-900">Anil Kumar</p>
+                            <p class="text-gray-600 text-sm">Patient, Delhi</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- CTA Section -->
-    <section class="py-12 sm:py-16 bg-primary-600 text-white">
-        <div class="container mx-auto px-4 text-center fade-in">
-            <h2 class="text-2xl sm:text-3xl font-bold mb-4">Ready to Book Your Test?</h2>
-            <p class="text-primary-100 max-w-2xl mx-auto mb-6 sm:mb-8 text-sm sm:text-base">Join thousands of satisfied customers who trust us for their diagnostic needs</p>
-            <div class="flex flex-col sm:flex-row justify-center gap-4">
-                <button class="bg-white text-primary-600 hover:bg-gray-100 px-6 sm:px-8 py-3 rounded-lg font-semibold transition-colors shadow-lg text-sm sm:text-base">
-                    Book Test Now
+    <section class="py-16 md:py-24 bg-gradient-to-r from-primary-600 to-primary-700 relative overflow-hidden">
+        <!-- Background Elements -->
+        <div class="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -mr-48 -mt-48"></div>
+        <div class="absolute bottom-0 left-0 w-72 h-72 bg-white/10 rounded-full -ml-36 -mb-36"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 fade-in">
+            <h2 class="text-white mb-4">Ready to Take Control of Your Health?</h2>
+            <p class="text-xl text-white/90 max-w-2xl mx-auto mb-8">Join thousands of satisfied customers who trust Pathology Care Platform for their diagnostic needs</p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button onclick="window.location.href='/patient/login'" class="bg-white text-primary-600 hover:bg-gray-100 px-8 py-4 rounded-xl font-semibold text-lg transition-colors shadow-lg flex items-center justify-center gap-2">
+                    <i class="fas fa-calendar-check"></i> Book Your Test Now
                 </button>
-                <button class="bg-transparent border-2 border-white text-white hover:bg-white hover:text-primary-600 px-6 sm:px-8 py-3 rounded-lg font-semibold transition-colors text-sm sm:text-base">
-                    Download App
+                <button class="border-2 border-white text-white hover:bg-white/10 px-8 py-4 rounded-xl font-semibold text-lg transition-colors flex items-center justify-center gap-2">
+                    <i class="fas fa-play-circle"></i> Learn More
                 </button>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-8 sm:py-12">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+    <footer class="bg-dark text-white py-12 md:py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
                 <!-- Company Info -->
                 <div class="fade-in">
-                    <div class="flex items-center space-x-2 mb-4">
-                        <div class="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center">
-                            <i class="fas fa-microscope text-white text-sm"></i>
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-700 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-microscope text-white"></i>
                         </div>
-                        <span class="text-lg sm:text-xl font-bold">Pathology Care Platform</span>
+                        <span class="text-lg font-bold font-poppins">Pathology Care</span>
                     </div>
-                    <p class="text-gray-400 mb-4 text-sm sm:text-base">Your trusted partner for all diagnostic needs. Connecting you to certified labs with convenience and care.</p>
-                    <div class="flex space-x-4">
-                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                            <i class="fab fa-facebook-f text-sm sm:text-base"></i>
+                    <p class="text-gray-400 mb-4 leading-relaxed">Your trusted partner for all diagnostic needs. Connecting you to certified labs with convenience and care.</p>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-lg bg-gray-800 hover:bg-primary-600 flex items-center justify-center transition-colors">
+                            <i class="fab fa-facebook-f"></i>
                         </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                            <i class="fab fa-twitter text-sm sm:text-base"></i>
+                        <a href="#" class="w-10 h-10 rounded-lg bg-gray-800 hover:bg-primary-600 flex items-center justify-center transition-colors">
+                            <i class="fab fa-twitter"></i>
                         </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                            <i class="fab fa-instagram text-sm sm:text-base"></i>
+                        <a href="#" class="w-10 h-10 rounded-lg bg-gray-800 hover:bg-primary-600 flex items-center justify-center transition-colors">
+                            <i class="fab fa-instagram"></i>
                         </a>
-                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                            <i class="fab fa-linkedin-in text-sm sm:text-base"></i>
+                        <a href="#" class="w-10 h-10 rounded-lg bg-gray-800 hover:bg-primary-600 flex items-center justify-center transition-colors">
+                            <i class="fab fa-linkedin-in"></i>
                         </a>
                     </div>
                 </div>
                 
                 <!-- Quick Links -->
-                <div class="fade-in">
-                    <h3 class="text-base sm:text-lg font-semibold mb-4">Quick Links</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors text-sm sm:text-base">Home</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors text-sm sm:text-base">All Tests</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors text-sm sm:text-base">Partner Labs</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors text-sm sm:text-base">Health Packages</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors text-sm sm:text-base">Offers</a></li>
+                <div class="fade-in-1">
+                    <h3 class="font-semibold mb-4 font-poppins">Quick Links</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">How It Works</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Partner Labs</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Blog</a></li>
                     </ul>
                 </div>
                 
                 <!-- Support -->
-                <div class="fade-in">
-                    <h3 class="text-base sm:text-lg font-semibold mb-4">Support</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors text-sm sm:text-base">About Us</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors text-sm sm:text-base">Contact Us</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors text-sm sm:text-base">FAQ</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors text-sm sm:text-base">Privacy Policy</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors text-sm sm:text-base">Terms & Conditions</a></li>
+                <div class="fade-in-2">
+                    <h3 class="font-semibold mb-4 font-poppins">Support</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Contact Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">FAQ</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Terms & Conditions</a></li>
                     </ul>
                 </div>
                 
                 <!-- Contact -->
-                <div class="fade-in">
-                    <h3 class="text-base sm:text-lg font-semibold mb-4">Contact Us</h3>
-                    <ul class="space-y-3">
-                        <li class="flex items-start">
-                            <i class="fas fa-map-marker-alt text-primary-500 mt-1 mr-3 text-sm"></i>
-                            <span class="text-gray-400 text-sm sm:text-base">123 Health Street, Medical District, Mumbai, India</span>
+                <div class="fade-in-3">
+                    <h3 class="font-semibold mb-4 font-poppins">Contact Info</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3">
+                            <i class="fas fa-map-marker-alt text-primary-400 mt-1 flex-shrink-0"></i>
+                            <span class="text-gray-400">Pune, Maharashtra, India</span>
                         </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-phone text-primary-500 mr-3 text-sm"></i>
-                            <span class="text-gray-400 text-sm sm:text-base">+91 98765 43210</span>
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-phone text-primary-400 flex-shrink-0"></i>
+                            <span class="text-gray-400">+91 7387625414</span>
                         </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-envelope text-primary-500 mr-3 text-sm"></i>
-                            <span class="text-gray-400 text-sm sm:text-base">info@pathologycare.com</span>
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-envelope text-primary-400 flex-shrink-0"></i>
+                            <span class="text-gray-400">info@pathologycare.com</span>
                         </li>
                     </ul>
                 </div>
             </div>
             
-            <div class="border-t border-gray-800 mt-6 sm:mt-8 pt-6 sm:pt-8 text-center text-gray-400 fade-in">
-                <p class="text-xs sm:text-sm">© 2025 Pathology Care Platform. All rights reserved.</p>
+            <div class="border-t border-gray-800 pt-8 text-center text-gray-400 fade-in">
+                <p>© 2026 Pathology Care Platform. All rights reserved. | Designed & Built with ❤️</p>
             </div>
         </div>
     </footer>
 
     <script>
-        // Mobile menu functionality
-        const openMenuButton = document.getElementById('openMenu');
-        const closeMenuButton = document.getElementById('closeMenu');
+        // Mobile Menu
+        const openMenu = document.getElementById('openMenu');
+        const closeMenu = document.getElementById('closeMenu');
         const mobileMenu = document.getElementById('mobileMenu');
         const overlay = document.getElementById('overlay');
         
-        openMenuButton.addEventListener('click', () => {
+        openMenu.addEventListener('click', () => {
             mobileMenu.classList.add('open');
             overlay.classList.add('open');
             document.body.style.overflow = 'hidden';
         });
         
-        closeMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.remove('open');
-            overlay.classList.remove('open');
-            document.body.style.overflow = 'auto';
+        [closeMenu, overlay].forEach(el => {
+            el.addEventListener('click', () => {
+                mobileMenu.classList.remove('open');
+                overlay.classList.remove('open');
+                document.body.style.overflow = 'auto';
+            });
         });
         
-        overlay.addEventListener('click', () => {
-            mobileMenu.classList.remove('open');
-            overlay.classList.remove('open');
-            document.body.style.overflow = 'auto';
+        // Close menu on link click
+        document.querySelectorAll('#mobileMenu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('open');
+                overlay.classList.remove('open');
+                document.body.style.overflow = 'auto';
+            });
         });
         
-        // Fade in animation on scroll
-        document.addEventListener('DOMContentLoaded', function() {
-            const fadeElements = document.querySelectorAll('.fade-in');
-            
-            const fadeInOnScroll = function() {
-                fadeElements.forEach(element => {
-                    const elementTop = element.getBoundingClientRect().top;
-                    const elementVisible = 150;
-                    
-                    if (elementTop < window.innerHeight - elementVisible) {
-                        element.classList.add('visible');
-                    }
-                });
-            };
-            
-            // Initial check
-            fadeInOnScroll();
-            
-            // Check on scroll
-            window.addEventListener('scroll', fadeInOnScroll);
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.fade-in, .slide-up').forEach(el => {
+            observer.observe(el);
         });
     </script>
 </body>
