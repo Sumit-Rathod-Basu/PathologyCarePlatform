@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab Settings</title>
+    <style>
+        /* ============================================
+           DESIGN DIRECTION: Clean, Professional Settings
+           Aesthetic: Modern admin interface with refined minimalism
+           Typography: Clear hierarchy with geometric precision
+           ============================================ */
+
+        :root {
+            /* Color Palette */
+            --primary-50: #f0f7ff;
+            --primary-100: #e0f0fe;
+            --primary-500: #0084ff;
+            --primary-600: #0066cc;
+            --primary-700: #004399;
+            
+            --neutral-50: #f9fafb;
+            --neutral-100: #f3f4f6;
+            --neutral-200: #e5e7eb;
+            --neutral-300: #d1d5db;
+            --neutral-400: #9ca3af;
+            --neutral-500: #6b7280;
+            --neutral-600: #4b5563;
+            --neutral-700: #374151;
+            --neutral-800: #1f2937;
+            --neutral-900: #111827;
+            
+            --success-500: #10b981;
+            --warning-500: #f59e0b;
+            --danger-500: #ef4444;
+            
+            --border: var(--neutral-200);
+            --bg-primary: var(--neutral-50);
+            --bg-secondary: white;
+            --text-primary: var(--neutral-900);
+            --text-secondary: var(--neutral-500);
+            
+            /* Spacing & Typography */
+            --spacing-unit: 4px;
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            
+            --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+            --font-mono: 'Monaco', 'Courier New', monospace;
+            
+            /* Transitions */
+            --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-primary: var(--neutral-900);
+                --bg-secondary: var(--neutral-800);
+                --text-primary: var(--neutral-50);
+                --text-secondary: var(--neutral-400);
+                --border: var(--neutral-700);
+            }
+        }
+
+        /* ============================================
+           GLOBAL STYLES
+           ============================================ */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ============================================
+           LAYOUT STRUCTURE
+           ============================================ */
+
+        .settings-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .settings-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .settings-header h1 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .settings-header p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* ============================================
+           SETTINGS SECTION
+           ============================================ */
+
+        .settings-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            transition: box-shadow var(--transition-base),
+                        border-color var(--transition-base);
+        }
+
+        .settings-section:hover {
+            border-color: var(--primary-500);
+            box-shadow: 0 4px 12px rgba(0, 132, 255, 0.08);
+        }
+
+        .section-header {
+            padding: 1.25rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: linear-gradient(135deg, var(--primary-50) 0%, var(--neutral-50) 100%);
+        }
+
+        .section-icon {
+            font-size: 1.5rem;
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .section-description {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .section-content {
+            padding: 1.5rem;
+        }
+
+        /* ============================================
+           FORM GROUPS
+           ============================================ */
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .label-required::after {
+            content: ' *';
+            color: var(--danger-500);
+        }
+
+        .form-group small {
+            display: block;
+            margin-top: 0.375rem;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        /* ============================================
+           TEXT INPUT STYLES
+           ============================================ */
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 0.625rem 0.875rem;
+            font-size: 0.95rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: inherit;
+            transition: border-color var(--transition-fast),
+                        box-shadow var(--transition-fast),
+                        background-color var(--transition-fast);
+        }
+
+        input[type="text"]:hover,
+        input[type="email"]:hover,
+        input[type="number"]:hover,
+        textarea:hover {
+            border-color: var(--neutral-300);
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="number"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 3px rgba(0, 132, 255, 0.1);
+            background: var(--bg-secondary);
+        }
+
+        input[type="text"]::placeholder,
+        input[type="email"]::placeholder,
+        textarea::placeholder {
+            color: var(--neutral-400);
+        }
+
+        /* ============================================
+           FILE INPUT STYLES
+           ============================================ */
+
+        .file-input-group {
+            margin-top: 1rem;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        input[type="file"] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            z-index: 1;
+        }
+
+        .file-input-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            padding: 2rem;
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-lg);
+            background: linear-gradient(135deg, rgba(0, 132, 255, 0.03), transparent);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            text-align: center;
+        }
+
+        .file-input-wrapper:hover .file-input-label {
+            border-color: var(--primary-500);
+            background: linear-gradient(135deg, rgba(0, 132, 255, 0.08), transparent);
+        }
+
+        .file-input-wrapper input[type="file"]:focus ~ .file-input-label {
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 3px rgba(0, 132, 255, 0.1);
+        }
+
+        .file-input-icon {
+            font-size: 1.5rem;
+        }
+
+        .file-input-text {
+            text-align: left;
+        }
+
+        .file-input-text strong {
+            display: block;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .file-input-text small {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        /* ============================================
+           MEDIA PREVIEW
+           ============================================ */
+
+        .media-preview {
+            margin-top: 1rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 1rem;
+        }
+
+        .preview-item {
+            position: relative;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            aspect-ratio: 1 / 1;
+        }
+
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 0.5rem;
+            transition: transform var(--transition-fast);
+        }
+
+        .preview-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .preview-label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.7));
+            color: white;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .file-info {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+            padding: 0.5rem 0.875rem;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-500);
+            border-radius: var(--radius-md);
+            font-size: 0.85rem;
+            font-weight: 500;
+            animation: slideInUp var(--transition-base);
+        }
+
+        .file-info.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger-500);
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ============================================
+           FORM ACTIONS
+           ============================================ */
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .form-actions button {
+            flex: 1;
+        }
+
+        /* ============================================
+           BUTTON STYLES
+           ============================================ */
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-family: inherit;
+            transition: all var(--transition-base);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Primary Button */
+        .btn-primary {
+            background: var(--primary-500);
+            color: white;
+            box-shadow: 0 2px 8px rgba(0, 132, 255, 0.3);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: var(--primary-600);
+            box-shadow: 0 4px 12px rgba(0, 132, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* Secondary Button */
+        .btn-secondary {
+            background: var(--neutral-100);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: var(--neutral-200);
+            border-color: var(--neutral-300);
+        }
+
+        /* Danger Button */
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger-500);
+            border: 1px solid var(--danger-500);
+        }
+
+        .btn-danger:hover:not(:disabled) {
+            background: var(--danger-500);
+            color: white;
+        }
+
+        /* Ghost Button */
+        .btn-ghost {
+            background: transparent;
+            color: var(--primary-500);
+            border: none;
+        }
+
+        .btn-ghost:hover:not(:disabled) {
+            background: rgba(0, 132, 255, 0.1);
+        }
+
+        /* Loading State */
+        .btn.loading {
+            pointer-events: none;
+        }
+
+        .btn.loading::after {
+            content: '';
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            margin-left: 0.5rem;
+            border: 2px solid currentColor;
+            border-right-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ============================================
+           TOAST NOTIFICATIONS
+           ============================================ */
+
+        .toast-container {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            pointer-events: none;
+        }
+
+        .toast {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 1rem 1.25rem;
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            pointer-events: auto;
+            animation: slideInRight var(--transition-base);
+            border-left: 4px solid var(--primary-500);
+            max-width: 400px;
+        }
+
+        .toast.success {
+            border-left-color: var(--success-500);
+        }
+
+        .toast.error {
+            border-left-color: var(--danger-500);
+        }
+
+        .toast.warning {
+            border-left-color: var(--warning-500);
+        }
+
+        .toast-icon {
+            font-size: 1.25rem;
+            flex-shrink: 0;
+            margin-top: 0.25rem;
+        }
+
+        .toast-content strong {
+            display: block;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .toast-content {
+            flex: 1;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideOutRight {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+        }
+
+        /* ============================================
+           VALIDATION STYLES
+           ============================================ */
+
+        input:invalid:not(:placeholder-shown) {
+            border-color: var(--danger-500);
+        }
+
+        input:invalid:not(:placeholder-shown):focus {
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+        }
+
+        input:valid:not(:placeholder-shown) {
+            border-color: var(--success-500);
+        }
+
+        /* ============================================
+           RESPONSIVE DESIGN
+           ============================================ */
+
+        @media (max-width: 768px) {
+            .settings-container {
+                padding: 1rem;
+            }
+
+            .settings-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .section-header {
+                padding: 1rem;
+            }
+
+            .section-content {
+                padding: 1rem;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .form-actions button {
+                width: 100%;
+            }
+
+            .media-preview {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .toast {
+                max-width: 90vw;
+            }
+        }
+
+        /* ============================================
+           UTILITY CLASSES
+           ============================================ */
+
+        .text-muted {
+            color: var(--text-secondary);
+        }
+
+        .mt-1 {
+            margin-top: 0.5rem;
+        }
+
+        .mt-2 {
+            margin-top: 1rem;
+        }
+
+        .gap-sm {
+            gap: 0.5rem;
+        }
+
+        /* ============================================
+           DARK MODE
+           ============================================ */
+
+        @media (prefers-color-scheme: dark) {
+            .toast {
+                background: var(--bg-secondary);
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            }
+
+            .section-header {
+                background: linear-gradient(135deg, var(--neutral-700) 0%, var(--neutral-800) 100%);
+            }
+
+            .btn-secondary {
+                background: var(--neutral-700);
+                border-color: var(--neutral-600);
+            }
+
+            .btn-secondary:hover:not(:disabled) {
+                background: var(--neutral-600);
+                border-color: var(--neutral-500);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="settings-container">
+    <!-- Header -->
+    <div class="settings-header">
+        <h1>⚙️ Lab Settings</h1>
+        <p>Manage your laboratory information, branding assets, and professional documents</p>
+    </div>
+
+    <!-- Form -->
+    <form id="settingsForm" th:action="@{/admin/settings/save}" method="post" enctype="multipart/form-data">
+
+        <!-- Basic Information Section -->
+        <div class="settings-section">
+            <div class="section-header">
+                <div class="section-icon">🏥</div>
+                <div>
+                    <div class="section-title">Basic Information</div>
+                    <div class="section-description">Lab name and doctor credentials</div>
+                </div>
+            </div>
+            <div class="section-content">
+                <div class="form-group">
+                    <label for="labName" class="label-required">Lab Name</label>
+                    <input type="text" 
+                           id="labName" 
+                           name="labName" 
+                           th:value="${settings.labName}"
+                           placeholder="e.g., City Diagnostic Center"
+                           required />
+                    <small>The official name of your laboratory</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="doctorName" class="label-required">Doctor Name</label>
+                    <input type="text" 
+                           id="doctorName" 
+                           name="doctorName" 
+                           th:value="${settings.doctorName}"
+                           placeholder="e.g., Dr. Sarah Johnson"
+                           required />
+                    <small>Full name of the supervising doctor</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Branding Section -->
+        <div class="settings-section">
+            <div class="section-header">
+                <div class="section-icon">🎨</div>
+                <div>
+                    <div class="section-title">Branding Assets</div>
+                    <div class="section-description">Logo and organizational marks</div>
+                </div>
+            </div>
+            <div class="section-content">
+                <!-- Logo -->
+                <div class="form-group">
+                    <label>Lab Logo</label>
+                    <small>PNG, JPG, GIF, or WEBP (Max 5MB)</small>
+                    <div class="file-input-group">
+                        <div class="file-input-wrapper">
+                            <input type="file" id="logo" name="logo" accept="image/*" data-type="logo" />
+                            <div class="file-input-label">
+                                <div class="file-input-icon">🖼️</div>
+                                <div class="file-input-text">
+                                    <strong>Choose logo file</strong>
+                                    <small>or drag and drop</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div th:if="${settings.logoUrl}" class="media-preview">
+                        <div class="preview-item">
+                            <img th:src="${settings.logoUrl}" alt="Lab logo" />
+                            <div class="preview-label">Current Logo</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seal -->
+                <div class="form-group mt-2">
+                    <label>Official Seal</label>
+                    <small>PNG, JPG, GIF, or WEBP (Max 5MB)</small>
+                    <div class="file-input-group">
+                        <div class="file-input-wrapper">
+                            <input type="file" id="seal" name="seal" accept="image/*" data-type="seal" />
+                            <div class="file-input-label">
+                                <div class="file-input-icon">⭐</div>
+                                <div class="file-input-text">
+                                    <strong>Choose seal file</strong>
+                                    <small>or drag and drop</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div th:if="${settings.sealUrl}" class="media-preview">
+                        <div class="preview-item">
+                            <img th:src="${settings.sealUrl}" alt="Official seal" />
+                            <div class="preview-label">Current Seal</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Professional Documents Section -->
+        <div class="settings-section">
+            <div class="section-header">
+                <div class="section-icon">📄</div>
+                <div>
+                    <div class="section-title">Professional Documents</div>
+                    <div class="section-description">Signature and letterhead templates</div>
+                </div>
+            </div>
+            <div class="section-content">
+                <!-- Signature -->
+                <div class="form-group">
+                    <label>Doctor's Signature</label>
+                    <small>PNG, JPG, GIF, or WEBP (Max 5MB)</small>
+                    <div class="file-input-group">
+                        <div class="file-input-wrapper">
+                            <input type="file" id="signature" name="signature" accept="image/*" data-type="signature" />
+                            <div class="file-input-label">
+                                <div class="file-input-icon">✍️</div>
+                                <div class="file-input-text">
+                                    <strong>Choose signature file</strong>
+                                    <small>or drag and drop</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div th:if="${settings.signatureUrl}" class="media-preview">
+                        <div class="preview-item">
+                            <img th:src="${settings.signatureUrl}" alt="Doctor's signature" />
+                            <div class="preview-label">Current Signature</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Letterhead -->
+                <div class="form-group mt-2">
+                    <label>Letterhead Template</label>
+                    <small>PNG, JPG, GIF, or WEBP (Max 5MB)</small>
+                    <div class="file-input-group">
+                        <div class="file-input-wrapper">
+                            <input type="file" id="letterhead" name="letterhead" accept="image/*" data-type="letterhead" />
+                            <div class="file-input-label">
+                                <div class="file-input-icon">📋</div>
+                                <div class="file-input-text">
+                                    <strong>Choose letterhead file</strong>
+                                    <small>or drag and drop</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div th:if="${settings.letterheadUrl}" class="media-preview">
+                        <div class="preview-item">
+                            <img th:src="${settings.letterheadUrl}" alt="Letterhead template" />
+                            <div class="preview-label">Current Letterhead</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="submitBtn">
+                <span>💾</span> Save Settings
+            </button>
+            <button type="button" class="btn btn-secondary" id="resetBtn">
+                <span>↻</span> Reset Changes
+            </button>
+            <a href="javascript:history.back()" class="btn btn-ghost">
+                <span>←</span> Back
+            </a>
+        </div>
+
+    </form>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+    'use strict';
+
+    // ============================================
+    // Configuration
+    // ============================================
+
+    const CONFIG = {
+        MAX_FILE_SIZE: 5 * 1024 * 1024, // 5MB
+        VALID_TYPES: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
+        PREVIEW_SIZE: 150,
+        TOAST_DURATION: 3500,
+        DEBOUNCE_DELAY: 2000
+    };
+
+    // ============================================
+    // Utility Functions
+    // ============================================
+
+    /**
+     * Show toast notification
+     */
+    function showToast(message, type = 'success', title = '') {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+
+        const icons = {
+            success: '✅',
+            error: '❌',
+            warning: '⚠️',
+            info: 'ℹ️'
+        };
+
+        const titleHtml = title ? `<strong>${title}</strong>` : '';
+        toast.innerHTML = `
+            <div class="toast-icon">${icons[type] || '✅'}</div>
+            <div class="toast-content">
+                ${titleHtml}
+                ${message}
+            </div>
+        `;
+
+        container.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.animation = 'slideOutRight var(--transition-base)';
+            setTimeout(() => toast.remove(), 300);
+        }, CONFIG.TOAST_DURATION);
+    }
+
+    /**
+     * Validate file
+     */
+    function validateFile(file) {
+        if (file.size > CONFIG.MAX_FILE_SIZE) {
+            return {
+                valid: false,
+                error: 'File size must be less than 5MB'
+            };
+        }
+
+        if (!CONFIG.VALID_TYPES.includes(file.type)) {
+            return {
+                valid: false,
+                error: 'Please upload only JPEG, PNG, GIF, or WEBP images'
+            };
+        }
+
+        return { valid: true };
+    }
+
+    /**
+     * Format file size
+     */
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+    }
+
+    /**
+     * Debounce function
+     */
+    function debounce(fn, delay) {
+        let timeoutId;
+        return function(...args) {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => fn(...args), delay);
+        };
+    }
+
+    // ============================================
+    // File Input Handler
+    // ============================================
+
+    class FileInputHandler {
+        constructor(input) {
+            this.input = input;
+            this.type = input.dataset.type;
+            this.wrapper = input.closest('.file-input-wrapper');
+            this.group = input.closest('.form-group');
+            this.init();
+        }
+
+        init() {
+            this.input.addEventListener('change', (e) => this.handleChange(e));
+            this.input.addEventListener('dragover', (e) => this.handleDragOver(e));
+            this.input.addEventListener('drop', (e) => this.handleDrop(e));
+            this.input.addEventListener('dragleave', (e) => this.handleDragLeave(e));
+        }
+
+        handleChange(e) {
+            if (this.input.files.length > 0) {
+                this.handleFile(this.input.files[0]);
+            }
+        }
+
+        handleDragOver(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.wrapper.style.borderColor = 'var(--primary-500)';
+            this.wrapper.style.background = 'linear-gradient(135deg, rgba(0, 132, 255, 0.15), transparent)';
+        }
+
+        handleDragLeave(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.wrapper.style.borderColor = '';
+            this.wrapper.style.background = '';
+        }
+
+        handleDrop(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.wrapper.style.borderColor = '';
+            this.wrapper.style.background = '';
+
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                this.input.files = files;
+                this.handleFile(files[0]);
+            }
+        }
+
+        handleFile(file) {
+            const validation = validateFile(file);
+
+            if (!validation.valid) {
+                showToast(validation.error, 'error', 'Upload Error');
+                this.input.value = '';
+                this.removeFileInfo();
+                return;
+            }
+
+            this.removeFileInfo();
+            this.showFileInfo(file);
+            this.showPreview(file);
+        }
+
+        showFileInfo(file) {
+            const fileInfo = document.createElement('div');
+            fileInfo.className = 'file-info';
+            fileInfo.innerHTML = `✅ ${file.name} (${formatFileSize(file.size)})`;
+            this.group.appendChild(fileInfo);
+        }
+
+        removeFileInfo() {
+            const existing = this.group.querySelector('.file-info');
+            if (existing) existing.remove();
+        }
+
+        showPreview(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                let preview = this.group.querySelector('.media-preview');
+                if (!preview) {
+                    preview = document.createElement('div');
+                    preview.className = 'media-preview';
+                    this.group.appendChild(preview);
+                }
+
+                let item = preview.querySelector('.preview-item');
+                if (item) {
+                    const img = item.querySelector('img');
+                    img.src = e.target.result;
+                } else {
+                    item = document.createElement('div');
+                    item.className = 'preview-item';
+                    item.innerHTML = `
+                        <img src="${e.target.result}" alt="Preview" />
+                        <div class="preview-label">New ${this.type}</div>
+                    `;
+                    preview.appendChild(item);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    // ============================================
+    // Form Handler
+    // ============================================
+
+    class SettingsForm {
+        constructor(formId) {
+            this.form = document.getElementById(formId);
+            this.submitBtn = document.getElementById('submitBtn');
+            this.resetBtn = document.getElementById('resetBtn');
+            this.init();
+        }
+
+        init() {
+            // Initialize file handlers
+            this.form.querySelectorAll('input[type="file"]').forEach(input => {
+                new FileInputHandler(input);
+            });
+
+            // Form submission
+            this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+
+            // Reset button
+            this.resetBtn.addEventListener('click', (e) => this.handleReset(e));
+
+            // Auto-save draft
+            this.initAutoSave();
+        }
+
+        validateForm() {
+            const labName = document.getElementById('labName');
+            const doctorName = document.getElementById('doctorName');
+
+            if (!labName.value.trim()) {
+                showToast('Please enter lab name', 'error', 'Validation Error');
+                labName.focus();
+                return false;
+            }
+
+            if (!doctorName.value.trim()) {
+                showToast('Please enter doctor name', 'error', 'Validation Error');
+                doctorName.focus();
+                return false;
+            }
+
+            return true;
+        }
+
+        handleSubmit(e) {
+            if (!this.validateForm()) {
+                e.preventDefault();
+                return;
+            }
+
+            this.setLoading(true);
+            showToast('Saving your settings...', 'info');
+
+            // Simulate save (remove in production)
+            setTimeout(() => {
+                this.setLoading(false);
+                showToast('Settings saved successfully!', 'success', 'Success');
+                this.clearDraft();
+            }, 1500);
+        }
+
+        handleReset(e) {
+            e.preventDefault();
+            if (confirm('Are you sure you want to reset all changes? Unsaved changes will be lost.')) {
+                this.form.reset();
+                this.form.querySelectorAll('.file-info').forEach(el => el.remove());
+                showToast('Form has been reset', 'warning');
+            }
+        }
+
+        setLoading(loading) {
+            this.submitBtn.disabled = loading;
+            if (loading) {
+                this.submitBtn.classList.add('loading');
+            } else {
+                this.submitBtn.classList.remove('loading');
+            }
+        }
+
+        initAutoSave() {
+            const autoSave = debounce(() => {
+                const data = {
+                    labName: document.getElementById('labName').value,
+                    doctorName: document.getElementById('doctorName').value
+                };
+                localStorage.setItem('settings_draft', JSON.stringify(data));
+                showToast('Draft auto-saved', 'info');
+            }, CONFIG.DEBOUNCE_DELAY);
+
+            this.form.querySelectorAll('input[type="text"]').forEach(input => {
+                input.addEventListener('input', autoSave);
+            });
+
+            // Load draft
+            this.loadDraft();
+        }
+
+        loadDraft() {
+            const draft = localStorage.getItem('settings_draft');
+            if (draft) {
+                try {
+                    const data = JSON.parse(draft);
+                    if (data.labName && !document.getElementById('labName').value) {
+                        document.getElementById('labName').value = data.labName;
+                    }
+                    if (data.doctorName && !document.getElementById('doctorName').value) {
+                        document.getElementById('doctorName').value = data.doctorName;
+                    }
+                    if (data.labName || data.doctorName) {
+                        showToast('Loaded saved draft', 'info');
+                    }
+                } catch (e) {
+                    console.error('Failed to load draft:', e);
+                }
+            }
+        }
+
+        clearDraft() {
+            localStorage.removeItem('settings_draft');
+        }
+    }
+
+    // ============================================
+    // Initialize
+    // ============================================
+
+    document.addEventListener('DOMContentLoaded', () => {
+        new SettingsForm('settingsForm');
+    });
+</script>
+
+</body>
+</html>

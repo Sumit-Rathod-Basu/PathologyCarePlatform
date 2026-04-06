@@ -1,11 +1,15 @@
 package Pathology.Care.Platform.Cotroller;
 
+import Pathology.Care.Platform.Model.LabSettings;
 import Pathology.Care.Platform.Model.ResultSummary;
 import Pathology.Care.Platform.Model.TestEntry;
 import Pathology.Care.Platform.Service.Barcodeservice;
+import Pathology.Care.Platform.Service.LabSettingsService;
 import Pathology.Care.Platform.Service.QRCodeService;
 import Pathology.Care.Platform.Service.ResultSummarysave;
 import Pathology.Care.Platform.Service.TestEntryService;
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,8 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @Controller
@@ -33,8 +36,11 @@ public class InvoiceController {
     @Autowired
    private ResultSummarysave resultSummarysave;
 
+   @Autowired
+   private LabSettingsService labSettingsService;
+
     @GetMapping("/{patientId}")
-    public String generateInvoice(@PathVariable String patientId, Model model) throws Exception {
+    public String generateInvoice(@PathVariable String patientId, Model model, HttpSession session  ) throws Exception {
         // Fetch all test entries for this patient
         Long idLong=Long.parseLong(patientId);
         TestEntry test=testEntryService.getTest(idLong);
@@ -80,11 +86,15 @@ for (ResultSummary summary : summaries) {
         String barcodeText = "Patient ID: " + patientId + ", Total Tests: " + tests.size();
         String qrCode = qrCodeService.generateQRCodeBase64(qrText, 150, 150);
         String barcode = barcodeService.generateBarcodeBase64(barcodeText);
+        String labName = (String) session.getAttribute("labName");
+        LabSettings settings = labSettingsService.getSettings(labName); // Replace with actual lab name or logic to get it
+        System.out.println("info is: " + settings); // Replace with actual lab name or logic to get it
 
         model.addAttribute("tests", tests);
         model.addAttribute("qrCode", qrCode);
         model.addAttribute("barcode", barcode);
         model.addAttribute("patientId", patientId);
+        model.addAttribute("labSettings", settings);
         model.addAttribute("summaryPoints", summaryPoints);
         model.addAttribute("patientName", tests.get(0).getPatientName());
         model.addAttribute("patientMobile", tests.get(0).getPatientMobile());

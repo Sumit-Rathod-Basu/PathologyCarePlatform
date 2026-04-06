@@ -172,19 +172,20 @@
 
 
 <!-- Doctor Sign + Lab Seal -->
-    <div class="signature-section">
+    <div class="signature-section"> 
         <div class="signature-block">
-            <!-- <img th:src="'data:image/png;base64,' + ${doctorSign}" alt="Doctor Signature"/> -->
-            <img th:src="@{/images/sign.jpg}" alt="Lab Seal"/>
-            <p><strong>Dr. [[${doctorName}]]</strong><br>MD Pathologist</p>
+             <!-- <img th:src="'data:image/png;base64,' + ${labSettings.signatureUrl}" alt="Doctor Signature"/>  -->
+             <img th:src="${labSettings.signatureUrl}" alt="Current signature" /> 
+            <p><strong>Dr. [[${labSettings.doctorName}]]</strong>
         </div>
     <img th:src="'data:image/png;base64,' + ${qrCode}" alt="QR Code" style="width: 100px; height: 100px;"/>
 
 
 
         <div class="signature-block">
-            <!-- <img th:src="/resources/static/image.png' + ${labSeal}" alt="Lab Seal"/> -->
-            <img th:src="@{/images/demolabseal.png}" alt="Lab Seal"/>
+             
+             <img th:src="${labSettings.sealUrl}" alt="Current seal" /> 
+            <!-- <img th:src="@{/images/demolabseal.png}" alt="Lab Seal"/> -->
             <p><strong>Official Lab Seal</strong></p>
         </div>
     </div>

@@ -12,8 +12,8 @@ public class ChatController {
 
     public ChatController(OpenRouterService service) {
         this.service = service;
-    }
-
+    }  
+  
     @PostMapping
     public String chat(@RequestParam String message) {
         return service.getResponse(message);
