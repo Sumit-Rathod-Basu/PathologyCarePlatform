@@ -31,7 +31,7 @@ public String createFirstAdmin() {
     admin.setEmail("admin@rrlab.com");
 
     // 🔐 encoded password
-    admin.setPassword(passwordEncoder.encode("admin123"));
+    admin.setPassword(passwordEncoder.encode("admin123"));   
 
     adminRepository.save(admin);
 
