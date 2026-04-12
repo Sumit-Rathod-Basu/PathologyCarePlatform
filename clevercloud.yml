@@ -1,0 +1,7 @@
+type: java
+build:
+  tool: maven
+  goals: clean package
+
+run:
+  command: java -jar target/*.jar
