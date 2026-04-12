@@ -37,4 +37,16 @@ public String createFirstAdmin() {
 
     return "First Admin Created Successfully!";
 }
+@GetMapping("/delete-admin")
+@ResponseBody
+public String deleteAdmin() {
+
+    if (adminRepository.count() == 0) {
+        return "No admin found!";
+    }
+
+    adminRepository.deleteAll(); // delete all admins
+
+    return "Admin deleted successfully!";
+}
 }

@@ -3,10 +3,10 @@ spring:
     name: Pathology-Care-Platform
 
   datasource:
-    url: jdbc:mysql://localhost:3306/pathology_Care_Platform
-    username: root
-    password: admin
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:postgresql://dpg-d7djcfnavr4c73e3qchg-a.oregon-postgres.render.com:5432/pcp_4k9s
+    username: pcp
+    password: w0DeVMChw7BSXVAPWr7Bo2PMdPBIJMtQ
+    driver-class-name: org.postgresql.Driver
   
   mail:
     host: smtp.gmail.com
