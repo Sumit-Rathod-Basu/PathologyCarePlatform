@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="color-scheme" content="light dark">
+    <title>Share Live Location | PCP Care</title>
+
+    <style>
+        /* =========================================================
+           1. DESIGN TOKENS
+           ========================================================= */
+        :root {
+            /* Brand */
+            --color-brand-50:  #e7f6ec;
+            --color-brand-100: #d3edde;
+            --color-brand-500: #16834d;
+            --color-brand-600: #126b3e;
+            --color-brand-700: #0e5731;
+
+            /* Neutrals */
+            --color-bg:          #f1f7f3;
+            --color-surface:     #ffffff;
+            --color-surface-alt: #f7faf8;
+            --color-border:      #d9e3dd;
+            --color-border-strong: #b9c9bf;
+            --color-text:        #1f2a24;
+            --color-text-muted:  #5f6f66;
+            --color-text-subtle: #8a9a91;
+
+            /* Feedback */
+            --color-danger-50:  #fdecea;
+            --color-danger-600: #b42318;
+            --color-success-50:  #e7f6ec;
+            --color-success-600: #126b3e;
+            --color-info-50: #eef4ff;
+            --color-info-600: #2d4fa3;
+
+            /* Focus */
+            --focus-ring: 0 0 0 3px rgba(22, 131, 77, 0.28);
+
+            /* Typography */
+            --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            --font-size-xs:   0.75rem;
+            --font-size-sm:   0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg:   1.125rem;
+            --font-size-xl:   1.5rem;
+            --line-height-tight: 1.25;
+            --line-height-base:  1.5;
+
+            /* Spacing scale (4px base) */
+            --space-1: 0.25rem;
+            --space-2: 0.5rem;
+            --space-3: 0.75rem;
+            --space-4: 1rem;
+            --space-5: 1.25rem;
+            --space-6: 1.5rem;
+            --space-8: 2rem;
+
+            /* Shape & depth */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 18px;
+            --shadow-card: 0 1px 2px rgba(16, 24, 20, 0.04), 0 8px 24px rgba(16, 24, 20, 0.08);
+
+            /* Motion */
+            --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+            --duration-fast: 150ms;
+            --duration-base: 220ms;
+        }
+
+        /* Dark theme (follows OS setting unless the user overrides it) */
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]) {
+                --color-bg:          #0f1714;
+                --color-surface:     #17211d;
+                --color-surface-alt: #1d2a25;
+                --color-border:      #2b3b34;
+                --color-border-strong: #3d5249;
+                --color-text:        #e6efe9;
+                --color-text-muted:  #a3b5ab;
+                --color-text-subtle: #7a8d83;
+
+                --color-brand-50:  #1b3327;
+                --color-brand-100: #234535;
+                --color-brand-500: #34c27a;
+                --color-brand-600: #5fd594;
+                --color-brand-700: #8be5b3;
+
+                --color-danger-50:  #3a1d1b;
+                --color-danger-600: #ff8a80;
+                --color-success-50:  #1b3327;
+                --color-success-600: #7ee2a8;
+                --color-info-50: #1c2540;
+                --color-info-600: #9bb6ff;
+
+                --focus-ring: 0 0 0 3px rgba(52, 194, 122, 0.35);
+                --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
+            }
+        }
+
+        :root[data-theme="dark"] {
+            --color-bg:          #0f1714;
+            --color-surface:     #17211d;
+            --color-surface-alt: #1d2a25;
+            --color-border:      #2b3b34;
+            --color-border-strong: #3d5249;
+            --color-text:        #e6efe9;
+            --color-text-muted:  #a3b5ab;
+            --color-text-subtle: #7a8d83;
+
+            --color-brand-50:  #1b3327;
+            --color-brand-100: #234535;
+            --color-brand-500: #34c27a;
+            --color-brand-600: #5fd594;
+            --color-brand-700: #8be5b3;
+
+            --color-danger-50:  #3a1d1b;
+            --color-danger-600: #ff8a80;
+            --color-success-50:  #1b3327;
+            --color-success-600: #7ee2a8;
+
+            --focus-ring: 0 0 0 3px rgba(52, 194, 122, 0.35);
+            --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
+        }
+
+        /* =========================================================
+           2. BASE / RESET
+           ========================================================= */
+        *, *::before, *::after { box-sizing: border-box; }
+
+        html {
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+            scroll-padding-top: env(safe-area-inset-top, 0px);
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: grid;
+            place-items: center;
+            padding: max(var(--space-4), env(safe-area-inset-top))
+                     max(var(--space-4), env(safe-area-inset-right))
+                     max(var(--space-4), env(safe-area-inset-bottom))
+                     max(var(--space-4), env(safe-area-inset-left));
+            background: var(--color-bg);
+            color: var(--color-text);
+            font-family: var(--font-sans);
+            font-size: var(--font-size-base);
+            line-height: var(--line-height-base);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        [hidden] { display: none !important; }
+
+        h1, h2, h3, p { margin: 0; }
+
+        /* =========================================================
+           3. LAYOUT
+           ========================================================= */
+        .page {
+            width: 100%;
+            max-width: 440px;
+        }
+
+        .card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-card);
+            padding: clamp(var(--space-5), 4vw, var(--space-8));
+            animation: card-in var(--duration-base) var(--ease-out) both;
+        }
+
+        @keyframes card-in {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: none; }
+        }
+
+        .header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-2);
+            text-align: center;
+            margin-bottom: var(--space-6);
+        }
+
+        .header-icon {
+            display: grid;
+            place-items: center;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--color-brand-50);
+            color: var(--color-brand-500);
+            font-size: 1.6rem;
+        }
+
+        .title {
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            line-height: var(--line-height-tight);
+            color: var(--color-text);
+        }
+
+        .subtitle {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-muted);
+            max-width: 32ch;
+        }
+
+        /* =========================================================
+           4. FORM FIELDS
+           ========================================================= */
+        .field { display: flex; flex-direction: column; gap: var(--space-2); }
+
+        .label {
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .input {
+            appearance: none;
+            width: 100%;
+            min-height: 48px;
+            padding: var(--space-3) var(--space-4);
+            font: inherit;
+            font-size: 16px;               /* 16px prevents iOS zoom on focus */
+            color: var(--color-text);
+            background: var(--color-surface-alt);
+            border: 1px solid var(--color-border-strong);
+            border-radius: var(--radius-sm);
+            transition:
+                border-color var(--duration-fast) ease,
+                box-shadow var(--duration-fast) ease,
+                background-color var(--duration-fast) ease;
+        }
+
+        .input::placeholder { color: var(--color-text-subtle); }
+
+        .input:hover { border-color: var(--color-brand-500); }
+
+        .input:focus {
+            outline: none;
+            border-color: var(--color-brand-500);
+            box-shadow: var(--focus-ring);
+            background: var(--color-surface);
+        }
+
+        .input[aria-invalid="true"] {
+            border-color: var(--color-danger-600);
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-danger-600) 22%, transparent);
+        }
+
+        .hint {
+            font-size: var(--font-size-xs);
+            color: var(--color-text-subtle);
+        }
+
+        /* =========================================================
+           5. BUTTONS
+           ========================================================= */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
+            width: 100%;
+            min-height: 48px;
+            padding: var(--space-3) var(--space-5);
+            font: inherit;
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            line-height: 1.2;
+            text-align: center;
+            text-decoration: none;
+            color: #fff;
+            background: var(--color-brand-500);
+            border: 1px solid transparent;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            user-select: none;
+            transition:
+                background-color var(--duration-fast) ease,
+                transform var(--duration-fast) ease,
+                box-shadow var(--duration-fast) ease;
+        }
+
+        .btn:hover:not(:disabled)  { background: var(--color-brand-600); }
+        .btn:active:not(:disabled) { transform: scale(0.98); }
+        .btn:focus-visible {
+            outline: none;
+            box-shadow: var(--focus-ring);
+        }
+
+        .btn:disabled {
+            background: var(--color-border-strong);
+            color: var(--color-text-subtle);
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            color: var(--color-brand-600);
+            background: var(--color-surface);
+            border-color: var(--color-brand-500);
+        }
+        .btn-secondary:hover:not(:disabled) {
+            background: var(--color-brand-50);
+            color: var(--color-brand-700);
+        }
+
+        .btn-stack {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+            margin-top: var(--space-5);
+        }
+
+        /* Spinner shown while locating */
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid currentColor;
+            border-right-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* =========================================================
+           6. STATUS / ALERTS
+           ========================================================= */
+        .status {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-3);
+            margin-top: var(--space-5);
+            padding: var(--space-3) var(--space-4);
+            font-size: var(--font-size-sm);
+            line-height: 1.45;
+            color: var(--color-text-muted);
+            background: var(--color-surface-alt);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            overflow-wrap: anywhere;
+        }
+
+        .status::before {
+            content: "";
+            flex: 0 0 auto;
+            width: 8px;
+            height: 8px;
+            margin-top: 0.45em;
+            border-radius: 50%;
+            background: var(--color-text-subtle);
+        }
+
+        .status[data-type="error"] {
+            color: var(--color-danger-600);
+            background: var(--color-danger-50);
+            border-color: color-mix(in srgb, var(--color-danger-600) 30%, transparent);
+        }
+        .status[data-type="error"]::before { background: var(--color-danger-600); }
+
+        .status[data-type="success"] {
+            color: var(--color-success-600);
+            background: var(--color-success-50);
+            border-color: color-mix(in srgb, var(--color-success-600) 30%, transparent);
+        }
+        .status[data-type="success"]::before { background: var(--color-success-600); }
+
+        .status[data-type="info"]::before { background: var(--color-brand-500); }
+
+        /* =========================================================
+           7. RESULTS PANEL
+           ========================================================= */
+        .results {
+            margin-top: var(--space-5);
+            padding-top: var(--space-5);
+            border-top: 1px solid var(--color-border);
+        }
+
+        .coords {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-3);
+            margin-bottom: var(--space-4);
+        }
+
+        .coord {
+            padding: var(--space-3);
+            background: var(--color-surface-alt);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+        }
+
+        .coord-label {
+            display: block;
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--color-text-subtle);
+        }
+
+        .coord-value {
+            display: block;
+            margin-top: 2px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            font-size: var(--font-size-sm);
+            color: var(--color-text);
+            font-variant-numeric: tabular-nums;
+            overflow-wrap: anywhere;
+        }
+
+        /* =========================================================
+           8. UTILITIES & RESPONSIVE
+           ========================================================= */
+        .visually-hidden {
+            position: absolute !important;
+            width: 1px; height: 1px;
+            padding: 0; margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        @media (max-width: 360px) {
+            .coords { grid-template-columns: 1fr; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        @media print {
+            body { background: #fff; }
+            .card { box-shadow: none; border: 1px solid #ccc; animation: none; }
+            .btn-stack, .theme-toggle { display: none; }
+        }
+    </style>
+</head>
+
+<body>
+
+<main class="page">
+    <section class="card" aria-labelledby="title">
+
+        <header class="header">
+            <div class="header-icon" aria-hidden="true">📍</div>
+            <h1 id="title" class="title">Share Live Location</h1>
+            <p class="subtitle">Send your current location through WhatsApp.</p>
+        </header>
+
+        <form id="locationForm" novalidate>
+            <div class="field">
+                <label class="label" for="phone">Patient WhatsApp Number</label>
+                <input
+                    class="input"
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    inputmode="tel"
+                    autocomplete="tel"
+                    placeholder="e.g. 91 98765 43210"
+                    aria-describedby="phoneHint"
+                    aria-invalid="false"
+                    required>
+                <p id="phoneHint" class="hint">
+                    Include country code (e.g. 91 for India). 10–15 digits.
+                </p>
+            </div>
+
+            <div class="btn-stack">
+                <button type="submit" id="shareButton" class="btn">
+                    <span id="shareLabel">Share My Location on WhatsApp</span>
+                </button>
+            </div>
+        </form>
+
+        <div id="status" class="status" role="status" aria-live="polite" data-type="info">
+            Enter the patient's mobile number to begin.
+        </div>
+
+        <section id="results" class="results" hidden aria-label="Shared location">
+            <div class="coords">
+                <div class="coord">
+                    <span class="coord-label">Latitude</span>
+                    <span id="latValue" class="coord-value">—</span>
+                </div>
+                <div class="coord">
+                    <span class="coord-label">Longitude</span>
+                    <span id="lngValue" class="coord-value">—</span>
+                </div>
+            </div>
+
+            <div class="btn-stack">
+                <a id="waLink" class="btn" target="_blank" rel="noopener noreferrer">
+                    Open WhatsApp with Location
+                </a>
+                <a id="mapLink" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
+                    View Location on Map
+                </a>
+            </div>
+        </section>
+
+    </section>
+</main>
+
+<script>
+(() => {
+    "use strict";
+
+    const form       = document.getElementById("locationForm");
+    const phoneInput = document.getElementById("phone");
+    const statusEl   = document.getElementById("status");
+    const button     = document.getElementById("shareButton");
+    const shareLabel = document.getElementById("shareLabel");
+    const results    = document.getElementById("results");
+    const latValue   = document.getElementById("latValue");
+    const lngValue   = document.getElementById("lngValue");
+    const waLink     = document.getElementById("waLink");
+    const mapLink    = document.getElementById("mapLink");
+
+    const IDLE_LABEL = "Share My Location on WhatsApp";
+    const BUSY_LABEL = "Getting your location…";
+
+    const GEO_OPTIONS = {
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 0
+    };
+
+    const GEO_ERRORS = {
+        1: "Permission denied. Please allow location access and try again.",
+        2: "Location unavailable. Check that GPS or location services are on.",
+        3: "Request timed out. Please try again."
+    };
+
+    /* ---------- Helpers ---------- */
+
+    function setStatus(message, type = "info") {
+        statusEl.textContent = message;
+        statusEl.dataset.type = type;
+    }
+
+    function setBusy(isBusy) {
+        button.disabled = isBusy;
+        shareLabel.textContent = isBusy ? BUSY_LABEL : IDLE_LABEL;
+        button.setAttribute("aria-busy", String(isBusy));
+    }
+
+    function setPhoneInvalid(isInvalid) {
+        phoneInput.setAttribute("aria-invalid", String(isInvalid));
+    }
+
+    function hideResults() {
+        results.hidden = true;
+        waLink.removeAttribute("href");
+        mapLink.removeAttribute("href");
+    }
+
+    function getPosition() {
+        return new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject, GEO_OPTIONS);
+        });
+    }
+
+    function buildMessage(lat, lng, accuracy, mapsUrl) {
+        const accuracyText = accuracy ? ` (±${Math.round(accuracy)} m)` : "";
+        return [
+            "Hello,",
+            "",
+            "Our sample collector is sharing their current location with you.",
+            "",
+            "📍 Current Location:",
+            mapsUrl,
+            "",
+            `Latitude: ${lat}`,
+            `Longitude: ${lng}${accuracyText}`,
+            "",
+            "Thank you — PCP Care Platform"
+        ].join("\n");
+    }
+
+    /* ---------- Core logic ---------- */
+
+    async function handleSubmit(event) {
+        event.preventDefault();
+        hideResults();
+
+        // Keep digits only; convert an international "00" prefix.
+        let phone = phoneInput.value.replace(/\D/g, "");
+        if (phone.startsWith("00")) phone = phone.slice(2);
+
+        if (!/^\d{10,15}$/.test(phone)) {
+            setPhoneInvalid(true);
+            setStatus("Please enter a valid WhatsApp number (10–15 digits, with country code).", "error");
+            phoneInput.focus();
+            return;
+        }
+        setPhoneInvalid(false);
+
+        if (!window.isSecureContext) {
+            setStatus("Location requires a secure (HTTPS) connection.", "error");
+            return;
+        }
+
+        if (!("geolocation" in navigator)) {
+            setStatus("Location is not supported by this browser.", "error");
+            return;
+        }
+
+        setBusy(true);
+        setStatus("Getting your current GPS location…", "info");
+
+        try {
+            const { coords } = await getPosition();
+            const lat = coords.latitude.toFixed(6);
+            const lng = coords.longitude.toFixed(6);
+            const mapsUrl = `https://www.google.com/maps?q=${lat},${lng}`;
+            const message = buildMessage(lat, lng, coords.accuracy, mapsUrl);
+
+            latValue.textContent = lat;
+            lngValue.textContent = lng;
+            mapLink.href = mapsUrl;
+            waLink.href = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+            results.hidden = false;
+
+            setStatus("Location ready. Tap the button below to send it on WhatsApp.", "success");
+        } catch (error) {
+            const reason = GEO_ERRORS[error.code] || error.message || "Unknown error.";
+            setStatus("Unable to get location: " + reason, "error");
+        } finally {
+            setBusy(false);
+        }
+    }
+
+    /* ---------- Wire up ---------- */
+
+    form.addEventListener("submit", handleSubmit);
+
+    phoneInput.addEventListener("input", () => {
+        setPhoneInvalid(false);
+        if (statusEl.dataset.type === "error") {
+            setStatus("Enter the patient's mobile number to begin.", "info");
+        }
+    });
+})();
+</script>
+
+</body>
+</html>
